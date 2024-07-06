@@ -1,5 +1,6 @@
 ﻿using mediatheque_back_csharp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace mediatheque_back_csharp.Controllers
 {
@@ -36,7 +37,7 @@ namespace mediatheque_back_csharp.Controllers
         /// </summary>
         /// <returns>List of some IIdentified objects of the database</returns>
         [HttpGet]
-        public IEnumerable<TEntity> Get()
+        public async Task<ActionResult<IEnumerable<TEntity>>> Get()
         {
             //List<IIdentified> output = new List<IIdentified>(this._context.Authors);
             //output.AddRange(this._context.Books);
@@ -47,7 +48,7 @@ namespace mediatheque_back_csharp.Controllers
             //output.AddRange(this._context.Series);
 
             //return output;
-            return this._context.Set<TEntity>().ToList();
+            return await this._context.Set<TEntity>().ToListAsync();
         }
     }
 }
