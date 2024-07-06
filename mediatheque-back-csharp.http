@@ -1,0 +1,6 @@
+@mediatheque_back_csharp_HostAddress = https://localhost:8080
+
+GET {{mediatheque_back_csharp_HostAddress}}/author/
+Accept: application/json
+
+###
