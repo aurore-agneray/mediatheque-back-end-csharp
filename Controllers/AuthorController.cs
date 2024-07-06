@@ -11,6 +11,11 @@ namespace mediatheque_back_csharp.Controllers
     public class AuthorController : ControllerBase
     {
         /// <summary>
+        /// Context for connecting to the database
+        /// </summary>
+        private readonly MediathequeDbContext _context;
+
+        /// <summary>
         /// Logger for the AuthorController
         /// </summary>
         private readonly ILogger<AuthorController> _logger;
@@ -18,21 +23,23 @@ namespace mediatheque_back_csharp.Controllers
         /// <summary>
         /// Raw list of authors for testing
         /// </summary>
-        private static readonly Author[] Authors = new[]
+        private static readonly Author[] Authors =
         {
-            new Author() { Code = "ABC", FirstName = "Yo !", LastName = "POUET", Id = 1 },
-            new Author() { Code = "taertgertg", FirstName = "Lola", LastName = "HEHE", Id = 2 },
-            new Author() { Code = "zefzef", FirstName = "Jean", LastName = "Michel", Id = 3 },
-            new Author() { Code = "rgzezer", FirstName = "Johnny", LastName = "Halliday", Id = 4 },
-            new Author() { Code = "zerzerz", FirstName = "Céline", LastName = "Dion", Id = 5 },
+            new() { Code = "ABC", FirstName = "Yo !", LastName = "POUET", Id = 1 },
+            new() { Code = "taertgertg", FirstName = "Lola", LastName = "HEHE", Id = 2 },
+            new() { Code = "zefzef", FirstName = "Jean", LastName = "Michel", Id = 3 },
+            new() { Code = "rgzezer", FirstName = "Johnny", LastName = "Halliday", Id = 4 },
+            new() { Code = "zerzerz", FirstName = "Céline", LastName = "Dion", Id = 5 },
         };
 
         /// <summary>
         /// Constructor of the AuthorController class
         /// </summary>
+        /// <param name="context">Given database context</param>
         /// <param name="logger">Given Logger</param>
-        public AuthorController(ILogger<AuthorController> logger)
+        public AuthorController(MediathequeDbContext context, ILogger<AuthorController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
@@ -43,7 +50,7 @@ namespace mediatheque_back_csharp.Controllers
         [HttpGet(Name = "GetAuthors")]
         public IEnumerable<Author> Get()
         {
-            return Authors;
+            return this._context.Authors;
         }
     }
 }
