@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using mediatheque_back_csharp.Interfaces;
 
 namespace mediatheque_back_csharp.Pocos
 {
@@ -6,7 +7,7 @@ namespace mediatheque_back_csharp.Pocos
     /// POCO for the Authors
     /// </summary>
     [Table("Author")]
-    public class Author
+    public class Author : IIdentified
     {
         /// <summary>
         /// ID (primary key)
