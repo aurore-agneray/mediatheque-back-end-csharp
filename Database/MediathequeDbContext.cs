@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace mediatheque_back_csharp
+namespace mediatheque_back_csharp.Database
 {
     /// <summary>
     /// Global context for the connection to the "Mediatheque" MySQL database
@@ -81,7 +81,7 @@ namespace mediatheque_back_csharp
             }
 
             optionsBuilder.UseMySql(
-                connectionString, 
+                connectionString,
                 ServerVersion.AutoDetect(connectionString)
             );
         }

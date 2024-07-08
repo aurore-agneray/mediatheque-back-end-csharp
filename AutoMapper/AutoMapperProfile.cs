@@ -2,7 +2,7 @@
 using mediatheque_back_csharp.Dtos;
 using mediatheque_back_csharp.Pocos;
 
-namespace mediatheque_back_csharp;
+namespace mediatheque_back_csharp.AutoMapper;
 
 /// <summary>
 /// Defines the profile used for configuring the AutoMapper package

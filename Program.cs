@@ -1,4 +1,6 @@
 using mediatheque_back_csharp;
+using mediatheque_back_csharp.AutoMapper;
+using mediatheque_back_csharp.Database;
 
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
