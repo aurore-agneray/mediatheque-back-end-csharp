@@ -63,17 +63,17 @@ public class EditionDTO : IIdentified
     public int BookId { get; set; }
 
     /// <summary>
-    /// Format ID
+    /// Format DTO
     /// </summary>
-    public int? FormatId { get; set; }
+    public FormatDTO? Format { get; set; }
 
     /// <summary>
-    /// Publisher ID
+    /// Publisher DTO
     /// </summary>
-    public int PublisherId { get; set; }
+    public PublisherDTO? Publisher { get; set; }
 
     /// <summary>
-    /// Series ID
+    /// Series DTO
     /// </summary>
-    public int? SeriesId { get; set; }
+    public SeriesDTO? Series { get; set; }
 }
