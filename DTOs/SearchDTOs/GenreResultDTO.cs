@@ -8,6 +8,6 @@
         /// <summary>
         /// Name
         /// </summary>
-        public string GenreName { get; set; } = null!;
+        public string? GenreName { get; set; }
     }
 }
