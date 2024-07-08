@@ -8,30 +8,6 @@ namespace mediatheque_back_csharp.DTOs.SearchDTOs
     public class EditionResultDTO
     {
         /// <summary>
-        /// Constructor of the BookResultDTO
-        /// </summary>
-        /// <param name="book">A BookDTO object</param>
-        public EditionResultDTO(EditionDTO edition)
-        {
-            if (edition != null)
-            {
-                Id = edition.Id;
-                Isbn = edition.Isbn;
-                ArkId = edition.ArkId;
-                Volume = edition.Volume;
-                Subtitle = edition.Subtitle;
-                PublicationDate = edition.PublicationDate;
-                PublicationYear = edition.PublicationYear;
-                Summary = edition.Summary;
-                BookId = edition.BookId;
-
-                Format = new FormatResultDTO() { FormatName = edition.Format?.Name };
-                Series = new SeriesResultDTO() { SeriesName = edition.Series?.Name };
-                Publisher = new PublisherResultDTO() { PublishingHouse = edition.Publisher?.PublishingHouse };
-            }
-        }
-
-        /// <summary>
         /// ID (primary key)
         /// </summary>
         public int Id { get; set; }

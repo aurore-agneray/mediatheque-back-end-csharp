@@ -27,5 +27,12 @@ public class AutoMapperProfile : Profile
         CreateMap<Author, AuthorResultDTO>();
         CreateMap<Genre, GenreResultDTO>()
             .ForMember(dest => dest.GenreName, opt => opt.MapFrom(src => src.Name));
+
+        CreateMap<Edition, EditionResultDTO>();
+        CreateMap<Format, FormatResultDTO>()
+            .ForMember(dest => dest.FormatName, opt => opt.MapFrom(src => src.Name));
+        CreateMap<Series, SeriesResultDTO>()
+            .ForMember(dest => dest.SeriesName, opt => opt.MapFrom(src => src.Name));
+        CreateMap<Publisher, PublisherResultDTO>();
     }
 }

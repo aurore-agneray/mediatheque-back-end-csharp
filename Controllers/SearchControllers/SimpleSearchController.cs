@@ -87,7 +87,7 @@ public class SimpleSearchController : ControllerBase
                                  .ToListAsync();
 
         var bookResultDtos = _mapper.Map<List<Book>, List<BookResultDTO>>(results);
-        var editionsDtos = _mapper.Map<IEnumerable<Edition>, List<EditionDTO>>(results.SelectMany(res => res.Editions));
+        var editionsDtos = _mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(results.SelectMany(res => res.Editions));
 
 
         return bookResultDtos.Select(dto =>
@@ -95,7 +95,6 @@ public class SimpleSearchController : ControllerBase
             var resultDto = new SearchResultDTO(dto);
 
             resultDto.Editions = editionsDtos.Where(edition => edition.BookId == dto.Id)
-                                             .Select(edition => new EditionResultDTO(edition))
                                              .ToList();
             return resultDto;
         });
