@@ -20,5 +20,6 @@ public class AutoMapperProfile : Profile
         CreateMap<Format, FormatDTO>();
         CreateMap<Genre, GenreDTO>();
         CreateMap<Publisher, PublisherDTO>();
+        CreateMap<Series, SeriesDTO>();
     }
 }
