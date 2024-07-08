@@ -9,6 +9,22 @@ namespace mediatheque_back_csharp.DTOs.SearchDTOs
     public class BookResultDTO : IIdentified
     {
         /// <summary>
+        /// Constructor of the BookResultDTO
+        /// </summary>
+        /// <param name="book">A BookDTO object</param>
+        public BookResultDTO(BookDTO book)
+        {
+            if (book != null)
+            {
+                Id = book.Id;
+                Title = book.Title;
+                StaffComment = book.StaffComment;
+                Author = new AuthorResultDTO() { CompleteName = book.Author?.CompleteName };
+                Genre = new GenreResultDTO() { GenreName = book.Genre?.Name };
+            }
+        }
+
+        /// <summary>
         /// ID
         /// </summary>
         public int Id { get; set; }
@@ -32,21 +48,5 @@ namespace mediatheque_back_csharp.DTOs.SearchDTOs
         /// Genre Result DTO
         /// </summary>
         public GenreResultDTO? Genre { get; set; }
-
-        /// <summary>
-        /// Constructor of the BookResultDTO
-        /// </summary>
-        /// <param name="book">A BookDTO object</param>
-        public BookResultDTO(BookDTO book)
-        {
-            if (book != null)
-            {
-                Id = book.Id;
-                Title = book.Title;
-                StaffComment = book.StaffComment;
-                Author = new AuthorResultDTO() { CompleteName = book.Author?.CompleteName };
-                Genre = new GenreResultDTO() { GenreName = book.Genre?.Name };
-            }
-        }
     }
 }
