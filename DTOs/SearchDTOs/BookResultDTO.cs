@@ -1,5 +1,4 @@
-﻿using mediatheque_back_csharp.Dtos;
-using mediatheque_back_csharp.Interfaces;
+﻿using mediatheque_back_csharp.Interfaces;
 
 namespace mediatheque_back_csharp.DTOs.SearchDTOs
 {

@@ -1,6 +1,4 @@
-﻿using mediatheque_back_csharp.Dtos;
-
-namespace mediatheque_back_csharp.DTOs.SearchDTOs
+﻿namespace mediatheque_back_csharp.DTOs.SearchDTOs
 {
     /// <summary>
     /// Object retrieved for the Edition while searching for books
