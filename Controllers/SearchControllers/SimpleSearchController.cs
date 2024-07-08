@@ -76,7 +76,10 @@ public class SimpleSearchController : ControllerBase
                                            )
                                         );
 
-        var results = await books.ToListAsync();
+        var results = await books.Include(b => b.Author)
+                                 .Include(b => b.Genre)
+                                 .ToListAsync();
+
         var booksDtos = _mapper.Map<List<Book>, List<BookDTO>>(results);
 
         return booksDtos.Select(book =>
