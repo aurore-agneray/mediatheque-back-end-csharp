@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using mediatheque_back_csharp.Dtos;
+using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Pocos;
 
 namespace mediatheque_back_csharp.AutoMapper;
@@ -21,5 +22,10 @@ public class AutoMapperProfile : Profile
         CreateMap<Genre, GenreDTO>();
         CreateMap<Publisher, PublisherDTO>();
         CreateMap<Series, SeriesDTO>();
+
+        CreateMap<Book, BookResultDTO>();
+        CreateMap<Author, AuthorResultDTO>();
+        CreateMap<Genre, GenreResultDTO>()
+            .ForMember(dest => dest.GenreName, opt => opt.MapFrom(src => src.Name));
     }
 }

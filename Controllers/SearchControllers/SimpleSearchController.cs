@@ -86,15 +86,15 @@ public class SimpleSearchController : ControllerBase
                                  .ThenInclude(ed => ed.Publisher)
                                  .ToListAsync();
 
-        var booksDtos = _mapper.Map<List<Book>, List<BookDTO>>(results);
+        var bookResultDtos = _mapper.Map<List<Book>, List<BookResultDTO>>(results);
         var editionsDtos = _mapper.Map<IEnumerable<Edition>, List<EditionDTO>>(results.SelectMany(res => res.Editions));
 
 
-        return booksDtos.Select(book =>
+        return bookResultDtos.Select(dto =>
         {
-            var resultDto = new SearchResultDTO(book);
+            var resultDto = new SearchResultDTO(dto);
 
-            resultDto.Editions = editionsDtos.Where(edition => edition.BookId == book.Id)
+            resultDto.Editions = editionsDtos.Where(edition => edition.BookId == dto.Id)
                                              .Select(edition => new EditionResultDTO(edition))
                                              .ToList();
             return resultDto;

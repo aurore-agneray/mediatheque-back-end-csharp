@@ -1,6 +1,4 @@
-﻿using mediatheque_back_csharp.Dtos;
-
-namespace mediatheque_back_csharp.DTOs.SearchDTOs;
+﻿namespace mediatheque_back_csharp.DTOs.SearchDTOs;
 
 /// <summary>
 /// Object retrieved while searching for books.
@@ -13,12 +11,12 @@ public class SearchResultDTO
     /// Generates all sub-DTOs
     /// </summary>
     /// <param name="book">A BookDTO object</param>
-    public SearchResultDTO(BookDTO book)
+    public SearchResultDTO(BookResultDTO book)
     {
         if (book != null)
         {
             BookId = book.Id;
-            Book = new BookResultDTO(book);
+            Book = book;
         }
     }
 
