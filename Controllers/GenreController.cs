@@ -1,4 +1,6 @@
-﻿using mediatheque_back_csharp.Pocos;
+﻿using AutoMapper;
+using mediatheque_back_csharp.Dtos;
+using mediatheque_back_csharp.Pocos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers
@@ -8,14 +10,15 @@ namespace mediatheque_back_csharp.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class GenreController : IIdentifiedController<Genre>
+    public class GenreController : IIdentifiedController<Genre, GenreDTO>
     {
         /// <summary>
         /// Constructor of the GenreController class
         /// </summary>
         /// <param name="context">Given database context</param>
         /// <param name="logger">Given Logger</param>
-        public GenreController(MediathequeDbContext context, ILogger<GenreController> logger) : base(context, logger)
+        /// <param name="mapper">Given AutoMapper</param>
+        public GenreController(MediathequeDbContext context, ILogger<GenreController> logger, IMapper mapper) : base(context, logger, mapper)
         {
         }
     }

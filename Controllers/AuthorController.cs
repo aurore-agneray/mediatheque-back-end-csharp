@@ -1,4 +1,5 @@
-﻿using mediatheque_back_csharp.Interfaces;
+﻿using AutoMapper;
+using mediatheque_back_csharp.Dtos;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,14 +10,15 @@ namespace mediatheque_back_csharp.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class AuthorController : IIdentifiedController<Author>
+    public class AuthorController : IIdentifiedController<Author, AuthorDTO>
     {
         /// <summary>
         /// Constructor of the AuthorController class
         /// </summary>
         /// <param name="context">Given database context</param>
         /// <param name="logger">Given Logger</param>
-        public AuthorController(MediathequeDbContext context, ILogger<AuthorController> logger) : base(context, logger)
+        /// <param name="mapper">Given AutoMapper</param>
+        public AuthorController(MediathequeDbContext context, ILogger<AuthorController> logger, IMapper mapper) : base(context, logger, mapper)
         {
         }
     }

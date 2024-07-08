@@ -16,6 +16,12 @@ builder.Services.AddDbContext<MediathequeDbContext>();
 // Retrieves the configuration settings entered into the appsettings.json file
 builder.Services.Configure<MySettingsModel>(builder.Configuration.GetSection("MySettings"));
 
+// Configures AutoMapper used for converting my POCOs into DTOs
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfile>();
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

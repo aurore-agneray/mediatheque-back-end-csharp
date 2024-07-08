@@ -4,3 +4,26 @@ GET {{mediatheque_back_csharp_HostAddress}}/author/
 Accept: application/json
 
 ###
+
+GET {{mediatheque_back_csharp_HostAddress}}/book/
+Accept: application/json
+
+###
+
+GET {{mediatheque_back_csharp_HostAddress}}/edition/
+Accept: application/json
+
+###
+
+GET {{mediatheque_back_csharp_HostAddress}}/format/
+Accept: application/json
+
+###
+
+GET {{mediatheque_back_csharp_HostAddress}}/genre/
+Accept: application/json
+
+###
+
+GET {{mediatheque_back_csharp_HostAddress}}/publisher/
+Accept: application/json
