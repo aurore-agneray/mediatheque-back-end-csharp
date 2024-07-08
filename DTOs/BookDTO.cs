@@ -13,11 +13,6 @@ public class BookDTO : IIdentified
     public int Id { get; set; }
 
     /// <summary>
-    /// Custom code
-    /// </summary>
-    public string BookCode { get; set; } = null!;
-
-    /// <summary>
     /// Title
     /// </summary>
     public string? Title { get; set; }
@@ -28,12 +23,12 @@ public class BookDTO : IIdentified
     public string? StaffComment { get; set; }
 
     /// <summary>
-    /// Author ID
+    /// Author DTO
     /// </summary>
-    public int? AuthorId { get; set; }
+    public AuthorDTO? Author { get; set; }
 
     /// <summary>
-    /// Genre ID
+    /// Genre DTO
     /// </summary>
-    public int? GenreId { get; set; }
+    public GenreDTO? Genre { get; set; }
 }

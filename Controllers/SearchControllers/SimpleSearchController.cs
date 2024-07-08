@@ -1,5 +1,8 @@
-﻿using mediatheque_back_csharp.Database;
-using mediatheque_back_csharp.Interfaces;
+﻿using AutoMapper;
+using mediatheque_back_csharp.Database;
+using mediatheque_back_csharp.Dtos;
+using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.Pocos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,27 +27,34 @@ public class SimpleSearchController : ControllerBase
     protected readonly ILogger<SimpleSearchController> _logger;
 
     /// <summary>
+    /// Transforms the POCOs into DTOs
+    /// </summary>
+    protected readonly IMapper _mapper;
+
+    /// <summary>
     /// Constructor of the SimpleSearchController class
     /// </summary>
     /// <param name="context">Given database context</param>
     /// <param name="logger">Given Logger</param>
-    public SimpleSearchController(MediathequeDbContext context, ILogger<SimpleSearchController> logger)
+    /// <param name="mapper">Given AutoMapper</param>
+    public SimpleSearchController(MediathequeDbContext context, ILogger<SimpleSearchController> logger, IMapper mapper)
     {
         _context = context;
         _logger = logger;
+        _mapper = mapper;
     }
 
     /// <summary>
     /// Get CRUD request for the simple search.
     /// </summary>
     /// <param name="criterion">Words representing the search criterion</param>
-    /// <returns>List of some IIdentified objects of the database</returns>
+    /// <returns>List of some SearchResultsDTO objects</returns>
     [HttpGet]
-    public async Task<IEnumerable<IIdentified>> Get(string? criterion)
+    public async Task<IEnumerable<SearchResultDTO>> Get(string? criterion)
     {
         if (criterion == null || criterion == string.Empty) 
         {
-            return new List<IIdentified>();
+            return new List<SearchResultDTO>();
         }
 
         criterion = criterion.ToLower();
@@ -66,6 +76,12 @@ public class SimpleSearchController : ControllerBase
                                            )
                                         );
 
-        return await books.ToListAsync();
+        var results = await books.ToListAsync();
+        var booksDtos = _mapper.Map<List<Book>, List<BookDTO>>(results);
+
+        return booksDtos.Select(book =>
+        {
+            return new SearchResultDTO(book);
+        });
     }
 }
