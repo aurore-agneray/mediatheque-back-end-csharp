@@ -44,18 +44,8 @@ namespace mediatheque_back_csharp.DTOs.SearchDTOs
                 Id = book.Id;
                 Title = book.Title;
                 StaffComment = book.StaffComment;
-                Author = new AuthorResultDTO();
-                Genre = new GenreResultDTO();
-
-                if (book.Author != null)
-                {
-                    Author.CompleteName = book.Author.CompleteName;
-                }
-
-                if (book.Genre != null) 
-                { 
-                    Genre.GenreName = book.Genre.Name;
-                }
+                Author = new AuthorResultDTO() { CompleteName = book.Author?.CompleteName };
+                Genre = new GenreResultDTO() { GenreName = book.Genre?.Name };
             }
         }
     }
