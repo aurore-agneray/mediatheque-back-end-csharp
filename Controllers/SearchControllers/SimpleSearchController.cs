@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using mediatheque_back_csharp.Database;
-using mediatheque_back_csharp.Dtos;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.AspNetCore.Mvc;
@@ -88,7 +87,6 @@ public class SimpleSearchController : ControllerBase
 
         var bookResultDtos = _mapper.Map<List<Book>, List<BookResultDTO>>(results);
         var editionsDtos = _mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(results.SelectMany(res => res.Editions));
-
 
         return bookResultDtos.Select(dto =>
         {

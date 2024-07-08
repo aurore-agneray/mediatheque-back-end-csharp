@@ -34,5 +34,4 @@ public class SearchResultDTO
     /// Objects representing the editions of the book
     /// </summary>
     public List<EditionResultDTO> Editions { get; set; } = new List<EditionResultDTO>();
-
 }
