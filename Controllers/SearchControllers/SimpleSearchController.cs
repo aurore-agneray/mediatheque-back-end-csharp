@@ -115,16 +115,7 @@ public class SimpleSearchController : ControllerBase
             return new SearchResultDTO(bookDto)
             {
                 // Editions have to be grouped by series' name
-                Editions = editions.GroupBy(ed =>
-                {
-                    if (ed?.Series?.SeriesName != null)
-                    {
-                        return ed.Series.SeriesName;
-                    }
-
-                    return "0";
-                })
-                .ToDictionary(group => group.Key, group => group.ToList())
+                Editions = _manager.GroupEditionsBySeriesName(editions)
             };
         });
     }
