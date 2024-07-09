@@ -12,7 +12,7 @@ namespace mediatheque_back_csharp.Controllers.SearchControllers;
 /// which accepts a unique criterion (Author name, Book title, ISBN or series name)
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("/api/search/simple")]
 public class SimpleSearchController : ControllerBase
 {
     /// <summary>
@@ -44,35 +44,35 @@ public class SimpleSearchController : ControllerBase
     }
 
     /// <summary>
-    /// Get CRUD request for the simple search.
+    /// Post CRUD request for the simple search.
     /// </summary>
     /// <param name="criterion">Words representing the search criterion</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
-    [HttpGet]
-    public async Task<IEnumerable<SearchResultDTO>> Get(string? criterion)
+    [HttpPost]
+    public async Task<IEnumerable<SearchResultDTO>> Post(SimpleSearchArgsDTO argsDto)
     {
-        if (criterion == null || criterion == string.Empty) 
+        if (argsDto?.Criterion == null || argsDto.Criterion == string.Empty) 
         {
             return new List<SearchResultDTO>();
         }
 
-        criterion = criterion.ToLower();
+        argsDto.Criterion = argsDto.Criterion.ToLower();
 
         // Criterion is searched into the title, the author name, the ISBN and the series' name
         var books = _context.Books
                             .Where(book => (
                                                 book.Title != null
-                                                && book.Title.ToLower().Contains(criterion)
+                                                && book.Title.ToLower().Contains(argsDto.Criterion)
                                            )
                                            || (
                                                 book.Author != null
                                                 && book.Author.CompleteName != null
-                                                && book.Author.CompleteName.ToLower().Contains(criterion)
+                                                && book.Author.CompleteName.ToLower().Contains(argsDto.Criterion)
                                            )
                                            || (
                                                 book.Editions != null
-                                                && book.Editions.Any(edition => edition.Isbn == criterion 
-                                                   || (edition.Series != null && edition.Series.Name != null && edition.Series.Name.ToLower().Contains(criterion)))
+                                                && book.Editions.Any(edition => edition.Isbn == argsDto.Criterion
+                                                   || (edition.Series != null && edition.Series.Name != null && edition.Series.Name.ToLower().Contains(argsDto.Criterion)))
                                            )
                                         );
 
