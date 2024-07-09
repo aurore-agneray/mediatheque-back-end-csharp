@@ -86,14 +86,28 @@ public class SimpleSearchController : ControllerBase
                                  .ThenInclude(ed => ed.Publisher)
                                  .ToListAsync();
 
+        // Maps the books and the editions separately
         var bookResultDtos = _mapper.Map<List<Book>, List<BookResultDTO>>(results);
-        var editionsDtos = _mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(results.SelectMany(res => res.Editions));
+        var editionResultDtos = _mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(results.SelectMany(res => res.Editions));
 
-        return bookResultDtos.Select(dto =>
+        return bookResultDtos.Select(bookDto =>
         {
-            return new SearchResultDTO(dto)
+            // Binds each book to its editions
+            var editions = editionResultDtos.Where(edition => edition.BookId == bookDto.Id).ToList();
+
+            return new SearchResultDTO(bookDto)
             {
-                Editions = editionsDtos.Where(edition => edition.BookId == dto.Id).ToList()
+                // Editions have to be grouped by series' name
+                Editions = editions.GroupBy(ed =>
+                {
+                    if (ed?.Series?.SeriesName != null)
+                    {
+                        return ed.Series.SeriesName;
+                    }
+
+                    return "0";
+                })
+                .ToDictionary(group => group.Key, group => group.ToList())
             };
         });
     }

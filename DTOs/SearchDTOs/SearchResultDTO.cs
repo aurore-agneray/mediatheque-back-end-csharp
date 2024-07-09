@@ -32,6 +32,7 @@ public class SearchResultDTO
 
     /// <summary>
     /// Objects representing the editions of the book
+    /// They are grouped by series' name ! (the key of string type)
     /// </summary>
-    public List<EditionResultDTO> Editions { get; set; } = new List<EditionResultDTO>();
+    public Dictionary<string, List<EditionResultDTO>> Editions { get; set; }
 }
