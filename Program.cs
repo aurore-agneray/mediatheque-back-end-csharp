@@ -1,6 +1,7 @@
 using mediatheque_back_csharp;
 using mediatheque_back_csharp.AutoMapper;
 using mediatheque_back_csharp.Database;
+using mediatheque_back_csharp.Managers.SearchManagers;
 
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,9 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<AutoMapperProfile>();
 });
+
+// Injects my simple search manager
+builder.Services.AddScoped<SimpleSearchManager>();
 
 var app = builder.Build();
 
