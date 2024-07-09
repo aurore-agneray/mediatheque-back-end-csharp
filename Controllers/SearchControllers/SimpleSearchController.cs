@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,16 +32,27 @@ public class SimpleSearchController : ControllerBase
     protected readonly IMapper _mapper;
 
     /// <summary>
+    /// Methods for preparing the data sent by the SimpleSearchController
+    /// </summary>
+    public readonly SimpleSearchManager _manager;
+
+    /// <summary>
     /// Constructor of the SimpleSearchController class
     /// </summary>
     /// <param name="context">Given database context</param>
     /// <param name="logger">Given Logger</param>
     /// <param name="mapper">Given AutoMapper</param>
-    public SimpleSearchController(MediathequeDbContext context, ILogger<SimpleSearchController> logger, IMapper mapper)
+    public SimpleSearchController(
+        MediathequeDbContext context, 
+        ILogger<SimpleSearchController> logger, 
+        IMapper mapper, 
+        SimpleSearchManager manager
+    )
     {
         _context = context;
         _logger = logger;
         _mapper = mapper;
+        _manager = manager;
     }
 
     /// <summary>
@@ -87,13 +99,18 @@ public class SimpleSearchController : ControllerBase
                                  .ToListAsync();
 
         // Maps the books and the editions separately
-        var bookResultDtos = _mapper.Map<List<Book>, List<BookResultDTO>>(results);
+        // Orders the book by title's ascending alphabetical order
+        var bookResultDtos = _mapper.Map<List<Book>, List<BookResultDTO>>(results)
+                                    .OrderBy(book => book.Title);
+
         var editionResultDtos = _mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(results.SelectMany(res => res.Editions));
 
         return bookResultDtos.Select(bookDto =>
         {
-            // Binds each book to its editions
-            var editions = editionResultDtos.Where(edition => edition.BookId == bookDto.Id).ToList();
+            // Binds each book to its editions and orders the editions by volume
+            var editions = _manager.OrderEditionsByVolume(
+                editionResultDtos.Where(edition => edition.BookId == bookDto.Id)
+            );
 
             return new SearchResultDTO(bookDto)
             {
