@@ -15,6 +15,18 @@ builder.Services.AddSwaggerGen();
 // Add the connection to the database
 builder.Services.AddDbContext<MediathequeDbContext>();
 
+// Configures CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .WithHeaders("Content-type")
+                  .WithMethods("GET", "POST");
+        });
+});
+
 // Retrieves the configuration settings entered into the appsettings.json file
 builder.Services.Configure<MySettingsModel>(builder.Configuration.GetSection("MySettings"));
 
@@ -34,6 +46,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
