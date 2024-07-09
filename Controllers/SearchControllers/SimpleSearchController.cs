@@ -58,6 +58,7 @@ public class SimpleSearchController : ControllerBase
 
         criterion = criterion.ToLower();
 
+        // Criterion is searched into the title, the author name, the ISBN and the series' name
         var books = _context.Books
                             .Where(book => (
                                                 book.Title != null
@@ -90,11 +91,10 @@ public class SimpleSearchController : ControllerBase
 
         return bookResultDtos.Select(dto =>
         {
-            var resultDto = new SearchResultDTO(dto);
-
-            resultDto.Editions = editionsDtos.Where(edition => edition.BookId == dto.Id)
-                                             .ToList();
-            return resultDto;
+            return new SearchResultDTO(dto)
+            {
+                Editions = editionsDtos.Where(edition => edition.BookId == dto.Id).ToList()
+            };
         });
     }
 }
