@@ -11,7 +11,7 @@ namespace mediatheque_back_csharp.Controllers.SearchControllers;
 /// which accepts a unique criterion (Author name, Book title, ISBN or series name)
 /// </summary>
 [ApiController]
-[Route("/api/search/simple")]
+[Route("/search/simple")]
 public class SimpleSearchController : ControllerBase
 {
     /// <summary>
