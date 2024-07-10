@@ -2,6 +2,10 @@ using mediatheque_back_csharp;
 using mediatheque_back_csharp.AutoMapper;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Managers.SearchManagers;
+using mediatheque_back_csharp.Middlewares;
+using Microsoft.OpenApi.Models;
+
+var routePrefix = "/api";
 
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +19,15 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Médiathèque", Version = "v1" });
+    c.AddServer(new OpenApiServer
+    {
+        Url = "/api",
+        Description = "Base path for the API"
+    });
+});
 
 // Add the connection to the database
 builder.Services.AddDbContext<MediathequeDbContext>();
@@ -61,6 +73,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors();
+
+// Custom middleware to enforce route prefix
+app.UseMiddleware<GlobalRoutePrefixMiddleware>(routePrefix);
+app.UsePathBase(new PathString(routePrefix));
+app.UseRouting();
 
 app.UseAuthorization();
 
