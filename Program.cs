@@ -3,7 +3,6 @@ using mediatheque_back_csharp.AutoMapper;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
-using Microsoft.OpenApi.Models;
 
 var routePrefix = "/api";
 
@@ -19,38 +18,13 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Médiathèque", Version = "v1" });
-    c.AddServer(new OpenApiServer
-    {
-        Url = routePrefix,
-        Description = "Base path for the API"
-    });
-});
+builder.Services.AddSwaggerGen(ServicesOptions.GetSwaggerGenOptions(routePrefix));
 
 // Add the connection to the database
 builder.Services.AddDbContext<MediathequeDbContext>();
 
 // Configures CORS policy
-var frontDomainsStr = myAppSettings?.FrontEndDomains;
-string[] frontDomains = null;
-
-if (frontDomainsStr != null)
-{
-    frontDomains = frontDomainsStr.Split(';');
-}
-
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins(frontDomains ?? ["http://localhost:5173"])
-                  .WithHeaders("Content-type")
-                  .WithMethods("GET", "POST");
-        });
-});
+builder.Services.AddCors(ServicesOptions.GetCorsOptions(myAppSettings));
 
 // Configures AutoMapper used for converting my POCOs into DTOs
 builder.Services.AddAutoMapper(cfg =>
