@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace mediatheque_back_csharp.Controllers;
 
@@ -52,15 +54,23 @@ public class LoadController : ControllerBase
     [HttpGet]
     public async Task<LoadDTO> Get()
     {
-        var genres = _context.Genres.OrderBy(g => g.Name);
-        var publishers = _context.Publishers.OrderBy(p => p.PublishingHouse);
-        var formats = _context.Formats.OrderBy(f => f.Name);
+        var genres = await _context.Genres.OrderBy(g => g.Name)
+                                          .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
+                                          .ToListAsync();
+
+        var publishers = await _context.Publishers.OrderBy(p => p.PublishingHouse)
+                                                  .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
+                                                  .ToListAsync();
+
+        var formats = await _context.Formats.OrderBy(f => f.Name)
+                                            .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
+                                            .ToListAsync();
 
         return new LoadDTO
         {
-            Genres = _mapper.Map<List<NamedDTO>>(genres),
-            Publishers = _mapper.Map<List<NamedDTO>>(publishers),
-            Formats = _mapper.Map<List<NamedDTO>>(formats)
+            Genres = genres,
+            Publishers = publishers,
+            Formats = formats
         };
     }
 }

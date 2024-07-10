@@ -14,7 +14,7 @@ public class SimpleSearchManager
     /// <summary>
     /// Transforms the POCOs into DTOs
     /// </summary>
-    protected readonly IMapper _mapper;
+    public readonly IMapper Mapper;
 
     /// <summary>
     /// Constructor of the SimpleSearchManager class
@@ -22,7 +22,7 @@ public class SimpleSearchManager
     /// <param name="mapper">Given AutoMapper</param>
     public SimpleSearchManager(IMapper mapper)
     {
-        _mapper = mapper;
+        Mapper = mapper;
     }
 
     /// <summary>
@@ -107,10 +107,10 @@ public class SimpleSearchManager
 
         // Maps the books and the editions separately
         // Orders the book by title's ascending alphabetical order
-        var bookResultDtos = _mapper.Map<List<Book>, List<BookResultDTO>>(books)
+        var bookResultDtos = Mapper.Map<List<Book>, List<BookResultDTO>>(books)
                                     .OrderBy(book => book.Title);
 
-        var editionResultDtos = _mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(
+        var editionResultDtos = Mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(
             books.SelectMany(res => res.Editions)
         );
 
