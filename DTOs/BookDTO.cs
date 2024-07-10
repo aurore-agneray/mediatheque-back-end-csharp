@@ -30,5 +30,5 @@ public class BookDTO : IIdentified
     /// <summary>
     /// Genre DTO
     /// </summary>
-    public GenreDTO? Genre { get; set; }
+    public NamedDTO? Genre { get; set; }
 }

@@ -18,10 +18,13 @@ public class AutoMapperProfile : Profile
         CreateMap<Author, AuthorDTO>();
         CreateMap<Book, BookDTO>();
         CreateMap<Edition, EditionDTO>();
-        CreateMap<Format, FormatDTO>();
-        CreateMap<Genre, GenreDTO>();
         CreateMap<Publisher, PublisherDTO>();
         CreateMap<Series, SeriesDTO>();
+
+        CreateMap<Format, NamedDTO>();
+        CreateMap<Genre, NamedDTO>();
+        CreateMap<Publisher, NamedDTO>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PublishingHouse));
 
         CreateMap<Book, BookResultDTO>();
         CreateMap<Author, AuthorResultDTO>();

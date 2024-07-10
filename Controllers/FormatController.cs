@@ -11,7 +11,7 @@ namespace mediatheque_back_csharp.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class FormatController : IIdentifiedController<Format, FormatDTO>
+    public class FormatController : IIdentifiedController<Format, NamedDTO>
     {
         /// <summary>
         /// Constructor of the FormatController class

@@ -7,7 +7,7 @@ namespace mediatheque_back_csharp.Pocos;
 /// POCO for the Series
 /// </summary>
 [Table("Series")]
-public class Series : IIdentified
+public class Series : INamed
 {
     /// <summary>
     /// ID (primary key)

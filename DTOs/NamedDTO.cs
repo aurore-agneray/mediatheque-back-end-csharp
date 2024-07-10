@@ -3,12 +3,12 @@
 namespace mediatheque_back_csharp.Dtos;
 
 /// <summary>
-/// DTO for the Genres
+/// Object retrieved for the INamed entities while loading the app
 /// </summary>
-public class GenreDTO : IIdentified
+public class NamedDTO : INamed
 {
     /// <summary>
-    /// ID (primary key)
+    /// ID
     /// </summary>
     public int Id { get; set; }
 
