@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace mediatheque_back_csharp;
+namespace mediatheque_back_csharp.Configuration;
 
 /// <summary>
 /// Defines the options for the services declared into the Program.cs file

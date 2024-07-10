@@ -1,5 +1,5 @@
-using mediatheque_back_csharp;
 using mediatheque_back_csharp.AutoMapper;
+using mediatheque_back_csharp.Configuration;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
