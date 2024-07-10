@@ -1,6 +1,7 @@
 ﻿using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Managers.SearchManagers;
+using mediatheque_back_csharp.Pocos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,26 +53,78 @@ public class SimpleSearchController : ControllerBase
     /// <param name="criterion">Words representing the search criterion</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
     [HttpPost]
-    public async Task<IEnumerable<SearchResultDTO>> Post(SimpleSearchArgsDTO argsDto)
+    public async Task<List<SearchResultDTO>> Post(SimpleSearchArgsDTO argsDto)
     {
         if (string.IsNullOrEmpty(argsDto?.Criterion))
         {
             return new List<SearchResultDTO>();
         }
 
+        var criterion = argsDto?.Criterion.ToLower();
+
         // Criterion is searched into the title, the author name, the ISBN and the series' name
-        var books = _context.Books.Where(_manager.GetSearchConditions(argsDto.Criterion));
+        /*Func<Book, IQueryable<IGrouping<string, Edition>>>*/
+        IQueryable<IGrouping<string, Edition>> editionsGroupingRequest(int bookId) {
+            return from edition in _context.Editions
+                   join book in _context.Books on edition.BookId equals bookId
+                   join series in _context.Series on edition.SeriesId equals series.Id
+                   group edition by series.Name into groupedBySeries
+                   select groupedBySeries;
+        };
 
-        var results = await books.Include(b => b.Author)
-                                 .Include(b => b.Genre)
-                                 .Include(b => b.Editions)
-                                 .ThenInclude(ed => ed.Format)
-                                 .Include(b => b.Editions)
-                                 .ThenInclude(ed => ed.Series)
-                                 .Include(b => b.Editions)
-                                 .ThenInclude(ed => ed.Publisher)
-                                 .ToListAsync();
+        var resultDtos = await (from boo in _context.Books
+                          join author in _context.Authors on boo.AuthorId equals author.Id
+                          join ed in _context.Editions on boo.Id equals ed.BookId
+                          join series in _context.Series on ed.SeriesId equals series.Id into seriesJoin
+                          from series in seriesJoin.DefaultIfEmpty() // Retrieves editions even if they have no series
+                          where boo.Title == "Stupeur et tremblements"
+                              || author.CompleteName == "Hondermarck Olivier"
+                              || ed.Isbn == "9782811620943"
+                              || series.Name == "Le Monde de Narnia"
+                          select new SearchResultDTO(_manager.Mapper.Map<BookResultDTO>(boo)))
+                        //  .Include(b => b.Author)
+                        //.Include(b => b.Genre)
+                        //.Include(b => b.Editions)
+                        //.ThenInclude(ed => ed.Format)
+                        //.Include(b => b.Editions)
+                        //.ThenInclude(ed => ed.Series)
+                        //.Include(b => b.Editions)
+                        //.ThenInclude(ed => ed.Publisher)
+                          .ToListAsync();
 
-        return _manager.GetSimpleSearchResults(results);
+        foreach (var dto in resultDtos)
+        {
+            var editions = await editionsGroupingRequest(dto.BookId).ToListAsync();
+            var dico = new Dictionary<string, List<EditionResultDTO>>();
+
+            foreach (var group in editions)
+            {
+                dico.Add(group.Key, _manager.Mapper.Map<List<EditionResultDTO>>(group.ToList()));
+            }
+
+            dto.Editions = dico;
+        }
+
+        //var results = await books.Select(book =>
+        //{
+        //    return new SearchResultDTO(book, _manager.Mapper)
+        //    {
+
+        //    };
+        //});
+
+        //Include(b => b.Author)
+        //                         .Include(b => b.Genre)
+        //                         .Include(b => b.Editions)
+        //                         .ThenInclude(ed => ed.Format)
+        //                         .Include(b => b.Editions)
+        //                         .ThenInclude(ed => ed.Series)
+        //                         .Include(b => b.Editions)
+        //                         .ThenInclude(ed => ed.Publisher)
+        //                         .ToListAsync();
+
+        //return _manager.GetSimpleSearchResults(results);
+
+        return resultDtos;
     }
 }
