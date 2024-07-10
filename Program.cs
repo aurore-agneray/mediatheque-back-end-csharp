@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Médiathèque", Version = "v1" });
     c.AddServer(new OpenApiServer
     {
-        Url = "/api",
+        Url = routePrefix,
         Description = "Base path for the API"
     });
 });
