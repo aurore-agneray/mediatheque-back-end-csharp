@@ -11,7 +11,7 @@ namespace mediatheque_back_csharp.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class GenreController : IIdentifiedController<Genre, GenreDTO>
+    public class GenreController : IIdentifiedController<Genre, NamedDTO>
     {
         /// <summary>
         /// Constructor of the GenreController class

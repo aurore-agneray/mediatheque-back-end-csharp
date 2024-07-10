@@ -65,7 +65,7 @@ public class EditionDTO : IIdentified
     /// <summary>
     /// Format DTO
     /// </summary>
-    public FormatDTO? Format { get; set; }
+    public NamedDTO? Format { get; set; }
 
     /// <summary>
     /// Publisher DTO

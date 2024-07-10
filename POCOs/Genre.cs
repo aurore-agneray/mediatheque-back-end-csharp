@@ -7,7 +7,7 @@ namespace mediatheque_back_csharp.Pocos;
 /// POCO for the Genres
 /// </summary>
 [Table("Genre")]
-public class Genre : IIdentified
+public class Genre : INamed
 {
     /// <summary>
     /// ID (primary key)

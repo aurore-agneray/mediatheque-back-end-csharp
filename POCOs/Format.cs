@@ -7,7 +7,7 @@ namespace mediatheque_back_csharp.Pocos;
 /// POCO for the Formats
 /// </summary>
 [Table("Format")]
-public class Format : IIdentified
+public class Format : INamed
 {
     /// <summary>
     /// ID (primary key)

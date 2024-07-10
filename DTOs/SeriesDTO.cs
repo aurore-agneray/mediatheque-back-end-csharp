@@ -5,7 +5,7 @@ namespace mediatheque_back_csharp.Dtos;
 /// <summary>
 /// DTO for the Series
 /// </summary>
-public class SeriesDTO : IIdentified
+public class SeriesDTO : INamed
 {
     /// <summary>
     /// ID (primary key)
