@@ -76,6 +76,8 @@ public class SimpleSearchManager
             return book => true;
         }
 
+        criterion = criterion.ToLower();
+
         return book => (
             book.Title != null
             && book.Title.ToLower().Contains(criterion)
@@ -87,7 +89,7 @@ public class SimpleSearchManager
         )
         || (
             book.Editions != null
-            && book.Editions.Any(edition => edition.Isbn == criterion
+            && book.Editions.Any(edition => edition.Isbn.Replace("-", string.Empty) == criterion.Replace("-", string.Empty)
                 || (edition.Series != null && edition.Series.Name != null && edition.Series.Name.ToLower().Contains(criterion)))
         );
     }

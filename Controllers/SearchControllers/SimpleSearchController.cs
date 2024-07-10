@@ -59,8 +59,6 @@ public class SimpleSearchController : ControllerBase
             return new List<SearchResultDTO>();
         }
 
-        argsDto.Criterion = argsDto.Criterion.ToLower();
-
         // Criterion is searched into the title, the author name, the ISBN and the series' name
         var books = _context.Books.Where(_manager.GetSearchConditions(argsDto.Criterion));
 
