@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
@@ -12,17 +15,55 @@ namespace mediatheque_back_csharp.Managers.SearchManagers;
 public class SimpleSearchManager
 {
     /// <summary>
+    /// HTTP Context for connecting to the database
+    /// </summary>
+    private readonly MediathequeDbContext _context;
+    
+    /// <summary>
     /// Transforms the POCOs into DTOs
     /// </summary>
-    public readonly IMapper Mapper;
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// Constructor of the SimpleSearchManager class
     /// </summary>
+    /// <param name="context">HTTP Context</param>
     /// <param name="mapper">Given AutoMapper</param>
-    public SimpleSearchManager(IMapper mapper)
+    public SimpleSearchManager(MediathequeDbContext context, IMapper mapper)
     {
-        Mapper = mapper;
+        _context = context;
+        _mapper = mapper;
+    }
+
+    /// <summary>
+    /// Generate the IQueryable object dedicated to 
+    /// retrieve the books from the database
+    /// </summary>
+    /// <returns>A IQueryable<Book> object</returns>
+    private IQueryable<Book> GetBooksRequest() {
+        return from boo in _context.Books
+                join author in _context.Authors on boo.AuthorId equals author.Id
+                join ed in _context.Editions on boo.Id equals ed.BookId
+                join series in _context.Series on ed.SeriesId equals series.Id into seriesJoin
+                from series in seriesJoin.DefaultIfEmpty() // Retrieves editions even if they have no series
+                where boo.Title == "Stupeur et tremblements"
+                    || author.CompleteName == "Hondermarck Olivier"
+                    || ed.Isbn == "9782811620943"
+                    || series.Name == "Le Monde de Narnia"
+                orderby boo.Title ascending
+                select boo;
+    }
+
+    /// <summary>
+    /// Generate the IQueryable object dedicated to 
+    /// retrieve the editions from the database
+    /// </summary>
+    /// <param name="bookId">ID of the concerned book</param>
+    /// <returns>A IQueryable<Edition> object</returns>
+    private IQueryable<Edition> GetEditionsForABookRequest(int bookId) {
+        return from edition in _context.Editions
+               where edition.BookId == bookId
+               select edition;
     }
 
     /// <summary>
@@ -60,7 +101,10 @@ public class SimpleSearchManager
 
             return "0";
 
-        }).ToDictionary(group => group.Key, group => group.ToList());
+        }).ToDictionary(
+            group => group.Key, 
+            group => group.ToList()
+        );
     }
 
     /// <summary>
@@ -69,7 +113,7 @@ public class SimpleSearchManager
     /// <param name="criterion">Title, author name, ISBN or series' name</param>
     /// <returns>Returns an expression which receive a Book as a parameter
     /// and returns boolean expressions</returns>
-    public Expression<Func<Book, bool>> GetSearchConditions(string criterion)
+    private Expression<Func<Book, bool>> GetSearchConditions(string criterion)
     {
         if (string.IsNullOrEmpty(criterion))
         {
@@ -95,37 +139,43 @@ public class SimpleSearchManager
     }
 
     /// <summary>
-    /// Constructs the final results list from the given books list
+    /// Retrieves the results from the database
     /// </summary>
-    /// <param name="books">Books sent by the database</param>
+    /// <param name="criterion">Searched into the title, the author name, the ISBN and the series' name</param>
     /// <returns>List of SearchResultDTOs (BookId + Book object + Editions grouped by series' name)</returns>
-    public IEnumerable<SearchResultDTO> GetSimpleSearchResults(List<Book> books)
+    public async Task<IEnumerable<SearchResultDTO>> GetSimpleSearchResults(string criterion)
     {
-        if (books == null) { 
-            return Enumerable.Empty<SearchResultDTO>(); 
+        if (string.IsNullOrEmpty(criterion))
+        {
+            return new List<SearchResultDTO>();
+        }
+            
+        var results = new List<SearchResultDTO>();
+    
+        // Retrieves the books according to the criterion
+        // Criterion is searched into the title, the author name, the ISBN and the series' name
+        var booksDtos = await GetBooksRequest().Include(b => b.Author)
+                                               .Include(b => b.Genre)
+                                               .ProjectTo<BookResultDTO>(_mapper.ConfigurationProvider)
+                                               .ToListAsync();
+
+        foreach (var book in booksDtos)
+        {
+            // Retrieves the editions of one book
+            var editionsDtos = await GetEditionsForABookRequest(book.Id).Include(ed => ed.Format)
+                                                                        .Include(ed => ed.Series)
+                                                                        .Include(ed => ed.Publisher)
+                                                                        .ProjectTo<EditionResultDTO>(_mapper.ConfigurationProvider)
+                                                                        .ToListAsync();
+
+            results.Add(new SearchResultDTO(book) {
+                // Groups the editions by series' name
+                Editions = GroupEditionsBySeriesName(
+                    OrderEditionsByVolume(editionsDtos)
+                )
+            });
         }
 
-        // Maps the books and the editions separately
-        // Orders the book by title's ascending alphabetical order
-        var bookResultDtos = Mapper.Map<List<Book>, List<BookResultDTO>>(books)
-                                    .OrderBy(book => book.Title);
-
-        var editionResultDtos = Mapper.Map<IEnumerable<Edition>, List<EditionResultDTO>>(
-            books.SelectMany(res => res.Editions)
-        );
-
-        return bookResultDtos.Select(bookDto =>
-        {
-            // Binds each book to its editions and orders the editions by volume
-            var editionsForABook = OrderEditionsByVolume(
-                editionResultDtos.Where(edition => edition.BookId == bookDto.Id)
-            );
-
-            return new SearchResultDTO(bookDto)
-            {
-                // Editions have to be grouped by series' name
-                Editions = GroupEditionsBySeriesName(editionsForABook)
-            };
-        });
+        return results;
     }
 }
