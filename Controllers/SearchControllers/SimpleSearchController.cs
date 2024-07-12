@@ -1,7 +1,7 @@
-﻿using mediatheque_back_csharp.Database;
+﻿using AutoMapper.QueryableExtensions;
+using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Managers.SearchManagers;
-using mediatheque_back_csharp.Pocos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,76 +55,71 @@ public class SimpleSearchController : ControllerBase
     [HttpPost]
     public async Task<List<SearchResultDTO>> Post(SimpleSearchArgsDTO argsDto)
     {
-        if (string.IsNullOrEmpty(argsDto?.Criterion))
-        {
-            return new List<SearchResultDTO>();
-        }
+        return await Task.Run(async() => {
 
-        var criterion = argsDto?.Criterion.ToLower();
-
-        // Criterion is searched into the title, the author name, the ISBN and the series' name
-        /*Func<Book, IQueryable<IGrouping<string, Edition>>>*/
-        IQueryable<IGrouping<string, Edition>> editionsGroupingRequest(int bookId) {
-            return from edition in _context.Editions
-                   join book in _context.Books on edition.BookId equals bookId
-                   join series in _context.Series on edition.SeriesId equals series.Id
-                   group edition by series.Name into groupedBySeries
-                   select groupedBySeries;
-        };
-
-        var resultDtos = await (from boo in _context.Books
-                          join author in _context.Authors on boo.AuthorId equals author.Id
-                          join ed in _context.Editions on boo.Id equals ed.BookId
-                          join series in _context.Series on ed.SeriesId equals series.Id into seriesJoin
-                          from series in seriesJoin.DefaultIfEmpty() // Retrieves editions even if they have no series
-                          where boo.Title == "Stupeur et tremblements"
-                              || author.CompleteName == "Hondermarck Olivier"
-                              || ed.Isbn == "9782811620943"
-                              || series.Name == "Le Monde de Narnia"
-                          select new SearchResultDTO(_manager.Mapper.Map<BookResultDTO>(boo)))
-                        //  .Include(b => b.Author)
-                        //.Include(b => b.Genre)
-                        //.Include(b => b.Editions)
-                        //.ThenInclude(ed => ed.Format)
-                        //.Include(b => b.Editions)
-                        //.ThenInclude(ed => ed.Series)
-                        //.Include(b => b.Editions)
-                        //.ThenInclude(ed => ed.Publisher)
-                          .ToListAsync();
-
-        foreach (var dto in resultDtos)
-        {
-            var editions = await editionsGroupingRequest(dto.BookId).ToListAsync();
-            var dico = new Dictionary<string, List<EditionResultDTO>>();
-
-            foreach (var group in editions)
+            if (string.IsNullOrEmpty(argsDto?.Criterion))
             {
-                dico.Add(group.Key, _manager.Mapper.Map<List<EditionResultDTO>>(group.ToList()));
+                return new List<SearchResultDTO>();
             }
 
-            dto.Editions = dico;
-        }
+            var results = new List<SearchResultDTO>();
+            var criterion = argsDto?.Criterion.ToLower();
 
-        //var results = await books.Select(book =>
-        //{
-        //    return new SearchResultDTO(book, _manager.Mapper)
-        //    {
+            // Criterion is searched into the title, the author name, the ISBN and the series' name
+            var getBooksFunc = () => {
+                return from boo in _context.Books
+                       join author in _context.Authors on boo.AuthorId equals author.Id
+                       join ed in _context.Editions on boo.Id equals ed.BookId
+                       join series in _context.Series on ed.SeriesId equals series.Id into seriesJoin
+                       from series in seriesJoin.DefaultIfEmpty() // Retrieves editions even if they have no series
+                       where boo.Title == "Stupeur et tremblements"
+                           || author.CompleteName == "Hondermarck Olivier"
+                           || ed.Isbn == "9782811620943"
+                           || series.Name == "Le Monde de Narnia"
+                       select boo;
+            };
 
-        //    };
-        //});
+            var getEditionsForABookFunc = (int bookId) => {
+                return from edition in _context.Editions
+                       where edition.BookId == bookId
+                       select edition;
+            };
 
-        //Include(b => b.Author)
-        //                         .Include(b => b.Genre)
-        //                         .Include(b => b.Editions)
-        //                         .ThenInclude(ed => ed.Format)
-        //                         .Include(b => b.Editions)
-        //                         .ThenInclude(ed => ed.Series)
-        //                         .Include(b => b.Editions)
-        //                         .ThenInclude(ed => ed.Publisher)
-        //                         .ToListAsync();
+            // Retrieves the books according to the criterion
+            var booksDtos = await getBooksFunc().Include(b => b.Author)
+                                                .Include(b => b.Genre)
+                                                .ProjectTo<BookResultDTO>(_manager.Mapper.ConfigurationProvider)
+                                                .ToListAsync();
 
-        //return _manager.GetSimpleSearchResults(results);
+            foreach (var book in booksDtos)
+            {
+                // Retrieves the editions of one book
+                var editionsDtos = await getEditionsForABookFunc(book.Id).Include(ed => ed.Format)
+                                                                         .Include(ed => ed.Series)
+                                                                         .Include(ed => ed.Publisher)
+                                                                         .ProjectTo<EditionResultDTO>(_manager.Mapper.ConfigurationProvider)
+                                                                         .ToListAsync();
 
-        return resultDtos;
+                results.Add(new SearchResultDTO(book) {
+
+                    // Groups the editions by series' name
+                    Editions = editionsDtos.GroupBy(ed =>
+                    {
+                        if (ed?.Series?.SeriesName != null)
+                        {
+                            return ed.Series.SeriesName;
+                        }
+
+                        return "0";
+
+                    }).ToDictionary(
+                        group => group.Key, 
+                        group => group.ToList()
+                    )
+                });
+            }
+
+            return results;
+        });
     }
 }

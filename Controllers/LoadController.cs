@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Dtos;
+using mediatheque_back_csharp.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,23 +55,21 @@ public class LoadController : ControllerBase
     [HttpGet]
     public async Task<LoadDTO> Get()
     {
-        var genres = await _context.Genres.OrderBy(g => g.Name)
-                                          .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
-                                          .ToListAsync();
+        return await Task.Run(async() => {    
 
-        var publishers = await _context.Publishers.OrderBy(p => p.PublishingHouse)
-                                                  .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
-                                                  .ToListAsync();
+            Task<List<NamedDTO>> ProjectDbINamedList(IOrderedQueryable<INamed> list) {
+                return list.ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
+                           .ToListAsync();
+            }
 
-        var formats = await _context.Formats.OrderBy(f => f.Name)
-                                            .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
-                                            .ToListAsync();
-
-        return new LoadDTO
-        {
-            Genres = genres,
-            Publishers = publishers,
-            Formats = formats
-        };
+            return new LoadDTO
+            {
+                Genres = await ProjectDbINamedList(_context.Genres.OrderBy(g => g.Name)),
+                Publishers = await _context.Publishers.OrderBy(p => p.PublishingHouse)
+                                                      .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
+                                                      .ToListAsync(),
+                Formats = await ProjectDbINamedList(_context.Formats.OrderBy(f => f.Name))
+            };
+        });
     }
 }
