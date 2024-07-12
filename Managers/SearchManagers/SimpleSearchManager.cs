@@ -5,7 +5,7 @@ using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using static System.Linq.Queryable;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
@@ -37,21 +37,27 @@ public class SimpleSearchManager
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 
-    /// retrieve the books from the database
+    /// retrieve the books from the database,
+    /// ordered by the title
     /// </summary>
+    /// <param name="criterion">Title, author name, ISBN or series' name</param>
     /// <returns>A IQueryable<Book> object</returns>
-    private IQueryable<Book> GetBooksRequest() {
-        return from boo in _context.Books
-                join author in _context.Authors on boo.AuthorId equals author.Id
-                join ed in _context.Editions on boo.Id equals ed.BookId
-                join series in _context.Series on ed.SeriesId equals series.Id into seriesJoin
-                from series in seriesJoin.DefaultIfEmpty() // Retrieves editions even if they have no series
-                where boo.Title == "Stupeur et tremblements"
-                    || author.CompleteName == "Hondermarck Olivier"
-                    || ed.Isbn == "9782811620943"
-                    || series.Name == "Le Monde de Narnia"
-                orderby boo.Title ascending
-                select boo;
+    private IQueryable<Book> GetOrderedBooksRequest(string criterion) {
+
+        return (
+            from boo in _context.Books
+            join author in _context.Authors on boo.AuthorId equals author.Id
+            join ed in _context.Editions on boo.Id equals ed.BookId
+            join series in _context.Series on ed.SeriesId equals series.Id into seriesJoin
+            from series in seriesJoin.DefaultIfEmpty() // Retrieves editions even if they have no series
+            where (boo.Title != null && boo.Title.Contains(criterion))
+                || (author.CompleteName != null && author.CompleteName.Contains(criterion))
+                || (ed.Isbn != null && ed.Isbn.Contains(criterion))
+                || (series.Name != null && series.Name.Contains(criterion))
+            select boo
+        )
+        .Distinct()
+        .OrderBy(b => b.Title);
     }
 
     /// <summary>
@@ -108,37 +114,6 @@ public class SimpleSearchManager
     }
 
     /// <summary>
-    /// Returns the expression used for searching the books into the DbContext.
-    /// </summary>
-    /// <param name="criterion">Title, author name, ISBN or series' name</param>
-    /// <returns>Returns an expression which receive a Book as a parameter
-    /// and returns boolean expressions</returns>
-    private Expression<Func<Book, bool>> GetSearchConditions(string criterion)
-    {
-        if (string.IsNullOrEmpty(criterion))
-        {
-            return book => true;
-        }
-
-        criterion = criterion.ToLower();
-
-        return book => (
-            book.Title != null
-            && book.Title.ToLower().Contains(criterion)
-        )
-        || (
-            book.Author != null
-            && book.Author.CompleteName != null
-            && book.Author.CompleteName.ToLower().Contains(criterion)
-        )
-        || (
-            book.Editions != null
-            && book.Editions.Any(edition => edition.Isbn.Replace("-", string.Empty) == criterion.Replace("-", string.Empty)
-                || (edition.Series != null && edition.Series.Name != null && edition.Series.Name.ToLower().Contains(criterion)))
-        );
-    }
-
-    /// <summary>
     /// Retrieves the results from the database
     /// </summary>
     /// <param name="criterion">Searched into the title, the author name, the ISBN and the series' name</param>
@@ -154,10 +129,10 @@ public class SimpleSearchManager
     
         // Retrieves the books according to the criterion
         // Criterion is searched into the title, the author name, the ISBN and the series' name
-        var booksDtos = await GetBooksRequest().Include(b => b.Author)
-                                               .Include(b => b.Genre)
-                                               .ProjectTo<BookResultDTO>(_mapper.ConfigurationProvider)
-                                               .ToListAsync();
+        var booksDtos = await GetOrderedBooksRequest(criterion).Include(b => b.Author)
+                                                        .Include(b => b.Genre)
+                                                        .ProjectTo<BookResultDTO>(_mapper.ConfigurationProvider)
+                                                        .ToListAsync();
 
         foreach (var book in booksDtos)
         {
