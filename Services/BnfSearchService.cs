@@ -72,9 +72,18 @@ public class BnfSearchService : ISearchService
 
         using (var reader = XmlReader.Create(url, readerSettings)) {
             
-            var content = await XDocument.LoadAsync(reader, LoadOptions.None, CancellationToken.None);
-            var descendants = content.Descendants();
-            var test = descendants.Nodes();
+            var fileRoot = await XDocument.LoadAsync(reader, LoadOptions.None, CancellationToken.None);
+            var mainNodes = fileRoot.Descendants();
+            var recordsNumberNode = mainNodes?.FirstOrDefault(no => no.Name.LocalName == "searchRetrieveResponse")
+                                             ?.Descendants()
+                                             ?.FirstOrDefault(no => no.Name.LocalName == "numberOfRecords");
+            var resultsNumberStr = string.Empty;
+            var resultsNumber = -1;
+
+            if ((resultsNumberStr = recordsNumberNode?.FirstNode?.ToString()) == null
+                || (resultsNumber = int.Parse(resultsNumberStr)) < 0) {
+                return new List<SearchResultDTO>();
+            }
         }
 
         return new List<SearchResultDTO>();
