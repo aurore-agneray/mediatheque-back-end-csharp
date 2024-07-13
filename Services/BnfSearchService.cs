@@ -74,14 +74,24 @@ public class BnfSearchService : ISearchService
             
             var fileRoot = await XDocument.LoadAsync(reader, LoadOptions.None, CancellationToken.None);
             var mainNodes = fileRoot.Descendants();
-            var recordsNumberNode = mainNodes?.FirstOrDefault(no => no.Name.LocalName == "searchRetrieveResponse")
-                                             ?.Descendants()
-                                             ?.FirstOrDefault(no => no.Name.LocalName == "numberOfRecords");
+            var recordsNumberNode = mainNodes?.FirstOrDefault(no => no.Name.LocalName == "numberOfRecords");
             var resultsNumberStr = string.Empty;
             var resultsNumber = -1;
 
             if ((resultsNumberStr = recordsNumberNode?.FirstNode?.ToString()) == null
-                || (resultsNumber = int.Parse(resultsNumberStr)) < 0) {
+                || (resultsNumber = int.Parse(resultsNumberStr)) <= 0) {
+                return new List<SearchResultDTO>();
+            }
+
+            /* Gets the "mxc:record" nodes
+            ** The namespace for "mxc" is "info:lc/xmlns/marcxchange-v2"
+            ** and the one for "srw" is "http://www.loc.gov/zing/srw/"
+            */ 
+            var resultsNodes = mainNodes?.FirstOrDefault(no => no.Name.LocalName == "records")
+                                        ?.Descendants()
+                                        ?.Where(node => node.Name.NamespaceName == "info:lc/xmlns/marcxchange-v2");
+
+            if (resultsNodes == null || resultsNodes.Count() <= 0) {
                 return new List<SearchResultDTO>();
             }
         }
