@@ -19,11 +19,6 @@ public class BnfSearchService : ISearchService
         IsAdvanced = isAdvanced;
     }
 
-     /// <summary>
-    /// Indicates if it is an advanced or a simple search
-    /// </summary>
-    public bool IsAdvanced { get; set; }
-
     /// <summary>
     /// Constructs the complete string with the conditions to
     /// send to the BnF API
@@ -43,12 +38,13 @@ public class BnfSearchService : ISearchService
 
         criterion = "\"" + criterion.Replace(" ", "+") + "\"";
 
-        return string.Concat(
-            $"bib.author all {criterion} or bib.title all {criterion} ",
-            $"or bib.isbn all {criterion} or bib.serialtitle all {criterion} ",
-            $"&recordSchema=unimarcxchange&maximumRecords={noticesQty}&startRecord=1"
-        );
+        return BnfConsts.SIMPLE_SEARCH_PARAMETERED_CONDITIONS(criterion, noticesQty);
     }
+
+     /// <summary>
+    /// Indicates if it is an advanced or a simple search
+    /// </summary>
+    public bool IsAdvanced { get; set; }
 
     /// <summary>
     /// Retrieves and returns the results of the wanted search
@@ -62,12 +58,12 @@ public class BnfSearchService : ISearchService
     public async Task<IEnumerable<SearchResultDTO>> GetResults(object criterion) {
 
         if (criterion.GetType() != typeof(string)) {
-            throw new ArgumentException("The criterion should be a string but it is not the case !");
+            throw new ArgumentException(TextConsts.BNF_SEARCH_SERVICE_ERROR_CRITERION_TYPE);
         }
 
         var stringCriterion = (string)criterion;
 
-        var url = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query=";
+        var url = BnfConsts.BNF_API_URL_BASE;
         url += GetSimpleSearchConditions(stringCriterion, 20);
 
         var readerSettings = new XmlReaderSettings() {
