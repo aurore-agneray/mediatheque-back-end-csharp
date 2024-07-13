@@ -1,5 +1,6 @@
 ﻿using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Managers.SearchManagers;
+using mediatheque_back_csharp.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers.SearchControllers;
@@ -55,6 +56,9 @@ public class SimpleSearchController : ControllerBase
 
             // Criterion is searched into the title, the author name, the ISBN and the series' name
             var results = await _manager.GetSimpleSearchResults(criterion);
+
+            var bnfService = new BnfSearchService(false);
+            var bnfResults = await bnfService.GetResults("test");
 
             return results.ToList();
         });
