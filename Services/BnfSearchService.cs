@@ -25,6 +25,32 @@ public class BnfSearchService : ISearchService
     public bool IsAdvanced { get; set; }
 
     /// <summary>
+    /// Constructs the complete string with the conditions to
+    /// send to the BnF API
+    /// </summary>
+    /// <param name="criterion">Criterion entered by the user to launch the searching process</param>
+    /// <param name="noticesQty">The quantity of notices returned by the API</param>
+    /// <returns>Returns the conditions part of the URL for the request</returns>
+    private string GetSimpleSearchConditions(string criterion, int noticesQty) {
+
+        if (string.IsNullOrEmpty(criterion)) {
+            return string.Empty;
+        }
+
+        if (noticesQty < 20) {
+            noticesQty = 20;
+        }
+
+        criterion = "\"" + criterion.Replace(" ", "+") + "\"";
+
+        return string.Concat(
+            $"bib.author all {criterion} or bib.title all {criterion} ",
+            $"or bib.isbn all {criterion} or bib.serialtitle all {criterion} ",
+            $"&recordSchema=unimarcxchange&maximumRecords={noticesQty}&startRecord=1"
+        );
+    }
+
+    /// <summary>
     /// Retrieves and returns the results of the wanted search
     /// </summary>
     /// <param name="criterion">
@@ -35,7 +61,14 @@ public class BnfSearchService : ISearchService
     /// <returns>A list of SearchResultDTOs</returns>
     public async Task<IEnumerable<SearchResultDTO>> GetResults(object criterion) {
 
-        var url = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query=bib.author%20all%20%22narnia%22%20and%20bib.title%20all%20%22narnia%22&recordSchema=unimarcxchange&maximumRecords=20&startRecord=1";
+        if (criterion.GetType() != typeof(string)) {
+            throw new ArgumentException("The criterion should be a string but it is not the case !");
+        }
+
+        var stringCriterion = (string)criterion;
+
+        var url = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query=";
+        url += GetSimpleSearchConditions(stringCriterion, 20);
 
         var readerSettings = new XmlReaderSettings() {
             Async = true
@@ -44,6 +77,8 @@ public class BnfSearchService : ISearchService
         using (var reader = XmlReader.Create(url, readerSettings)) {
             
             var content = await XDocument.LoadAsync(reader, LoadOptions.None, CancellationToken.None);
+            var descendants = content.Descendants();
+            var test = descendants.Nodes();
         }
 
         return new List<SearchResultDTO>();

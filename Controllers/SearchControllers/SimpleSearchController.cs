@@ -58,7 +58,7 @@ public class SimpleSearchController : ControllerBase
             var results = await _manager.GetSimpleSearchResults(criterion);
 
             var bnfService = new BnfSearchService(false);
-            var bnfResults = await bnfService.GetResults("test");
+            var bnfResults = await bnfService.GetResults("narnia");
 
             return results.ToList();
         });
