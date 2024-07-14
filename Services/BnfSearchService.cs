@@ -85,8 +85,7 @@ public class BnfSearchService : ISearchService
 
             /* Gets the "mxc:record" nodes
             ** The namespace for "mxc" is "info:lc/xmlns/marcxchange-v2"
-            ** and the one for "srw" is "http://www.loc.gov/zing/srw/"
-            */ 
+            ** and the one for "srw" is "http://www.loc.gov/zing/srw/"   */ 
             var resultsNodes = mainNodes?.Where(node => 
                 node.Name.NamespaceName == "info:lc/xmlns/marcxchange-v2"
                 && node.Name.LocalName == "record"
@@ -94,6 +93,19 @@ public class BnfSearchService : ISearchService
 
             if (resultsNodes == null || resultsNodes.Count() <= 0) {
                 return new List<SearchResultDTO>();
+            }
+
+            IEnumerable<XElement> datafields;
+
+            foreach (var result in resultsNodes) {
+                // Gets the datafields with the needed tags
+                datafields = result.Descendants().Where(node => 
+                    node.Name.LocalName == "datafield" 
+                    && node.Attributes().ToList().Exists(
+                        at => at.Name == "tag"
+                        && BnfConsts.NEEDED_TAGS.Contains(at.Value)
+                    )
+                );
             }
         }
 
