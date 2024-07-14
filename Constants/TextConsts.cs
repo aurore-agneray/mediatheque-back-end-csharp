@@ -1,3 +1,5 @@
+namespace mediatheque_back_csharp.Constants;
+
 /// <summary>
 /// Texts used into all the app
 /// </summary>

@@ -1,5 +1,7 @@
 using System.Text.RegularExpressions;
 
+namespace mediatheque_back_csharp.Constants;
+
 /// <summary>
 /// Constants used into the Bnf Search
 /// </summary>
