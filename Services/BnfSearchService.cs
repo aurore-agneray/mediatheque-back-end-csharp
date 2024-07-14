@@ -87,9 +87,10 @@ public class BnfSearchService : ISearchService
             ** The namespace for "mxc" is "info:lc/xmlns/marcxchange-v2"
             ** and the one for "srw" is "http://www.loc.gov/zing/srw/"
             */ 
-            var resultsNodes = mainNodes?.FirstOrDefault(no => no.Name.LocalName == "records")
-                                        ?.Descendants()
-                                        ?.Where(node => node.Name.NamespaceName == "info:lc/xmlns/marcxchange-v2");
+            var resultsNodes = mainNodes?.Where(node => 
+                node.Name.NamespaceName == "info:lc/xmlns/marcxchange-v2"
+                && node.Name.LocalName == "record"
+            );
 
             if (resultsNodes == null || resultsNodes.Count() <= 0) {
                 return new List<SearchResultDTO>();
