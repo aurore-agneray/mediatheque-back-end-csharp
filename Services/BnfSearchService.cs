@@ -1,5 +1,6 @@
 using System.Xml;
 using System.Xml.Linq;
+using mediatheque_back_csharp.Classes;
 using mediatheque_back_csharp.Constants;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Interfaces;
@@ -96,9 +97,10 @@ public class BnfSearchService : ISearchService
                 return new List<SearchResultDTO>();
             }
 
-            IEnumerable<XElement> datafields;
+            IEnumerable<BnfDataField> datafields;
 
             foreach (var result in resultsNodes) {
+                
                 // Gets the datafields with the needed tags
                 datafields = result.Descendants().Where(node => 
                     node.Name.LocalName == "datafield" 
@@ -106,7 +108,12 @@ public class BnfSearchService : ISearchService
                         at => at.Name == "tag"
                         && BnfConsts.NEEDED_TAGS.Contains(at.Value)
                     )
-                );
+                ).Select(rawDataField => new BnfDataField() {
+                    Tag = rawDataField.Attribute("tag").Value,
+                    Ind1 = rawDataField.Attribute("ind1").Value,
+                    Ind2 = rawDataField.Attribute("ind2").Value,
+                    Subfields = rawDataField.Descendants()
+                });
             }
         }
 
