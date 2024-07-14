@@ -112,7 +112,12 @@ public class BnfSearchService : ISearchService
                     Tag = rawDataField.Attribute("tag").Value,
                     Ind1 = rawDataField.Attribute("ind1").Value,
                     Ind2 = rawDataField.Attribute("ind2").Value,
-                    Subfields = rawDataField.Descendants()
+                    Subfields = rawDataField.Descendants().Select(rawSubfield => 
+                        new BnfSubField {
+                            Code = rawSubfield.Attribute("code").Value,
+                            Value = rawSubfield.Value
+                        }
+                    )
                 });
             }
         }

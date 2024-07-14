@@ -1,5 +1,3 @@
-using System.Xml.Linq;
-
 namespace mediatheque_back_csharp.Classes;
 
 /// <summary>
@@ -25,5 +23,5 @@ public class BnfDataField {
     /// <summary>
     /// Subnodes of type mxc:subfield
     /// </summary>
-    public IEnumerable<XElement> Subfields { get; set; }
+    public IEnumerable<BnfSubField> Subfields { get; set; }
 }
