@@ -126,7 +126,7 @@ public class BnfSearchService : ISearchService
         
         IEnumerable<BnfDataField> datafields;
         KeyValuePair<string, Dictionary<string, string>> extractedEditionData;
-        string title = null, authorName = null;
+        string seriesName, title = null, authorName = null;
         var outList = new List<SearchResultDTO>();
 
         /* Will contain objects whose keys are into the format "AUTHORNAME_BOOKNAME"
@@ -164,8 +164,9 @@ public class BnfSearchService : ISearchService
             title = titleAndAuthorArray[0];
             authorName = titleAndAuthorArray[1];
 
+            // Creates for each book a SearchResultDTO that will contain several editions
             var searchResultDto = new SearchResultDTO {
-                BookId = bookId++,
+                BookId = bookId,
                 Book = new BookResultDTO {
                     Title = title,
                     Author = new AuthorResultDTO {
@@ -174,24 +175,44 @@ public class BnfSearchService : ISearchService
                 }
             };
 
+            // Groups the concerned editions by the series' name
+            var editionsGroupedBySeries = book.ToList().GroupBy(
+                editionData => {
+                    seriesName = editionData.Value[BnfPropertiesConsts.SERIES_NAME];
+
+                    if (string.IsNullOrEmpty(seriesName)) {
+                        return "0";
+                    }
+                    return seriesName;
+                }
+            );
+
+            // Completes the list of the editions for the concerned book
+            searchResultDto.Editions = editionsGroupedBySeries.ToDictionary(
+                group => group.Key, 
+                group => group.Select(editionsData => {
+                    return new EditionResultDTO {
+                        BookId = bookId,
+                        Isbn = editionsData.Value[BnfPropertiesConsts.ISBN],
+                        Subtitle = editionsData.Value[BnfPropertiesConsts.SUBTITLE],
+                        PublicationDateBnf = editionsData.Value[BnfPropertiesConsts.PUBLICATION_DATE_BNF],
+                        Volume = editionsData.Value[BnfPropertiesConsts.VOLUME],
+                        Summary = editionsData.Value[BnfPropertiesConsts.SUMMARY],
+                        Series = new SeriesResultDTO {
+                            SeriesName = editionsData.Value[BnfPropertiesConsts.SERIES_NAME]
+                        },
+                        Publisher = new PublisherResultDTO {
+                            PublishingHouse = editionsData.Value[BnfPropertiesConsts.PUBLISHER]
+                        }
+                    };
+                }).ToList()
+            );
+
             outList.Add(searchResultDto);
+            bookId++;
         }
 
-        // var editionResultDto = new EditionResultDTO {
-        //     Isbn = resultCustomObject.Isbn,
-        //     Subtitle = resultCustomObject.Subtitle,
-        //     PublicationYear = resultCustomObject.PublicationDate,
-        //     Volume = resultCustomObject.Volume,
-        //     Summary = resultCustomObject.Summary,
-        //     Series = new SeriesResultDTO {
-        //         SeriesName = resultCustomObject.SeriesName
-        //     },
-        //     Publisher = new PublisherResultDTO {
-        //         PublishingHouse = resultCustomObject.Publisher
-        //     }
-        // };
-
-        return new List<SearchResultDTO>();
+        return outList;
     }
 
     /// <summary>
@@ -203,7 +224,8 @@ public class BnfSearchService : ISearchService
     private string SearchForValue(ref IEnumerable<BnfDataField> datafields, string propertyName) {
 
         BnfDataField? extractedDataf;
-        string? extractedValue = string.Empty;
+        string? outValue = string.Empty, 
+                extractedValue = string.Empty;
 
         // Gets the convenient tags and codes for the given property name
         var searchedTagsAndCodes = BnfConsts.TAGS_AND_CODES[propertyName];
@@ -228,11 +250,11 @@ public class BnfSearchService : ISearchService
             );
 
             if (!string.IsNullOrEmpty(extractedValue)) {
-                return extractedValue;
+                outValue += " " + extractedValue;
             }
         }
 
-        return extractedValue ?? string.Empty;
+        return outValue.Trim();
     }
 
      /// <summary>

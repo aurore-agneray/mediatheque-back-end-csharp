@@ -55,10 +55,10 @@ public class SimpleSearchController : ControllerBase
             var criterion = argsDto?.Criterion.ToLower();
 
             // Criterion is searched into the title, the author name, the ISBN and the series' name
-            var results = await _manager.GetSimpleSearchResults(criterion);
+            //var results = await _manager.GetSimpleSearchResults(criterion);
 
             var bnfService = new BnfSearchService(false);
-            var bnfResults = await bnfService.GetResults("narnia");
+            var results = await bnfService.GetResults(criterion);
 
             return results.ToList();
         });
