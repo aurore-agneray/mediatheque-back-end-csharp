@@ -7,6 +7,14 @@
 public class SearchResultDTO
 {
     /// <summary>
+    /// Constructor without parameters
+    /// </summary>
+    public SearchResultDTO()
+    {
+        Editions = new Dictionary<string, List<EditionResultDTO>>();
+    }
+
+    /// <summary>
     /// Constructor with one BookDTO parameter.
     /// Generates all sub-DTOs
     /// </summary>

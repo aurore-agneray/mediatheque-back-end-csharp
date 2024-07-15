@@ -22,6 +22,12 @@ public class BnfSearchService : ISearchService
     }
 
     /// <summary>
+    /// Used for separating the title and the author's name
+    /// when they are concatenated
+    /// </summary>
+    private const string TITLE_AND_AUTHOR_NAME_SEPARATOR = ";;;";
+
+    /// <summary>
     /// Namespace "mxc"
     /// </summary>
     private XNamespace _nMxc = "info:lc/xmlns/marcxchange-v2";
@@ -54,28 +60,21 @@ public class BnfSearchService : ISearchService
     }
 
     /// <summary>
-    /// Constructs objects of type SearchResultDTO from XElements of the XML content
+    /// Extracts the DataField nodes' data from the given XElement
+    /// which corresponds to an edition
     /// </summary>
-    /// <param name="xmlNodes">XML nodes</param>
-    /// <returns>Final list of SearchResultDTOs</returns>
-    private List<SearchResultDTO> ExtractResultsFromXmlNodes(ref IEnumerable<XElement> xmlNodes) {
-        
-        IEnumerable<BnfDataField> datafields;
-        string isbn;
+    /// <param name="result">Object of type XElement</param>
+    /// <returns>A list of BnfDataFields</returns>
+    private IEnumerable<BnfDataField> GetDataFieldsFromXElement(XElement result) {
 
-        /* Will contain objects whose keys are into the format "AUTHORNAME_BOOKNAME"
-        ** and the values are dictionaries for editions data */
-        List<KeyValuePair<string, Dictionary<string, string>>> results = new();
-
-        foreach (var result in xmlNodes) {
-            
-            // Gets the datafields with the needed tags
-            datafields = result.Descendants(_nMxc + "datafield").Where(node => 
+        return result.Descendants(_nMxc + "datafield")
+            .Where(node => 
                 node.Attributes().ToList().Exists(
                     at => at.Name == "tag"
                     && BnfConsts.NEEDED_TAGS.Contains(at.Value)
                 )
-            ).Select(rawDataField => new BnfDataField() {
+            )
+            .Select(rawDataField => new BnfDataField() {
                 Tag = rawDataField.Attribute("tag").Value,
                 Ind1 = rawDataField.Attribute("ind1").Value,
                 Ind2 = rawDataField.Attribute("ind2").Value,
@@ -86,27 +85,97 @@ public class BnfSearchService : ISearchService
                     }
                 )
             });
+    }
 
-            // Keep the result only if the ISBN is not empty
-            if (!string.IsNullOrEmpty(isbn = SearchForValue(ref datafields, BnfPropertiesConsts.ISBN))) {
-                results.Add(
-                    new(
-                        $"{SearchForValue(ref datafields, BnfPropertiesConsts.TITLE)};;;{SearchForValue(ref datafields, BnfPropertiesConsts.AUTHOR)}",
-                        new() {
-                            { BnfPropertiesConsts.ISBN, isbn },
-                            { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
-                            { BnfPropertiesConsts.PUBLISHER, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLISHER) },
-                            { BnfPropertiesConsts.SERIES_NAME, SearchForValue(ref datafields, BnfPropertiesConsts.SERIES_NAME) },
-                            { BnfPropertiesConsts.SUBTITLE, SearchForValue(ref datafields, BnfPropertiesConsts.SUBTITLE) },
-                            { BnfPropertiesConsts.SUMMARY, SearchForValue(ref datafields, BnfPropertiesConsts.SUMMARY) },
-                            { BnfPropertiesConsts.VOLUME, SearchForValue(ref datafields, BnfPropertiesConsts.VOLUME) }
-                        }
-                    )
-                );
+    /// <summary>
+    /// Extracts the properties of the edition from the given BnfDataField list.
+    /// The names of these properties are defined into the class BnfPropertiesConsts 
+    /// </summary>
+    /// <param name="datafields">List of BnfDataField objects</param>
+    /// <returns>An KeyValuePair whose key is into the format "AUTHORNAME_BOOKNAME" 
+    /// and the value is a dictionary containing the edition's data</returns>
+    private KeyValuePair<string, Dictionary<string, string>> ExtractOneEditionData(ref IEnumerable<BnfDataField> datafields) {
+        
+        string isbn;
+
+        // Keep the result only if the ISBN is not empty
+        if (!string.IsNullOrEmpty(isbn = SearchForValue(ref datafields, BnfPropertiesConsts.ISBN))) {
+            return new(
+                $"{SearchForValue(ref datafields, BnfPropertiesConsts.TITLE)}{TITLE_AND_AUTHOR_NAME_SEPARATOR}{SearchForValue(ref datafields, BnfPropertiesConsts.AUTHOR)}",
+                new() {
+                    { BnfPropertiesConsts.ISBN, isbn },
+                    { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
+                    { BnfPropertiesConsts.PUBLISHER, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLISHER) },
+                    { BnfPropertiesConsts.SERIES_NAME, SearchForValue(ref datafields, BnfPropertiesConsts.SERIES_NAME) },
+                    { BnfPropertiesConsts.SUBTITLE, SearchForValue(ref datafields, BnfPropertiesConsts.SUBTITLE) },
+                    { BnfPropertiesConsts.SUMMARY, SearchForValue(ref datafields, BnfPropertiesConsts.SUMMARY) },
+                    { BnfPropertiesConsts.VOLUME, SearchForValue(ref datafields, BnfPropertiesConsts.VOLUME) }
+                }
+            );
+        }
+
+        return default;
+    }
+
+    /// <summary>
+    /// Constructs objects of type SearchResultDTO from XElements of the XML content
+    /// </summary>
+    /// <param name="xmlNodes">XML nodes</param>
+    /// <returns>Final list of SearchResultDTOs</returns>
+    private List<SearchResultDTO> ExtractResultsFromXmlNodes(ref IEnumerable<XElement> xmlNodes) {
+        
+        IEnumerable<BnfDataField> datafields;
+        KeyValuePair<string, Dictionary<string, string>> extractedEditionData;
+        string title = null, authorName = null;
+        var outList = new List<SearchResultDTO>();
+
+        /* Will contain objects whose keys are into the format "AUTHORNAME_BOOKNAME"
+        ** and the values are dictionaries for editions data */
+        List<KeyValuePair<string, Dictionary<string, string>>> results = new();
+
+        foreach (var result in xmlNodes) {
+            
+            datafields = GetDataFieldsFromXElement(result);
+            extractedEditionData = ExtractOneEditionData(ref datafields);
+
+            if (!extractedEditionData.Equals(default(KeyValuePair<string, Dictionary<string, string>>))) {
+                results.Add(extractedEditionData);
             }
         }
 
-        var test = results[0].Value["isbn"];
+        // Orders the results by book and author's name
+        results = results.OrderBy(res => res.Key).ToList();
+
+        // Groups the results by book and author's name
+        var groupedByBooks = results.GroupBy(res => res.Key);
+
+        // Creates the DTOs
+        int bookId = 1;
+
+        foreach (var book in groupedByBooks) {
+
+            // Extracts the book's title and the author's name
+            var titleAndAuthorArray = book.Key.Split(TITLE_AND_AUTHOR_NAME_SEPARATOR);
+
+            if (titleAndAuthorArray.Count() < 2) {
+                continue;
+            }
+
+            title = titleAndAuthorArray[0];
+            authorName = titleAndAuthorArray[1];
+
+            var searchResultDto = new SearchResultDTO {
+                BookId = bookId++,
+                Book = new BookResultDTO {
+                    Title = title,
+                    Author = new AuthorResultDTO {
+                        CompleteName = authorName
+                    }
+                }
+            };
+
+            outList.Add(searchResultDto);
+        }
 
         // var editionResultDto = new EditionResultDTO {
         //     Isbn = resultCustomObject.Isbn,
