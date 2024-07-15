@@ -74,24 +74,21 @@ public class BnfSearchService : ISearchService
 
         using (var reader = XmlReader.Create(url, readerSettings)) {
             
+            XNamespace nMxc = "info:lc/xmlns/marcxchange-v2";
+            XNamespace nSrw = "http://www.loc.gov/zing/srw/";
+
             var fileRoot = await XDocument.LoadAsync(reader, LoadOptions.None, CancellationToken.None);
-            var mainNodes = fileRoot.Descendants();
-            var recordsNumberNode = mainNodes?.FirstOrDefault(no => no.Name.LocalName == "numberOfRecords");
+
+            var recordsNumberNode = fileRoot.Descendants(nSrw + "numberOfRecords").FirstOrDefault();
             var resultsNumberStr = string.Empty;
             var resultsNumber = -1;
 
-            if ((resultsNumberStr = recordsNumberNode?.FirstNode?.ToString()) == null
+            if ((resultsNumberStr = recordsNumberNode?.Value) == null
                 || (resultsNumber = int.Parse(resultsNumberStr)) <= 0) {
                 return new List<SearchResultDTO>();
             }
 
-            /* Gets the "mxc:record" nodes
-            ** The namespace for "mxc" is "info:lc/xmlns/marcxchange-v2"
-            ** and the one for "srw" is "http://www.loc.gov/zing/srw/"   */ 
-            var resultsNodes = mainNodes?.Where(node => 
-                node.Name.NamespaceName == "info:lc/xmlns/marcxchange-v2"
-                && node.Name.LocalName == "record"
-            );
+            var resultsNodes = fileRoot.Descendants(nMxc + "record");
 
             if (resultsNodes == null || resultsNodes.Count() <= 0) {
                 return new List<SearchResultDTO>();
