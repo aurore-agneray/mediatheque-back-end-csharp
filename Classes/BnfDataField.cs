@@ -12,11 +12,13 @@ public class BnfDataField {
 
     /// <summary>
     /// Value of the attribute "ind1"
+    /// If " ", all compared values will be equal
     /// </summary>
     public string Ind1 { get; set; } = " ";
 
     /// <summary>
     /// Value of the attribute "ind2"
+    /// If " ", all compared values will be equal
     /// </summary>
     public string Ind2 { get; set; } = " ";
 
@@ -38,8 +40,8 @@ public class BnfDataField {
         }
 
         return this.Tag == otherDf.Tag
-            && this.Ind1 == otherDf.Ind1
-            && this.Ind2 == otherDf.Ind2;
+            && (this.Ind1 == otherDf.Ind1 || otherDf.Ind1 == " ")
+            && (this.Ind2 == otherDf.Ind2 || otherDf.Ind2 == " ");
     }
 
     /// <summary>

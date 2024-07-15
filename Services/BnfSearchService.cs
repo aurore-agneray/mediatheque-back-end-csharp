@@ -22,6 +22,16 @@ public class BnfSearchService : ISearchService
     }
 
     /// <summary>
+    /// Namespace "mxc"
+    /// </summary>
+    private XNamespace _nMxc = "info:lc/xmlns/marcxchange-v2";
+
+    /// <summary>
+    /// Namespace "srw"
+    /// </summary>
+    private XNamespace _nSrw = "http://www.loc.gov/zing/srw/";
+
+    /// <summary>
     /// Constructs the complete string with the conditions to
     /// send to the BnF API
     /// </summary>
@@ -43,6 +53,94 @@ public class BnfSearchService : ISearchService
         return BnfConsts.SIMPLE_SEARCH_PARAMETERED_CONDITIONS(criterion, noticesQty);
     }
 
+    /// <summary>
+    /// Constructs objects of type SearchResultDTO from XElements of the XML content
+    /// </summary>
+    /// <param name="xmlNodes">XML nodes</param>
+    /// <returns>Final list of SearchResultDTOs</returns>
+    private List<SearchResultDTO> ExtractResultsFromXmlNodes(ref IEnumerable<XElement> xmlNodes) {
+        
+        IEnumerable<BnfDataField> datafields;
+
+        foreach (var result in xmlNodes) {
+            
+            // Gets the datafields with the needed tags
+            datafields = result.Descendants(_nMxc + "datafield").Where(node => 
+                node.Attributes().ToList().Exists(
+                    at => at.Name == "tag"
+                    && BnfConsts.NEEDED_TAGS.Contains(at.Value)
+                )
+            ).Select(rawDataField => new BnfDataField() {
+                Tag = rawDataField.Attribute("tag").Value,
+                Ind1 = rawDataField.Attribute("ind1").Value,
+                Ind2 = rawDataField.Attribute("ind2").Value,
+                Subfields = rawDataField.Descendants().Select(rawSubfield => 
+                    new BnfSubField {
+                        Code = rawSubfield.Attribute("code").Value,
+                        Value = rawSubfield.Value
+                    }
+                )
+            });
+
+            var resultCustomObject = new {
+                Title = SearchForValue(ref datafields, BnfPropertiesConsts.TITLE),
+            };
+
+            // book = new BookResultDTO {
+            //     Title = datafields.FirstOrDefault(dataf => {
+            //         var searchedTagsAndCodes = BnfConsts.TAGS_AND_CODES["title"];
+            //         return dataf.Subfields.ToList().Exists(sub => sub.Code)
+            //     }
+            //         )
+            // }
+
+            // Regex.Match(tagAndCodes.Key, @"^\d{3}").Value
+        }
+
+        return new List<SearchResultDTO>();
+    }
+
+    /// <summary>
+    /// Searches for a value into the datafields according to the property name
+    /// </summary>
+    /// <param name="datafields">List of filtered BnfDataField objects</param>
+    /// <param name="propertyName">Name of the property, refers to the file BnfConsts</param>
+    /// <returns>A string value</returns>
+    private string SearchForValue(ref IEnumerable<BnfDataField> datafields, string propertyName) {
+
+        BnfDataField? extractedDataf;
+        string? extractedValue = string.Empty;
+
+        // Gets the convenient tags and codes for the given property name
+        var searchedTagsAndCodes = BnfConsts.TAGS_AND_CODES[propertyName];
+
+        /* "searchParams" contains a tag, ind1, ind2 and the bound codes */
+        foreach (var searchParams in searchedTagsAndCodes) {
+
+            // Takes the BnfDataField corresponding to the tag
+            extractedDataf = datafields.FirstOrDefault(
+                dataf => dataf.Equals(searchParams.Key)
+            );
+            
+            if (extractedDataf == null) {
+                continue;
+            }
+
+            // Searches for the value into the subfields whose codes are given
+            extractedValue = searchParams.Value.Select(code =>
+                extractedDataf.ExtractValueFromSubfield(code)
+            ).FirstOrDefault(v => 
+                !string.IsNullOrEmpty(v)
+            );
+
+            if (!string.IsNullOrEmpty(extractedValue)) {
+                return extractedValue;
+            }
+        }
+
+        return extractedValue;
+    }
+
      /// <summary>
     /// Indicates if it is an advanced or a simple search
     /// </summary>
@@ -59,66 +157,47 @@ public class BnfSearchService : ISearchService
     /// <returns>A list of SearchResultDTOs</returns>
     public async Task<IEnumerable<SearchResultDTO>> GetResults(object criterion) {
 
+        // For a simple search, the criterion should be a string value !
         if (criterion.GetType() != typeof(string)) {
             throw new ArgumentException(TextConsts.BNF_SEARCH_SERVICE_ERROR_CRITERION_TYPE);
         }
 
+        var outResults = new List<SearchResultDTO>();
         var stringCriterion = (string)criterion;
+        var url = BnfConsts.BNF_API_URL_BASE + GetSimpleSearchConditions(stringCriterion, 20);
 
-        var url = BnfConsts.BNF_API_URL_BASE;
-        url += GetSimpleSearchConditions(stringCriterion, 20);
-
+        // Configures the XML reader
         var readerSettings = new XmlReaderSettings() {
             Async = true
         };
 
         using (var reader = XmlReader.Create(url, readerSettings)) {
-            
-            XNamespace nMxc = "info:lc/xmlns/marcxchange-v2";
-            XNamespace nSrw = "http://www.loc.gov/zing/srw/";
 
-            var fileRoot = await XDocument.LoadAsync(reader, LoadOptions.None, CancellationToken.None);
+            // Loads the XML content from the url
+            var fileRoot = await XDocument.LoadAsync(
+                reader, 
+                LoadOptions.None, 
+                CancellationToken.None
+            );
 
-            var recordsNumberNode = fileRoot.Descendants(nSrw + "numberOfRecords").FirstOrDefault();
-            var resultsNumberStr = string.Empty;
-            var resultsNumber = -1;
+            // Checks the number of records
+            var recordsNumberNode = fileRoot.Descendants(_nSrw + "numberOfRecords")
+                                            .FirstOrDefault();
 
-            if ((resultsNumberStr = recordsNumberNode?.Value) == null
-                || (resultsNumber = int.Parse(resultsNumberStr)) <= 0) {
+            if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0) {
                 return new List<SearchResultDTO>();
             }
 
-            var resultsNodes = fileRoot.Descendants(nMxc + "record");
+            // Checks the results nodes
+            var resultsNodes = fileRoot.Descendants(_nMxc + "record");
 
             if (resultsNodes == null || resultsNodes.Count() <= 0) {
                 return new List<SearchResultDTO>();
             }
 
-            IEnumerable<BnfDataField> datafields;
-
-            foreach (var result in resultsNodes) {
-                
-                // Gets the datafields with the needed tags
-                datafields = result.Descendants().Where(node => 
-                    node.Name.LocalName == "datafield" 
-                    && node.Attributes().ToList().Exists(
-                        at => at.Name == "tag"
-                        && BnfConsts.NEEDED_TAGS.Contains(at.Value)
-                    )
-                ).Select(rawDataField => new BnfDataField() {
-                    Tag = rawDataField.Attribute("tag").Value,
-                    Ind1 = rawDataField.Attribute("ind1").Value,
-                    Ind2 = rawDataField.Attribute("ind2").Value,
-                    Subfields = rawDataField.Descendants().Select(rawSubfield => 
-                        new BnfSubField {
-                            Code = rawSubfield.Attribute("code").Value,
-                            Value = rawSubfield.Value
-                        }
-                    )
-                });
-            }
+            outResults = ExtractResultsFromXmlNodes(ref resultsNodes);
         }
 
-        return new List<SearchResultDTO>();
+        return outResults;
     }
 }

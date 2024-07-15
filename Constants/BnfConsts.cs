@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+using mediatheque_back_csharp.Classes;
 
 namespace mediatheque_back_csharp.Constants;
 
@@ -16,65 +16,65 @@ public static class BnfConsts {
     /// Joins tags and codes used to extract books data from
     /// the XML BnF API result
     /// </summary>
-    public static Dictionary<string, Dictionary<string, string[]>> TAGS_AND_CODES => new() {
+    public static Dictionary<string, Dictionary<BnfDataField, string[]>> TAGS_AND_CODES => new() {
         {
-            "author",
+            BnfPropertiesConsts.AUTHOR,
             new() {
-                { "200", ["f"] },
-                { "700", ["a", "b"] },
-                { "710", ["a"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_200, ["f"] },
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_700, ["a", "b"] },
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_710, ["a"] }
             }
         },
         {
-            "isbn",
+            BnfPropertiesConsts.ISBN,
             new() {
-                { "010", ["32", "656"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_010, ["a"] }
             }
         },
         {
-            "publicationDateBnf",
+            BnfPropertiesConsts.PUBLICATION_DATE_BNF,
             new() {
-                { "210", ["d"] },
-                { "214", ["d"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_210, ["d"] },
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_214, ["d"] }
             }
         },
         {
-            "publisher",
+            BnfPropertiesConsts.PUBLISHER,
             new() {
-                { "210", ["c"] },
-                { "214", ["c"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_210, ["c"] },
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_214, ["c"] }
             }
         },
         {
-            "seriesName",
+            BnfPropertiesConsts.SERIES_NAME,
             new() {
-                { "225|1|9", ["a"] },
-                { "461", ["t"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_225_1_9, ["a"] },
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_461, ["t"] }
             }
         },
         {
-            "subtitle",
+            BnfPropertiesConsts.SUBTITLE,
             new() {
-                { "200", ["i"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_200, ["i"] }
             }
         },
         {
-            "summary",
+            BnfPropertiesConsts.SUMMARY,
             new() {
-                { "330", ["a"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_330, ["a"] }
             }
         },
         {
-            "title",
+            BnfPropertiesConsts.TITLE,
             new() {
-                { "200", ["a", "e"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_200, ["a", "e"] }
             }
         },
         {
-            "volume",
+            BnfPropertiesConsts.VOLUME,
             new() {
-                { "225|1|9", ["v"] },
-                { "461", ["v"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_225_1_9, ["v"] },
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_461, ["v"] }
             }
         }
     };
@@ -88,7 +88,7 @@ public static class BnfConsts {
     /// Tags that are searched into the XML content
     /// </summary>
     public static List<string> NEEDED_TAGS => TAGS_AND_CODES.SelectMany(
-        item => item.Value.Select(tagAndCodes => Regex.Match(tagAndCodes.Key, @"^\d{3}").Value)
+        item => item.Value.Select(tagAndCodes => tagAndCodes.Key.Tag)
     ).Distinct().ToList();
 
     /// <summary>
