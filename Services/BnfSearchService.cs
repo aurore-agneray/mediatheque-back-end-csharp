@@ -61,6 +61,11 @@ public class BnfSearchService : ISearchService
     private List<SearchResultDTO> ExtractResultsFromXmlNodes(ref IEnumerable<XElement> xmlNodes) {
         
         IEnumerable<BnfDataField> datafields;
+        string isbn;
+
+        /* Will contain objects whose keys are into the format "AUTHORNAME_BOOKNAME"
+        ** and the values are dictionaries for editions data */
+        List<KeyValuePair<string, Dictionary<string, string>>> results = new();
 
         foreach (var result in xmlNodes) {
             
@@ -82,20 +87,40 @@ public class BnfSearchService : ISearchService
                 )
             });
 
-            var resultCustomObject = new {
-                Title = SearchForValue(ref datafields, BnfPropertiesConsts.TITLE),
-            };
-
-            // book = new BookResultDTO {
-            //     Title = datafields.FirstOrDefault(dataf => {
-            //         var searchedTagsAndCodes = BnfConsts.TAGS_AND_CODES["title"];
-            //         return dataf.Subfields.ToList().Exists(sub => sub.Code)
-            //     }
-            //         )
-            // }
-
-            // Regex.Match(tagAndCodes.Key, @"^\d{3}").Value
+            // Keep the result only if the ISBN is not empty
+            if (!string.IsNullOrEmpty(isbn = SearchForValue(ref datafields, BnfPropertiesConsts.ISBN))) {
+                results.Add(
+                    new(
+                        $"{SearchForValue(ref datafields, BnfPropertiesConsts.TITLE)};;;{SearchForValue(ref datafields, BnfPropertiesConsts.AUTHOR)}",
+                        new() {
+                            { BnfPropertiesConsts.ISBN, isbn },
+                            { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
+                            { BnfPropertiesConsts.PUBLISHER, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLISHER) },
+                            { BnfPropertiesConsts.SERIES_NAME, SearchForValue(ref datafields, BnfPropertiesConsts.SERIES_NAME) },
+                            { BnfPropertiesConsts.SUBTITLE, SearchForValue(ref datafields, BnfPropertiesConsts.SUBTITLE) },
+                            { BnfPropertiesConsts.SUMMARY, SearchForValue(ref datafields, BnfPropertiesConsts.SUMMARY) },
+                            { BnfPropertiesConsts.VOLUME, SearchForValue(ref datafields, BnfPropertiesConsts.VOLUME) }
+                        }
+                    )
+                );
+            }
         }
+
+        var test = results[0].Value["isbn"];
+
+        // var editionResultDto = new EditionResultDTO {
+        //     Isbn = resultCustomObject.Isbn,
+        //     Subtitle = resultCustomObject.Subtitle,
+        //     PublicationYear = resultCustomObject.PublicationDate,
+        //     Volume = resultCustomObject.Volume,
+        //     Summary = resultCustomObject.Summary,
+        //     Series = new SeriesResultDTO {
+        //         SeriesName = resultCustomObject.SeriesName
+        //     },
+        //     Publisher = new PublisherResultDTO {
+        //         PublishingHouse = resultCustomObject.Publisher
+        //     }
+        // };
 
         return new List<SearchResultDTO>();
     }
@@ -138,7 +163,7 @@ public class BnfSearchService : ISearchService
             }
         }
 
-        return extractedValue;
+        return extractedValue ?? string.Empty;
     }
 
      /// <summary>

@@ -98,7 +98,7 @@ public static class BnfConsts {
 
         return string.Concat(
             $"bib.author all {criterion} or bib.title all {criterion} ",
-            $"or bib.isbn all {criterion} or bib.serialtitle all {criterion} ",
+            $"or bib.isbn all {criterion} ",
             $"&recordSchema=unimarcxchange&maximumRecords={noticesQty}&startRecord=1"
         );
     };
