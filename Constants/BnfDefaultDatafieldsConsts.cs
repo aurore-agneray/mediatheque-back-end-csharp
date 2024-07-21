@@ -10,9 +10,9 @@ public struct BnfDefaultDatafieldsConsts {
     public static BnfDataField _DATA_FIELD_010 => new BnfDataField() { Tag = "010" };
 
     /// <summary>
-    /// Default Datafield with Tag = "200", Ind1 = " " and Ind2 = " "
+    /// Default Datafield with Tag = "200", Ind1 = "1" and Ind2 = " "
     /// </summary>
-    public static BnfDataField _DATA_FIELD_200 => new BnfDataField() { Tag = "200" };
+    public static BnfDataField _DATA_FIELD_200_1_EMPTY => new BnfDataField() { Tag = "200", Ind1 = "1" };
 
     /// <summary>
     /// Default Datafield with Tag = "210", Ind1 = " " and Ind2 = " "
@@ -20,9 +20,9 @@ public struct BnfDefaultDatafieldsConsts {
     public static BnfDataField _DATA_FIELD_210 => new BnfDataField() { Tag = "210" };
 
     /// <summary>
-    /// Default Datafield with Tag = "214", Ind1 = " " and Ind2 = " "
+    /// Default Datafield with Tag = "214", Ind1 = " " and Ind2 = "0"
     /// </summary>
-    public static BnfDataField _DATA_FIELD_214 => new BnfDataField() { Tag = "214" };
+    public static BnfDataField _DATA_FIELD_214_EMPTY_0 => new BnfDataField() { Tag = "214", Ind2 = "0" };
 
     /// <summary>
     /// Default Datafield with Tag = "214", Ind1 = "1" and Ind2 = "9"

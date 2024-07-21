@@ -20,7 +20,7 @@ public static class BnfConsts {
         {
             BnfPropertiesConsts.AUTHOR,
             new() {
-                { BnfDefaultDatafieldsConsts._DATA_FIELD_200, ["f"] },
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_200_1_EMPTY, ["f"] },
                 { BnfDefaultDatafieldsConsts._DATA_FIELD_700, ["a", "b"] },
                 { BnfDefaultDatafieldsConsts._DATA_FIELD_710, ["a"] }
             }
@@ -35,14 +35,14 @@ public static class BnfConsts {
             BnfPropertiesConsts.PUBLICATION_DATE_BNF,
             new() {
                 { BnfDefaultDatafieldsConsts._DATA_FIELD_210, ["d"] },
-                { BnfDefaultDatafieldsConsts._DATA_FIELD_214, ["d"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_214_EMPTY_0, ["d"] }
             }
         },
         {
             BnfPropertiesConsts.PUBLISHER,
             new() {
                 { BnfDefaultDatafieldsConsts._DATA_FIELD_210, ["c"] },
-                { BnfDefaultDatafieldsConsts._DATA_FIELD_214, ["c"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_214_EMPTY_0, ["c"] }
             }
         },
         {
@@ -55,8 +55,8 @@ public static class BnfConsts {
         {
             BnfPropertiesConsts.SUBTITLE,
             new() {
-                { BnfDefaultDatafieldsConsts._DATA_FIELD_200, ["i"] }
-            }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_200_1_EMPTY, ["h", "i"] }
+            }   
         },
         {
             BnfPropertiesConsts.SUMMARY,
@@ -67,7 +67,7 @@ public static class BnfConsts {
         {
             BnfPropertiesConsts.TITLE,
             new() {
-                { BnfDefaultDatafieldsConsts._DATA_FIELD_200, ["a", "e"] }
+                { BnfDefaultDatafieldsConsts._DATA_FIELD_200_1_EMPTY, ["a", "e"] }
             }
         },
         {
