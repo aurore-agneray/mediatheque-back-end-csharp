@@ -19,6 +19,11 @@ public static class BnfConsts {
     public const string TITLE_AND_AUTHOR_NAME_SEPARATOR = ";;;";
 
     /// <summary>
+    /// The default max number of notices returned by the API
+    /// </summary>
+    public const int DEFAULT_NOTICES_NUMBER = 20;
+
+    /// <summary>
     /// Joins tags and codes used to extract books data from
     /// the XML BnF API result
     /// </summary>

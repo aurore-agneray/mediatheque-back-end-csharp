@@ -20,6 +20,7 @@ public interface ISearchService
     /// search. For the BnF search it will be a string.
     /// For the MySQL database it will be an array to send to the ORM.
     /// </param>
+    /// <param name="noticesNb">Max number of notices returned by the BnF</param>
     /// <returns>A list of SearchResultDTOs</returns>
-    Task<IEnumerable<SearchResultDTO>> GetResults(object criterion);
+    Task<IEnumerable<SearchResultDTO>> GetResults(object criterion, int noticesNb);
 }

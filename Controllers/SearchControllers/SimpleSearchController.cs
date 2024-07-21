@@ -40,25 +40,33 @@ public class SimpleSearchController : ControllerBase
     /// <summary>
     /// Post CRUD request for the simple search.
     /// </summary>
-    /// <param name="criterion">Words representing the search criterion</param>
+    /// <param name="argsDto">Contains the parameters sent by the browser
+    /// ("criterion", a boolean "apiBnf" and the number of studied BnF's notices)</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
     [HttpPost]
     public async Task<List<SearchResultDTO>> Post(SimpleSearchArgsDTO argsDto)
     {
         return await Task.Run(async() => {
 
-            if (string.IsNullOrEmpty(argsDto?.Criterion))
+            if (argsDto == null || string.IsNullOrEmpty(argsDto?.Criterion))
             {
                 return new List<SearchResultDTO>();
             }
 
+            IEnumerable<SearchResultDTO> results;
+
             var criterion = argsDto?.Criterion.ToLower();
 
             // Criterion is searched into the title, the author name, the ISBN and the series' name
-            //var results = await _manager.GetSimpleSearchResults(criterion);
-
-            var bnfService = new BnfSearchService(false);
-            var results = await bnfService.GetResults(criterion);
+            if (argsDto.ApiBnf)
+            {
+                var bnfService = new BnfSearchService(false);
+                results = await bnfService.GetResults(criterion, argsDto.ApiBnfNoticesQty);
+            }
+            else
+            {
+                results = await _manager.GetSimpleSearchResults(criterion);
+            }
 
             return results.ToList();
         });

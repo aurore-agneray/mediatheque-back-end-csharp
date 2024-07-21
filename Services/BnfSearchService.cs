@@ -46,8 +46,8 @@ public class BnfSearchService : ISearchService
             return string.Empty;
         }
 
-        if (noticesQty < 20) {
-            noticesQty = 20;
+        if (noticesQty < BnfConsts.DEFAULT_NOTICES_NUMBER) {
+            noticesQty = BnfConsts.DEFAULT_NOTICES_NUMBER;
         }
 
         criterion = "\"" + criterion.Replace(" ", "+") + "\"";
@@ -180,12 +180,11 @@ public class BnfSearchService : ISearchService
             }
         }
 
-        // Orders the results by book and author's name
-        return results.OrderBy(res => res.Key).ToList();
+        return results.ToList();
     }
 
     /// <summary>
-    /// Converts the given data into DTOs
+    /// Converts the given data into DTOs and order them by ascending book's title and author's name
     /// </summary>
     /// <param name="extractedResults">Results that have been extracted from the XML nodes
     /// and stored into dictionaries</param>
@@ -224,7 +223,10 @@ public class BnfSearchService : ISearchService
             editionId = 1;
         }
 
-        return outList;
+        return outList.Where(dto => dto?.Book?.Author != null)
+                      .OrderBy(dto => dto.Book.Title)
+                      .ThenBy(dto => dto.Book.Author.CompleteName)
+                      .ToList();
     }
 
     /// <summary>
@@ -240,8 +242,9 @@ public class BnfSearchService : ISearchService
     /// search. For the BnF search it will be a string.
     /// For the MySQL database it will be an array to send to the ORM.
     /// </param>
+    /// <param name="noticesNb">Max number of notices returned by the BnF</param>
     /// <returns>A list of SearchResultDTOs</returns>
-    public async Task<IEnumerable<SearchResultDTO>> GetResults(object criterion) {
+    public async Task<IEnumerable<SearchResultDTO>> GetResults(object criterion, int noticesNb) {
 
         // For a simple search, the criterion should be a string value !
         if (criterion.GetType() != typeof(string)) {
@@ -250,7 +253,7 @@ public class BnfSearchService : ISearchService
 
         var outResults = new List<SearchResultDTO>();
         var stringCriterion = (string)criterion;
-        var url = BnfConsts.BNF_API_URL_BASE + GetSimpleSearchConditions(stringCriterion, 20);
+        var url = BnfConsts.BNF_API_URL_BASE + GetSimpleSearchConditions(stringCriterion, noticesNb);
 
         // Configures the XML reader
         var readerSettings = new XmlReaderSettings() {
