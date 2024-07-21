@@ -224,13 +224,13 @@ public class BnfSearchService : ISearchService
     private string SearchForValue(ref IEnumerable<BnfDataField> datafields, string propertyName) {
 
         BnfDataField? extractedDataf;
-        string? outValue = string.Empty, 
-                extractedValue = string.Empty;
+        string? extractedValue = string.Empty;
 
         // Gets the convenient tags and codes for the given property name
         var searchedTagsAndCodes = BnfConsts.TAGS_AND_CODES[propertyName];
 
-        /* "searchParams" contains a tag, ind1, ind2 and the bound codes */
+        /* "searchParams" contains a tag, ind1, ind2 and the bound codes 
+        ** The different tags are explored while no value is found */
         foreach (var searchParams in searchedTagsAndCodes) {
 
             // Takes the BnfDataField corresponding to the tag
@@ -242,19 +242,22 @@ public class BnfSearchService : ISearchService
                 continue;
             }
 
-            // Searches for the value into the subfields whose codes are given
+            /* Searches for the value into the subfields whose codes are given
+            ** If there are several explored subfields into the same datafield, the values are aggregated */
             extractedValue = searchParams.Value.Select(code =>
                 extractedDataf.ExtractValueFromSubfield(code)
-            ).FirstOrDefault(v => 
-                !string.IsNullOrEmpty(v)
+            ).Aggregate((agg, next) => 
+                agg + " " + (next ?? string.Empty)
             );
 
             if (!string.IsNullOrEmpty(extractedValue)) {
-                outValue += " " + extractedValue;
+                break;
             }
         }
 
-        return outValue.Trim();
+        return !string.IsNullOrEmpty(extractedValue) 
+                ? extractedValue.Trim() 
+                : string.Empty;
     }
 
      /// <summary>
