@@ -89,7 +89,7 @@ public class BnfSearchService : ISearchService
     /// <param name="datafields">List of filtered BnfDataField objects</param>
     /// <param name="propertyName">Name of the property, refers to the file BnfConsts</param>
     /// <returns>A string value</returns>
-    private string SearchForValue(ref IEnumerable<BnfDataField> datafields, string propertyName) {
+    private string SearchForValue(IEnumerable<BnfDataField> datafields, string propertyName) {
 
         BnfDataField? extractedDataf;
         string? extractedValue = string.Empty;
@@ -135,22 +135,22 @@ public class BnfSearchService : ISearchService
     /// <param name="datafields">List of BnfDataField objects</param>
     /// <returns>An KeyValuePair whose key is into the format "AUTHORNAME_BOOKNAME" 
     /// and the value is a dictionary containing the edition's data</returns>
-    private KeyValuePair<string, Dictionary<string, string>> ExtractOneEditionData(ref IEnumerable<BnfDataField> datafields) {
+    private KeyValuePair<string, Dictionary<string, string>> ExtractOneEditionData(IEnumerable<BnfDataField> datafields) {
         
         string isbn;
 
         // Keep the result only if the ISBN is not empty
-        if (!string.IsNullOrEmpty(isbn = SearchForValue(ref datafields, BnfPropertiesConsts.ISBN))) {
+        if (!string.IsNullOrEmpty(isbn = SearchForValue(datafields, BnfPropertiesConsts.ISBN))) {
             return new(
-                $"{SearchForValue(ref datafields, BnfPropertiesConsts.TITLE)}{BnfConsts.TITLE_AND_AUTHOR_NAME_SEPARATOR}{SearchForValue(ref datafields, BnfPropertiesConsts.AUTHOR)}",
+                $"{SearchForValue(datafields, BnfPropertiesConsts.TITLE)}{BnfConsts.TITLE_AND_AUTHOR_NAME_SEPARATOR}{SearchForValue(datafields, BnfPropertiesConsts.AUTHOR)}",
                 new() {
                     { BnfPropertiesConsts.ISBN, isbn },
-                    { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
-                    { BnfPropertiesConsts.PUBLISHER, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLISHER) },
-                    { BnfPropertiesConsts.SERIES_NAME, SearchForValue(ref datafields, BnfPropertiesConsts.SERIES_NAME) },
-                    { BnfPropertiesConsts.SUBTITLE, SearchForValue(ref datafields, BnfPropertiesConsts.SUBTITLE) },
-                    { BnfPropertiesConsts.SUMMARY, SearchForValue(ref datafields, BnfPropertiesConsts.SUMMARY) },
-                    { BnfPropertiesConsts.VOLUME, SearchForValue(ref datafields, BnfPropertiesConsts.VOLUME) }
+                    { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
+                    { BnfPropertiesConsts.PUBLISHER, SearchForValue(datafields, BnfPropertiesConsts.PUBLISHER) },
+                    { BnfPropertiesConsts.SERIES_NAME, SearchForValue(datafields, BnfPropertiesConsts.SERIES_NAME) },
+                    { BnfPropertiesConsts.SUBTITLE, SearchForValue(datafields, BnfPropertiesConsts.SUBTITLE) },
+                    { BnfPropertiesConsts.SUMMARY, SearchForValue(datafields, BnfPropertiesConsts.SUMMARY) },
+                    { BnfPropertiesConsts.VOLUME, SearchForValue(datafields, BnfPropertiesConsts.VOLUME) }
                 }
             );
         }
@@ -165,7 +165,7 @@ public class BnfSearchService : ISearchService
     /// <param name="xmlNodes">XML nodes</param>
     /// <returns>Returns objects whose keys are into the format "AUTHORNAME_BOOKNAME" 
     /// and the values are dictionaries containing editions data</returns>
-    private List<KeyValuePair<string, Dictionary<string, string>>> ExtractResultsFromXmlNodes(ref IEnumerable<XElement> xmlNodes) {
+    private List<KeyValuePair<string, Dictionary<string, string>>> ExtractResultsFromXmlNodes(IEnumerable<XElement> xmlNodes) {
         
         IEnumerable<BnfDataField> datafields;
         KeyValuePair<string, Dictionary<string, string>> extractedEditionData;
@@ -173,7 +173,7 @@ public class BnfSearchService : ISearchService
 
         foreach (var result in xmlNodes) {
             datafields = GetDataFieldsFromXElement(result);
-            extractedEditionData = ExtractOneEditionData(ref datafields);
+            extractedEditionData = ExtractOneEditionData(datafields);
 
             if (!extractedEditionData.Equals(default(KeyValuePair<string, Dictionary<string, string>>))) {
                 results.Add(extractedEditionData);
@@ -189,7 +189,7 @@ public class BnfSearchService : ISearchService
     /// <param name="extractedResults">Results that have been extracted from the XML nodes
     /// and stored into dictionaries</param>
     /// <returns>A list of SearchResultDTOs</returns>
-    private List<SearchResultDTO> ConvertExtractedResultsIntoDtos(ref List<KeyValuePair<string, Dictionary<string, string>>> extractedResults) {
+    private List<SearchResultDTO> ConvertExtractedResultsIntoDtos(List<KeyValuePair<string, Dictionary<string, string>>> extractedResults) {
 
         var outList = new List<SearchResultDTO>();
 
@@ -284,8 +284,8 @@ public class BnfSearchService : ISearchService
                 return new List<SearchResultDTO>();
             }
 
-            var extractedResults = ExtractResultsFromXmlNodes(ref resultsNodes);
-            outResults = ConvertExtractedResultsIntoDtos(ref extractedResults);
+            var extractedResults = ExtractResultsFromXmlNodes(resultsNodes);
+            outResults = ConvertExtractedResultsIntoDtos(extractedResults);
         }
 
         return outResults;
