@@ -74,22 +74,6 @@ public class SimpleSearchManager
     }
 
     /// <summary>
-    /// Order the given list by volumes' alphanumerical ascending order
-    /// </summary>
-    /// <param name="editions">List of EditionResultDTO objects</param>
-    /// <returns>Ordered list of EditionResultDTO objects</returns>
-    private List<EditionResultDTO> OrderEditionsByVolume(IEnumerable<EditionResultDTO> editions)
-    {
-        if (editions == null) {
-            return new List<EditionResultDTO>();
-        }
-        
-        return editions.OrderBy(item => item.Volume.ExtractPrefix())
-                       .ThenBy(item => item.Volume.ExtractNumber())
-                       .ToList();
-    }
-
-    /// <summary>
     /// Retrieves the results from the database
     /// </summary>
     /// <param name="criterion">Searched into the title, the author name, the ISBN and the series' name</param>
@@ -121,8 +105,8 @@ public class SimpleSearchManager
 
             results.Add(ResultsDtosGenerator.GenerateSearchResultDTO(
                 book,
-                // Groups the editions by series' name
-                OrderEditionsByVolume(editionsDtos).GroupElementsBySeriesName()
+                // Orders the editions by volume and groups them by series' name
+                editionsDtos.OrderElementsByVolume().GroupElementsBySeriesName()
             ));
         }
 

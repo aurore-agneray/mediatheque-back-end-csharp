@@ -35,4 +35,21 @@ public static class EditionResultDTOExtensions {
             group => group.ToList()
         );
     }
+
+    /// <summary>
+    /// Order the given list by volumes' alphanumerical ascending order
+    /// </summary>
+    /// <param name="editions">List of EditionResultDTO objects</param>
+    /// <returns>Ordered list of EditionResultDTO objects</returns>
+    public static List<EditionResultDTO> OrderElementsByVolume(this IEnumerable<EditionResultDTO> editions)
+    {
+        if (editions == null)
+        {
+            return new List<EditionResultDTO>();
+        }
+
+        return editions.OrderBy(item => item.Volume.ExtractPrefix())
+                       .ThenBy(item => item.Volume.ExtractNumber())
+                       .ToList();
+    }
 }

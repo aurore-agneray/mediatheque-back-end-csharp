@@ -211,7 +211,7 @@ public class BnfSearchService : ISearchService
             // Generates the editions' DTOs
             var editionsDtos = book.Select(edition => 
                 ResultsDtosGenerator.GenerateEditionResultDTO(edition.Value, bookId)
-            ).ToList();
+            ).OrderElementsByVolume().ToList();
 
             editionsDtos.ForEach(ed => ed.Id = editionId++);
 
