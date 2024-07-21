@@ -3,6 +3,8 @@ using System.Xml.Linq;
 using mediatheque_back_csharp.Classes;
 using mediatheque_back_csharp.Constants;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.Extensions;
+using mediatheque_back_csharp.Generators;
 using mediatheque_back_csharp.Interfaces;
 
 namespace mediatheque_back_csharp.Services;
@@ -20,12 +22,6 @@ public class BnfSearchService : ISearchService
     {
         IsAdvanced = isAdvanced;
     }
-
-    /// <summary>
-    /// Used for separating the title and the author's name
-    /// when they are concatenated
-    /// </summary>
-    private const string TITLE_AND_AUTHOR_NAME_SEPARATOR = ";;;";
 
     /// <summary>
     /// Namespace "mxc"
@@ -146,7 +142,7 @@ public class BnfSearchService : ISearchService
         // Keep the result only if the ISBN is not empty
         if (!string.IsNullOrEmpty(isbn = SearchForValue(ref datafields, BnfPropertiesConsts.ISBN))) {
             return new(
-                $"{SearchForValue(ref datafields, BnfPropertiesConsts.TITLE)}{TITLE_AND_AUTHOR_NAME_SEPARATOR}{SearchForValue(ref datafields, BnfPropertiesConsts.AUTHOR)}",
+                $"{SearchForValue(ref datafields, BnfPropertiesConsts.TITLE)}{BnfConsts.TITLE_AND_AUTHOR_NAME_SEPARATOR}{SearchForValue(ref datafields, BnfPropertiesConsts.AUTHOR)}",
                 new() {
                     { BnfPropertiesConsts.ISBN, isbn },
                     { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(ref datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
@@ -196,7 +192,6 @@ public class BnfSearchService : ISearchService
     /// <returns>A list of SearchResultDTOs</returns>
     private List<SearchResultDTO> ConvertExtractedResultsIntoDtos(ref List<KeyValuePair<string, Dictionary<string, string>>> extractedResults) {
 
-        string seriesName, title = null, authorName = null;
         var outList = new List<SearchResultDTO>();
 
         // Groups the results by book and author's name
@@ -204,65 +199,29 @@ public class BnfSearchService : ISearchService
 
         // Creates the DTOs
         int bookId = 1;
+        int editionId = 1;
 
         foreach (var book in groupedByBooks) {
-
-            // Extracts the book's title and the author's name
-            var titleAndAuthorArray = book.Key.Split(TITLE_AND_AUTHOR_NAME_SEPARATOR);
-
-            if (titleAndAuthorArray.Count() < 2) {
-                continue;
-            }
-
-            title = titleAndAuthorArray[0];
-            authorName = titleAndAuthorArray[1];
 
             // Creates for each book a SearchResultDTO that will contain several editions
             var searchResultDto = new SearchResultDTO {
                 BookId = bookId,
-                Book = new BookResultDTO {
-                    Title = title,
-                    Author = new AuthorResultDTO {
-                        CompleteName = authorName
-                    }
-                }
+                Book = ResultsDtosGenerator.GenerateBookResultDTO(book.Key, bookId)
             };
 
-            // Groups the concerned editions by the series' name
-            var editionsGroupedBySeries = book.ToList().GroupBy(
-                editionData => {
-                    seriesName = editionData.Value[BnfPropertiesConsts.SERIES_NAME];
+            // Generates the editions' DTOs
+            var editionsDtos = book.Select(edition => 
+                ResultsDtosGenerator.GenerateEditionResultDTO(edition.Value, bookId)
+            ).ToList();
 
-                    if (string.IsNullOrEmpty(seriesName)) {
-                        return "0";
-                    }
-                    return seriesName;
-                }
-            );
+            editionsDtos.ForEach(ed => ed.Id = editionId++);
 
-            // Completes the list of the editions for the concerned book
-            searchResultDto.Editions = editionsGroupedBySeries.ToDictionary(
-                group => group.Key, 
-                group => group.Select(editionsData => {
-                    return new EditionResultDTO {
-                        BookId = bookId,
-                        Isbn = editionsData.Value[BnfPropertiesConsts.ISBN],
-                        Subtitle = editionsData.Value[BnfPropertiesConsts.SUBTITLE],
-                        PublicationDateBnf = editionsData.Value[BnfPropertiesConsts.PUBLICATION_DATE_BNF],
-                        Volume = editionsData.Value[BnfPropertiesConsts.VOLUME],
-                        Summary = editionsData.Value[BnfPropertiesConsts.SUMMARY],
-                        Series = new SeriesResultDTO {
-                            SeriesName = editionsData.Value[BnfPropertiesConsts.SERIES_NAME]
-                        },
-                        Publisher = new PublisherResultDTO {
-                            PublishingHouse = editionsData.Value[BnfPropertiesConsts.PUBLISHER]
-                        }
-                    };
-                }).ToList()
-            );
+            // Groups the concerned editions by the series' name and completes the list for the concerned book
+            searchResultDto.Editions = editionsDtos.GroupElementsBySeriesName();
 
             outList.Add(searchResultDto);
             bookId++;
+            editionId = 1;
         }
 
         return outList;

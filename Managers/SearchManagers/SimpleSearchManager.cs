@@ -79,38 +79,13 @@ public class SimpleSearchManager
     /// <returns>Ordered list of EditionResultDTO objects</returns>
     private List<EditionResultDTO> OrderEditionsByVolume(IEnumerable<EditionResultDTO> editions)
     {
+        if (editions == null) {
+            return new List<EditionResultDTO>();
+        }
+        
         return editions.OrderBy(item => item.Volume.ExtractPrefix())
                        .ThenBy(item => item.Volume.ExtractNumber())
                        .ToList();
-    }
-
-    /// <summary>
-    /// Groups the editions of the given list into a dictionary 
-    /// where the keys are the series' names
-    /// </summary>
-    /// <param name="editions">List of EditionResultDTOs objects</param>
-    /// <returns>Returns a dictionary where the keys are the series' names
-    /// and the elements are some lists containing editions</returns>
-    private Dictionary<string, List<EditionResultDTO>> GroupEditionsBySeriesName(IEnumerable<EditionResultDTO> editions)
-    {
-        if (editions == null || editions.Count() == 0)
-        {
-            return new Dictionary<string, List<EditionResultDTO>>();
-        }
-
-        return editions.GroupBy(ed =>
-        {
-            if (ed?.Series?.SeriesName != null)
-            {
-                return ed.Series.SeriesName;
-            }
-
-            return "0";
-
-        }).ToDictionary(
-            group => group.Key, 
-            group => group.ToList()
-        );
     }
 
     /// <summary>
@@ -145,9 +120,7 @@ public class SimpleSearchManager
 
             results.Add(new SearchResultDTO(book) {
                 // Groups the editions by series' name
-                Editions = GroupEditionsBySeriesName(
-                    OrderEditionsByVolume(editionsDtos)
-                )
+                Editions = OrderEditionsByVolume(editionsDtos).GroupElementsBySeriesName()
             });
         }
 

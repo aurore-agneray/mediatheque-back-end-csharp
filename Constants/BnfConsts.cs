@@ -11,6 +11,12 @@ public static class BnfConsts {
     /// Base of the url for the Bnf's requests
     /// </summary>
     public const string BNF_API_URL_BASE = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query=";
+    
+    /// <summary>
+    /// Used for separating the title and the author's name
+    /// when they are concatenated
+    /// </summary>
+    public const string TITLE_AND_AUTHOR_NAME_SEPARATOR = ";;;";
 
     /// <summary>
     /// Joins tags and codes used to extract books data from
