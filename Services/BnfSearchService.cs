@@ -88,6 +88,51 @@ public class BnfSearchService : ISearchService
     }
 
     /// <summary>
+    /// Searches for a value into the datafields according to the property name
+    /// </summary>
+    /// <param name="datafields">List of filtered BnfDataField objects</param>
+    /// <param name="propertyName">Name of the property, refers to the file BnfConsts</param>
+    /// <returns>A string value</returns>
+    private string SearchForValue(ref IEnumerable<BnfDataField> datafields, string propertyName) {
+
+        BnfDataField? extractedDataf;
+        string? extractedValue = string.Empty;
+
+        // Gets the convenient tags and codes for the given property name
+        var searchedTagsAndCodes = BnfConsts.TAGS_AND_CODES[propertyName];
+
+        /* "searchParams" contains a tag, ind1, ind2 and the bound codes 
+        ** The different tags are explored while no value is found */
+        foreach (var searchParams in searchedTagsAndCodes) {
+
+            // Takes the BnfDataField corresponding to the tag
+            extractedDataf = datafields.FirstOrDefault(
+                dataf => dataf.Equals(searchParams.Key)
+            );
+            
+            if (extractedDataf == null) {
+                continue;
+            }
+
+            /* Searches for the value into the subfields whose codes are given
+            ** If there are several explored subfields into the same datafield, the values are aggregated */
+            extractedValue = searchParams.Value.Select(code =>
+                extractedDataf.ExtractValueFromSubfield(code)
+            ).Aggregate((agg, next) => 
+                agg + " " + (next ?? string.Empty)
+            );
+
+            if (!string.IsNullOrEmpty(extractedValue)) {
+                break;
+            }
+        }
+
+        return !string.IsNullOrEmpty(extractedValue) 
+                ? extractedValue.Trim() 
+                : string.Empty;
+    }
+
+    /// <summary>
     /// Extracts the properties of the edition from the given BnfDataField list.
     /// The names of these properties are defined into the class BnfPropertiesConsts 
     /// </summary>
@@ -118,23 +163,19 @@ public class BnfSearchService : ISearchService
     }
 
     /// <summary>
-    /// Constructs objects of type SearchResultDTO from XElements of the XML content
+    /// Extracts data from XElements of the XML content in order 
+    /// to store them into dictionaries
     /// </summary>
     /// <param name="xmlNodes">XML nodes</param>
-    /// <returns>Final list of SearchResultDTOs</returns>
-    private List<SearchResultDTO> ExtractResultsFromXmlNodes(ref IEnumerable<XElement> xmlNodes) {
+    /// <returns>Returns objects whose keys are into the format "AUTHORNAME_BOOKNAME" 
+    /// and the values are dictionaries containing editions data</returns>
+    private List<KeyValuePair<string, Dictionary<string, string>>> ExtractResultsFromXmlNodes(ref IEnumerable<XElement> xmlNodes) {
         
         IEnumerable<BnfDataField> datafields;
         KeyValuePair<string, Dictionary<string, string>> extractedEditionData;
-        string seriesName, title = null, authorName = null;
-        var outList = new List<SearchResultDTO>();
-
-        /* Will contain objects whose keys are into the format "AUTHORNAME_BOOKNAME"
-        ** and the values are dictionaries for editions data */
         List<KeyValuePair<string, Dictionary<string, string>>> results = new();
 
         foreach (var result in xmlNodes) {
-            
             datafields = GetDataFieldsFromXElement(result);
             extractedEditionData = ExtractOneEditionData(ref datafields);
 
@@ -144,10 +185,22 @@ public class BnfSearchService : ISearchService
         }
 
         // Orders the results by book and author's name
-        results = results.OrderBy(res => res.Key).ToList();
+        return results.OrderBy(res => res.Key).ToList();
+    }
+
+    /// <summary>
+    /// Converts the given data into DTOs
+    /// </summary>
+    /// <param name="extractedResults">Results that have been extracted from the XML nodes
+    /// and stored into dictionaries</param>
+    /// <returns>A list of SearchResultDTOs</returns>
+    private List<SearchResultDTO> ConvertExtractedResultsIntoDtos(ref List<KeyValuePair<string, Dictionary<string, string>>> extractedResults) {
+
+        string seriesName, title = null, authorName = null;
+        var outList = new List<SearchResultDTO>();
 
         // Groups the results by book and author's name
-        var groupedByBooks = results.GroupBy(res => res.Key);
+        var groupedByBooks = extractedResults.GroupBy(res => res.Key);
 
         // Creates the DTOs
         int bookId = 1;
@@ -216,51 +269,6 @@ public class BnfSearchService : ISearchService
     }
 
     /// <summary>
-    /// Searches for a value into the datafields according to the property name
-    /// </summary>
-    /// <param name="datafields">List of filtered BnfDataField objects</param>
-    /// <param name="propertyName">Name of the property, refers to the file BnfConsts</param>
-    /// <returns>A string value</returns>
-    private string SearchForValue(ref IEnumerable<BnfDataField> datafields, string propertyName) {
-
-        BnfDataField? extractedDataf;
-        string? extractedValue = string.Empty;
-
-        // Gets the convenient tags and codes for the given property name
-        var searchedTagsAndCodes = BnfConsts.TAGS_AND_CODES[propertyName];
-
-        /* "searchParams" contains a tag, ind1, ind2 and the bound codes 
-        ** The different tags are explored while no value is found */
-        foreach (var searchParams in searchedTagsAndCodes) {
-
-            // Takes the BnfDataField corresponding to the tag
-            extractedDataf = datafields.FirstOrDefault(
-                dataf => dataf.Equals(searchParams.Key)
-            );
-            
-            if (extractedDataf == null) {
-                continue;
-            }
-
-            /* Searches for the value into the subfields whose codes are given
-            ** If there are several explored subfields into the same datafield, the values are aggregated */
-            extractedValue = searchParams.Value.Select(code =>
-                extractedDataf.ExtractValueFromSubfield(code)
-            ).Aggregate((agg, next) => 
-                agg + " " + (next ?? string.Empty)
-            );
-
-            if (!string.IsNullOrEmpty(extractedValue)) {
-                break;
-            }
-        }
-
-        return !string.IsNullOrEmpty(extractedValue) 
-                ? extractedValue.Trim() 
-                : string.Empty;
-    }
-
-     /// <summary>
     /// Indicates if it is an advanced or a simple search
     /// </summary>
     public bool IsAdvanced { get; set; }
@@ -314,7 +322,8 @@ public class BnfSearchService : ISearchService
                 return new List<SearchResultDTO>();
             }
 
-            outResults = ExtractResultsFromXmlNodes(ref resultsNodes);
+            var extractedResults = ExtractResultsFromXmlNodes(ref resultsNodes);
+            outResults = ConvertExtractedResultsIntoDtos(ref extractedResults);
         }
 
         return outResults;
