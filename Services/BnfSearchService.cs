@@ -192,6 +192,8 @@ public class BnfSearchService : ISearchService
     private List<SearchResultDTO> ConvertExtractedResultsIntoDtos(List<KeyValuePair<string, Dictionary<string, string>>> extractedResults) {
 
         var outList = new List<SearchResultDTO>();
+        SearchResultDTO searchResultDto;
+        List<EditionResultDTO> editionsDtos;
 
         // Groups the results by book and author's name
         var groupedByBooks = extractedResults.GroupBy(res => res.Key);
@@ -203,13 +205,13 @@ public class BnfSearchService : ISearchService
         foreach (var book in groupedByBooks) {
 
             // Creates for each book a SearchResultDTO that will contain several editions
-            var searchResultDto = new SearchResultDTO {
+            searchResultDto = new() {
                 BookId = bookId,
                 Book = ResultsDtosGenerator.GenerateBookResultDTO(book.Key, bookId)
             };
 
             // Generates the editions' DTOs
-            var editionsDtos = book.Select(edition => 
+            editionsDtos = book.Select(edition => 
                 ResultsDtosGenerator.GenerateEditionResultDTO(edition.Value, bookId)
             ).OrderElementsByVolume().ToList();
 
@@ -260,33 +262,37 @@ public class BnfSearchService : ISearchService
             Async = true
         };
 
+        XDocument fileRoot;
+
         using (var reader = XmlReader.Create(url, readerSettings)) {
 
             // Loads the XML content from the url
-            var fileRoot = await XDocument.LoadAsync(
+            fileRoot = await XDocument.LoadAsync(
                 reader, 
                 LoadOptions.None, 
                 CancellationToken.None
             );
-
-            // Checks the number of records
-            var recordsNumberNode = fileRoot.Descendants(_nSrw + "numberOfRecords")
-                                            .FirstOrDefault();
-
-            if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0) {
-                return new List<SearchResultDTO>();
-            }
-
-            // Checks the results nodes
-            var resultsNodes = fileRoot.Descendants(_nMxc + "record");
-
-            if (resultsNodes == null || resultsNodes.Count() <= 0) {
-                return new List<SearchResultDTO>();
-            }
-
-            var extractedResults = ExtractResultsFromXmlNodes(resultsNodes);
-            outResults = ConvertExtractedResultsIntoDtos(extractedResults);
         }
+
+        // Checks the number of records
+        var recordsNumberNode = fileRoot.Descendants(_nSrw + "numberOfRecords")
+                                        .FirstOrDefault();
+
+        if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0)
+        {
+            return new List<SearchResultDTO>();
+        }
+
+        // Checks the results nodes
+        var resultsNodes = fileRoot.Descendants(_nMxc + "record");
+
+        if (resultsNodes == null || resultsNodes.Count() <= 0)
+        {
+            return new List<SearchResultDTO>();
+        }
+
+        var extractedResults = ExtractResultsFromXmlNodes(resultsNodes);
+        outResults = ConvertExtractedResultsIntoDtos(extractedResults);
 
         return outResults;
     }
