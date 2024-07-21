@@ -26,12 +26,12 @@ public class BnfSearchService : ISearchService
     /// <summary>
     /// Namespace "mxc"
     /// </summary>
-    private XNamespace _nMxc = "info:lc/xmlns/marcxchange-v2";
+    private readonly XNamespace _nMxc = "info:lc/xmlns/marcxchange-v2";
 
     /// <summary>
     /// Namespace "srw"
     /// </summary>
-    private XNamespace _nSrw = "http://www.loc.gov/zing/srw/";
+    private readonly XNamespace _nSrw = "http://www.loc.gov/zing/srw/";
 
     /// <summary>
     /// Constructs the complete string with the conditions to

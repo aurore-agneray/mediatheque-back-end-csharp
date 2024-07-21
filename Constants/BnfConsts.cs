@@ -27,7 +27,7 @@ public static class BnfConsts {
     /// Joins tags and codes used to extract books data from
     /// the XML BnF API result
     /// </summary>
-    public static Dictionary<string, Dictionary<BnfDataField, string[]>> TAGS_AND_CODES => new() {
+    public static readonly Dictionary<string, Dictionary<BnfDataField, string[]>> TAGS_AND_CODES = new() {
         {
             BnfPropertiesConsts.AUTHOR,
             new() {
@@ -91,21 +91,16 @@ public static class BnfConsts {
     };
 
     /// <summary>
-    /// Properties that are retrieved for each edition
-    /// </summary>
-    public static List<string> EXTRACTED_PROPERTIES => TAGS_AND_CODES.Keys.ToList();
-
-    /// <summary>
     /// Tags that are searched into the XML content
     /// </summary>
-    public static List<string> NEEDED_TAGS => TAGS_AND_CODES.SelectMany(
+    public static readonly List<string> NEEDED_TAGS = TAGS_AND_CODES.SelectMany(
         item => item.Value.Select(tagAndCodes => tagAndCodes.Key.Tag)
     ).Distinct().ToList();
 
     /// <summary>
     /// Returns the parametered part of the simple search request's url
     /// </summary>
-    public static Func<string, int, string> SIMPLE_SEARCH_PARAMETERED_CONDITIONS = (string criterion, int noticesQty) => {
+    public static readonly Func<string, int, string> SIMPLE_SEARCH_PARAMETERED_CONDITIONS = (string criterion, int noticesQty) => {
 
         return string.Concat(
             $"bib.author all {criterion} or bib.title all {criterion} ",
