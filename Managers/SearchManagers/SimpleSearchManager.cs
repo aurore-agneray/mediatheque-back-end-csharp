@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Extensions;
+using mediatheque_back_csharp.Generators;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
 using static System.Linq.Queryable;
@@ -118,10 +119,11 @@ public class SimpleSearchManager
                                                                         .ProjectTo<EditionResultDTO>(_mapper.ConfigurationProvider)
                                                                         .ToListAsync();
 
-            results.Add(new SearchResultDTO(book) {
+            results.Add(ResultsDtosGenerator.GenerateSearchResultDTO(
+                book,
                 // Groups the editions by series' name
-                Editions = OrderEditionsByVolume(editionsDtos).GroupElementsBySeriesName()
-            });
+                OrderEditionsByVolume(editionsDtos).GroupElementsBySeriesName()
+            ));
         }
 
         return results;

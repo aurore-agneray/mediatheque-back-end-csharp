@@ -63,4 +63,19 @@ public static class ResultsDtosGenerator {
             Id = bookId
         };
     }
+
+    /// <summary>
+    /// Generates a SearchResultDTO and associates the given BookResultDTO
+    /// to its "Book" property
+    /// </summary>
+    /// <param name="book">A BookDTO object</param>
+    /// <param name="editionsGroupedBySeriesName">A dictionary whose keys are series' names and values are editions</param>
+    public static SearchResultDTO GenerateSearchResultDTO(BookResultDTO book, Dictionary<string, List<EditionResultDTO>> editionsGroupedBySeriesName)
+    {
+        return new SearchResultDTO {
+            BookId = book.Id,
+            Book = book,
+            Editions = editionsGroupedBySeriesName
+        };
+    }
 }
