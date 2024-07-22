@@ -48,7 +48,7 @@ public class BnfSearchService : ISearchService
     /// <summary>
     /// StringBuilder for concatenating strings
     /// </summary>
-    private StringBuilder stringBuilder = new StringBuilder();
+    private StringBuilder _stringBuilder = new StringBuilder();
 
     /// <summary>
     /// Constructs the complete string with the conditions to
@@ -67,11 +67,11 @@ public class BnfSearchService : ISearchService
             noticesQty = BnfConsts.DEFAULT_NOTICES_NUMBER;
         }
 
-        stringBuilder = stringBuilder.Clear();
-        stringBuilder.Append(DOUBLE_QUOTES)
+        _stringBuilder = _stringBuilder.Clear();
+        _stringBuilder.Append(DOUBLE_QUOTES)
                      .Append(criterion.Replace(SPACE, PLUS))
                      .Append(DOUBLE_QUOTES);
-        criterion = stringBuilder.ToString();
+        criterion = _stringBuilder.ToString();
 
         return BnfConsts.SIMPLE_SEARCH_PARAMETERED_CONDITIONS(criterion, noticesQty);
     }
@@ -157,19 +157,19 @@ public class BnfSearchService : ISearchService
     /// <returns>An KeyValuePair whose key is into the format "AUTHORNAME_BOOKNAME" 
     /// and the value is a dictionary containing the edition's data</returns>
     private KeyValuePair<string, Dictionary<string, string>> ExtractOneEditionData(IEnumerable<BnfDataField> datafields) {
-        
+
         string isbn;
 
         // Keep the result only if the ISBN is not empty
         if (!string.IsNullOrEmpty(isbn = SearchForValue(datafields, BnfPropertiesConsts.ISBN))) {
 
-            stringBuilder = stringBuilder.Clear();
-            stringBuilder.Append(SearchForValue(datafields, BnfPropertiesConsts.TITLE))
+            _stringBuilder = _stringBuilder.Clear();
+            _stringBuilder.Append(SearchForValue(datafields, BnfPropertiesConsts.TITLE))
                          .Append(BnfConsts.TITLE_AND_AUTHOR_NAME_SEPARATOR)
                          .Append(SearchForValue(datafields, BnfPropertiesConsts.AUTHOR));
 
             return new(
-                stringBuilder.ToString(),
+                _stringBuilder.ToString(),
                 new() {
                     { BnfPropertiesConsts.ISBN, isbn },
                     { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
