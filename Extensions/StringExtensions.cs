@@ -7,6 +7,11 @@ namespace mediatheque_back_csharp.Extensions
     /// </summary>
     public static class StringExtensions
     {
+        private const string _alphabeticalPattern = @"^\D+";
+        private const string _numericalPattern = @"^\d+";
+        private static readonly Regex _alphabeticalRegex = new Regex(_alphabeticalPattern);
+        private static readonly Regex _numericalRegex = new Regex(_numericalPattern);
+
         /// <summary>
         /// Extracts the ALPHABETICAL prefix of the given string
         /// </summary>
@@ -20,7 +25,7 @@ namespace mediatheque_back_csharp.Extensions
                 return string.Empty;
             }
 
-            var match = Regex.Match(input, @"^\D+");
+            var match = _alphabeticalRegex.Match(input);
             return match.Success ? match.Value.Trim() : string.Empty;
         }
 
@@ -37,7 +42,7 @@ namespace mediatheque_back_csharp.Extensions
                 return 0;
             }
 
-            var match = Regex.Match(input, @"\d+");
+            var match = _numericalRegex.Match(input);
             return match.Success ? int.Parse(match.Value) : 0;
         }
     }
