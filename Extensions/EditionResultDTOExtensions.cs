@@ -1,3 +1,4 @@
+using mediatheque_back_csharp.Constants;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 
 namespace mediatheque_back_csharp.Extensions;
@@ -28,7 +29,7 @@ public static class EditionResultDTOExtensions {
                 return ed.Series.SeriesName;
             }
 
-            return "0";
+            return BnfConsts.NO_SERIES_NAME;
 
         }).ToDictionary(
             group => group.Key, 

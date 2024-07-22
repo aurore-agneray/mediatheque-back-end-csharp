@@ -25,6 +25,11 @@ public static class BnfConsts {
     public const string IND_DEFAULT_VALUE = " ";
 
     /// <summary>
+    /// Word used for defining a group of editions that are not attached to a series
+    /// </summary>
+    public const string NO_SERIES_NAME = "0";
+
+    /// <summary>
     /// The default max number of notices returned by the API
     /// </summary>
     public const int DEFAULT_NOTICES_NUMBER = 20;
