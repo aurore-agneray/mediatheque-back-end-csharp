@@ -4,6 +4,7 @@ using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Generators;
 using mediatheque_back_csharp.Interfaces;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -14,6 +15,17 @@ namespace mediatheque_back_csharp.Services;
 /// </summary>
 public class BnfSearchService : ISearchService
 {
+    private const string DOUBLE_QUOTES = "\"";
+    private const string SPACE = " ";
+    private const string PLUS = "+";
+    private const string DATAFIELD = "datafield";
+    private const string TAG = "tag";
+    private const string IND1 = "ind1";
+    private const string IND2 = "ind2";
+    private const string CODE = "code";
+    private const string NUMBER_OF_RECORDS = "numberOfRecords";
+    private const string RECORD = "record";
+
     /// <summary>
     /// Main constructor
     /// </summary>
@@ -34,6 +46,11 @@ public class BnfSearchService : ISearchService
     private readonly XNamespace _nSrw = "http://www.loc.gov/zing/srw/";
 
     /// <summary>
+    /// StringBuilder for concatenating strings
+    /// </summary>
+    private StringBuilder stringBuilder = new StringBuilder();
+
+    /// <summary>
     /// Constructs the complete string with the conditions to
     /// send to the BnF API
     /// </summary>
@@ -50,7 +67,11 @@ public class BnfSearchService : ISearchService
             noticesQty = BnfConsts.DEFAULT_NOTICES_NUMBER;
         }
 
-        criterion = "\"" + criterion.Replace(" ", "+") + "\"";
+        stringBuilder = stringBuilder.Clear();
+        stringBuilder.Append(DOUBLE_QUOTES)
+                     .Append(criterion.Replace(SPACE, PLUS))
+                     .Append(DOUBLE_QUOTES);
+        criterion = stringBuilder.ToString();
 
         return BnfConsts.SIMPLE_SEARCH_PARAMETERED_CONDITIONS(criterion, noticesQty);
     }
@@ -63,20 +84,20 @@ public class BnfSearchService : ISearchService
     /// <returns>A list of BnfDataFields</returns>
     private IEnumerable<BnfDataField> GetDataFieldsFromXElement(XElement result) {
 
-        return result.Descendants(_nMxc + "datafield")
+        return result.Descendants(_nMxc + DATAFIELD)
             .Where(node => 
                 node.Attributes().ToList().Exists(
-                    at => at.Name == "tag"
+                    at => at.Name == TAG
                     && BnfConsts.NEEDED_TAGS.Contains(at.Value)
                 )
             )
             .Select(rawDataField => new BnfDataField() {
-                Tag = rawDataField.Attribute("tag").Value,
-                Ind1 = rawDataField.Attribute("ind1").Value,
-                Ind2 = rawDataField.Attribute("ind2").Value,
+                Tag = rawDataField.Attribute(TAG).Value,
+                Ind1 = rawDataField.Attribute(IND1).Value,
+                Ind2 = rawDataField.Attribute(IND2).Value,
                 Subfields = rawDataField.Descendants().Select(rawSubfield => 
                     new BnfSubField {
-                        Code = rawSubfield.Attribute("code").Value,
+                        Code = rawSubfield.Attribute(CODE).Value,
                         Value = rawSubfield.Value
                     }
                 )
@@ -114,7 +135,7 @@ public class BnfSearchService : ISearchService
             ** If there are several explored subfields into the same datafield, the values are aggregated */
             extractedValue = searchParams.Value.Select(code =>
                 extractedDataf.ExtractValueFromSubfield(code)
-            ).Aggregate((agg, next) => 
+            ).Aggregate((agg, next) =>
                 agg + " " + (next ?? string.Empty)
             );
 
@@ -141,8 +162,14 @@ public class BnfSearchService : ISearchService
 
         // Keep the result only if the ISBN is not empty
         if (!string.IsNullOrEmpty(isbn = SearchForValue(datafields, BnfPropertiesConsts.ISBN))) {
+
+            stringBuilder = stringBuilder.Clear();
+            stringBuilder.Append(SearchForValue(datafields, BnfPropertiesConsts.TITLE))
+                         .Append(BnfConsts.TITLE_AND_AUTHOR_NAME_SEPARATOR)
+                         .Append(SearchForValue(datafields, BnfPropertiesConsts.AUTHOR));
+
             return new(
-                $"{SearchForValue(datafields, BnfPropertiesConsts.TITLE)}{BnfConsts.TITLE_AND_AUTHOR_NAME_SEPARATOR}{SearchForValue(datafields, BnfPropertiesConsts.AUTHOR)}",
+                stringBuilder.ToString(),
                 new() {
                     { BnfPropertiesConsts.ISBN, isbn },
                     { BnfPropertiesConsts.PUBLICATION_DATE_BNF, SearchForValue(datafields, BnfPropertiesConsts.PUBLICATION_DATE_BNF) },
@@ -275,7 +302,7 @@ public class BnfSearchService : ISearchService
         }
 
         // Checks the number of records
-        var recordsNumberNode = fileRoot.Descendants(_nSrw + "numberOfRecords")
+        var recordsNumberNode = fileRoot.Descendants(_nSrw + NUMBER_OF_RECORDS)
                                         .FirstOrDefault();
 
         if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0)
@@ -284,7 +311,7 @@ public class BnfSearchService : ISearchService
         }
 
         // Checks the results nodes
-        var resultsNodes = fileRoot.Descendants(_nMxc + "record");
+        var resultsNodes = fileRoot.Descendants(_nMxc + RECORD);
 
         if (resultsNodes == null || resultsNodes.Count() <= 0)
         {
