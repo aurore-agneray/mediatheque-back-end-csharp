@@ -19,6 +19,12 @@ public static class BnfConsts {
     public const string TITLE_AND_AUTHOR_NAME_SEPARATOR = ";;;";
 
     /// <summary>
+    /// Defines the default value of the properties Ind1 and Ind2 
+    /// of the Datafields
+    /// </summary>
+    public const string IND_DEFAULT_VALUE = " ";
+
+    /// <summary>
     /// The default max number of notices returned by the API
     /// </summary>
     public const int DEFAULT_NOTICES_NUMBER = 20;

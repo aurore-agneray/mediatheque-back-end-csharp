@@ -1,3 +1,5 @@
+using mediatheque_back_csharp.Constants;
+
 namespace mediatheque_back_csharp.Classes;
 
 /// <summary>
@@ -14,13 +16,13 @@ public class BnfDataField {
     /// Value of the attribute "ind1"
     /// If " ", all compared values will be equal
     /// </summary>
-    public string Ind1 { get; set; } = " ";
+    public string Ind1 { get; set; } = BnfConsts.IND_DEFAULT_VALUE;
 
     /// <summary>
     /// Value of the attribute "ind2"
     /// If " ", all compared values will be equal
     /// </summary>
-    public string Ind2 { get; set; } = " ";
+    public string Ind2 { get; set; } = BnfConsts.IND_DEFAULT_VALUE;
 
     /// <summary>
     /// Subnodes of type mxc:subfield
@@ -40,8 +42,8 @@ public class BnfDataField {
         }
 
         return this.Tag == otherDf.Tag
-            && (this.Ind1 == otherDf.Ind1 || otherDf.Ind1 == " ")
-            && (this.Ind2 == otherDf.Ind2 || otherDf.Ind2 == " ");
+            && (this.Ind1 == otherDf.Ind1 || otherDf.Ind1 == BnfConsts.IND_DEFAULT_VALUE)
+            && (this.Ind2 == otherDf.Ind2 || otherDf.Ind2 == BnfConsts.IND_DEFAULT_VALUE);
     }
 
     /// <summary>
