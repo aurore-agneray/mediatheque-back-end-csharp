@@ -4,27 +4,30 @@ using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
 
-var routePrefix = "/api";
+const string ROUTE_PREFIX = "/api";
+const string MY_SETTINGS = "MySettings";
 
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
 
 // Retrieves the configuration settings entered into the appsettings.json file
-builder.Services.Configure<MySettingsModel>(builder.Configuration.GetSection("MySettings"));
-var myAppSettings = builder.Configuration.GetSection("MySettings").Get<MySettingsModel>();
+var myAppSettings = builder.Configuration.GetSection(MY_SETTINGS);
+builder.Services.Configure<MySettingsModel>(myAppSettings);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(ServicesOptions.GetSwaggerGenOptions(routePrefix));
+builder.Services.AddSwaggerGen(ServicesOptions.GetSwaggerGenOptions(ROUTE_PREFIX));
 
 // Add the connection to the database
 builder.Services.AddDbContext<MediathequeDbContext>();
 
 // Configures CORS policy
-builder.Services.AddCors(ServicesOptions.GetCorsOptions(myAppSettings));
+builder.Services.AddCors(
+    ServicesOptions.GetCorsOptions(myAppSettings.Get<MySettingsModel>())
+);
 
 // Configures AutoMapper used for converting my POCOs into DTOs
 builder.Services.AddAutoMapper(cfg =>
@@ -49,8 +52,8 @@ app.UseHttpsRedirection();
 app.UseCors();
 
 // Custom middleware to enforce route prefix
-app.UseMiddleware<GlobalRoutePrefixMiddleware>(routePrefix);
-app.UsePathBase(new PathString(routePrefix));
+app.UseMiddleware<GlobalRoutePrefixMiddleware>(ROUTE_PREFIX);
+app.UsePathBase(new PathString(ROUTE_PREFIX));
 app.UseRouting();
 
 app.UseAuthorization();
