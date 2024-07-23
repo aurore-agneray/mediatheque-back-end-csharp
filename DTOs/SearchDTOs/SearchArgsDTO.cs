@@ -3,10 +3,15 @@ using mediatheque_back_csharp.Dtos;
 namespace mediatheque_back_csharp.DTOs.SearchDTOs;
 
 /// <summary>
-/// Arguments received for the advanced search
+/// Arguments received for the search
 /// </summary>
-public class AdvancedSearchArgsDTO
+public class SearchArgsDTO
 {
+    /// <summary>
+    /// Criterion (Book's title, author's name, series' name or ISBN)
+    /// </summary>
+    public string? Criterion { get; set; }
+
     /// <summary>
     /// Book's title
     /// </summary>
