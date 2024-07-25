@@ -46,6 +46,12 @@ public class BnfSearchService : ISearchService
     private readonly XNamespace _nSrw = "http://www.loc.gov/zing/srw/";
 
     /// <summary>
+    /// Defines the options used for reading the XML files
+    /// </summary>
+
+    private readonly XmlReaderSettings _xmlReaderSettings = new XmlReaderSettings { Async = true };
+
+    /// <summary>
     /// StringBuilder for concatenating strings
     /// </summary>
     private StringBuilder _stringBuilder = new StringBuilder();
@@ -283,29 +289,30 @@ public class BnfSearchService : ISearchService
         var outResults = new List<SearchResultDTO>();
         var stringCriterion = (string)criterion;
         var url = BnfConsts.BNF_API_URL_BASE + GetSimpleSearchConditions(stringCriterion, noticesNb);
+        string numberContent = string.Empty;
 
-        // Configures the XML reader
-        var readerSettings = new XmlReaderSettings() {
-            Async = true
-        };
+        XDocument fileRoot = new XDocument();
 
-        XDocument fileRoot;
-
-        using (var reader = XmlReader.Create(url, readerSettings)) {
-
-            // Loads the XML content from the url
-            fileRoot = await XDocument.LoadAsync(
-                reader, 
-                LoadOptions.None, 
-                CancellationToken.None
-            );
+        using (var reader = XmlReader.Create(url, _xmlReaderSettings))
+        {
+            while (await reader.ReadAsync())
+            {
+                //if (reader.NodeType == XmlNodeType.Element && reader.Name == "srw:" + NUMBER_OF_RECORDS)
+                //{
+                //    numberContent = await reader.ReadInnerXmlAsync();
+                //}
+                //else if (reader.NodeType == XmlNodeType.Element && reader.Name == "srw:records")
+                //{
+                //    Console.WriteLine(reader.ReadInnerXml());
+                //}
+            }
         }
 
         // Checks the number of records
         var recordsNumberNode = fileRoot.Descendants(_nSrw + NUMBER_OF_RECORDS)
                                         .FirstOrDefault();
 
-        if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0)
+        if (!int.TryParse(numberContent, out int resultsNumber) || resultsNumber <= 0)
         {
             return new List<SearchResultDTO>();
         }
