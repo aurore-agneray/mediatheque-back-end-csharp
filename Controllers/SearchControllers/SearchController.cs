@@ -8,8 +8,8 @@ namespace mediatheque_back_csharp.Controllers.SearchControllers;
 /// API's requests for the book search
 /// </summary>
 [ApiController]
-[Route("")]
-public class SearchController : ControllerBase
+[Route("/search")]
+public abstract class SearchController : ControllerBase
 {
     /// <summary>
     /// Logger for the SearchController
@@ -38,8 +38,14 @@ public class SearchController : ControllerBase
     /// <param name="criteria">Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
     [HttpPost]
-    public async Task<List<SearchResultDTO>> Post(SearchArgsDTO criteria)
+    public async Task<IActionResult> Post(SearchArgsDTO criteria)
     {
-        return await _manager.SearchForResults(criteria);
+        if (_manager == null) {
+            return NotFound();
+        }
+
+        var results = await _manager.SearchForResults(criteria);
+
+        return Ok(results);
     }
 }
