@@ -35,6 +35,8 @@ public class AdvancedSearchManager : SearchManager
         {
             return default;
         }
+        
+        DateTime criterionDate;
 
         IQueryable<Book> query = (
             from boo in _context.Books
@@ -87,6 +89,45 @@ public class AdvancedSearchManager : SearchManager
             expression = expression.Or(book =>
                 book.Editions.Any(ed => ed.FormatId == criteria.Format.Id)
             );
+        }
+
+        if (!string.IsNullOrEmpty(criteria?.PubDate?.Criterion) 
+            && !string.IsNullOrEmpty(criteria?.PubDate?.Operator)
+            && DateTime.TryParse(criteria.PubDate.Criterion, out criterionDate)) {
+
+            if (criteria.PubDate.Operator == "=") {
+                expression = expression.Or(book => 
+                    book.Editions.Any(ed => 
+                        (ed.PublicationDate.HasValue 
+                        && DateTime.Equals(criterionDate.Date, ed.PublicationDate.Value.Date))
+                        ||
+                        (ed.PublicationYear.HasValue 
+                        && criterionDate.Year == ed.PublicationYear.Value)
+                    )
+                );
+            }
+            else if (criteria.PubDate.Operator == "<") {
+                expression = expression.Or(book => 
+                    book.Editions.Any(ed => 
+                        (ed.PublicationDate.HasValue 
+                        && DateTime.Compare(ed.PublicationDate.Value.Date, criterionDate.Date) < 0)
+                        ||
+                        (ed.PublicationYear.HasValue 
+                        && ed.PublicationYear.Value < criterionDate.Year)
+                    )
+                );
+            }
+            else if (criteria.PubDate.Operator == ">") {
+                expression = expression.Or(book => 
+                    book.Editions.Any(ed => 
+                        (ed.PublicationDate.HasValue 
+                        && DateTime.Compare(ed.PublicationDate.Value.Date, criterionDate.Date) > 0)
+                        ||
+                        (ed.PublicationYear.HasValue 
+                        && ed.PublicationYear.Value > criterionDate.Year)
+                    )
+                );
+            }
         }
 
         if (!string.IsNullOrEmpty(criteria?.Author))
