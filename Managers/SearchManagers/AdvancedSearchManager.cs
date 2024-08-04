@@ -2,9 +2,9 @@ using AutoMapper;
 using LinqKit;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
@@ -93,41 +93,9 @@ public class AdvancedSearchManager : SearchManager
 
         if (!string.IsNullOrEmpty(criteria?.PubDate?.Criterion) 
             && !string.IsNullOrEmpty(criteria?.PubDate?.Operator)
-            && DateTime.TryParse(criteria.PubDate.Criterion, out criterionDate)) {
-
-            if (criteria.PubDate.Operator == "=") {
-                expression = expression.Or(book => 
-                    book.Editions.Any(ed => 
-                        (ed.PublicationDate.HasValue 
-                        && DateTime.Equals(criterionDate.Date, ed.PublicationDate.Value.Date))
-                        ||
-                        (ed.PublicationYear.HasValue 
-                        && criterionDate.Year == ed.PublicationYear.Value)
-                    )
-                );
-            }
-            else if (criteria.PubDate.Operator == "<") {
-                expression = expression.Or(book => 
-                    book.Editions.Any(ed => 
-                        (ed.PublicationDate.HasValue 
-                        && DateTime.Compare(ed.PublicationDate.Value.Date, criterionDate.Date) < 0)
-                        ||
-                        (ed.PublicationYear.HasValue 
-                        && ed.PublicationYear.Value < criterionDate.Year)
-                    )
-                );
-            }
-            else if (criteria.PubDate.Operator == ">") {
-                expression = expression.Or(book => 
-                    book.Editions.Any(ed => 
-                        (ed.PublicationDate.HasValue 
-                        && DateTime.Compare(ed.PublicationDate.Value.Date, criterionDate.Date) > 0)
-                        ||
-                        (ed.PublicationYear.HasValue 
-                        && ed.PublicationYear.Value > criterionDate.Year)
-                    )
-                );
-            }
+            && DateTime.TryParse(criteria.PubDate.Criterion, out criterionDate)) 
+        {
+            expression = expression.AddPublicationDateCondition(criteria.PubDate.Operator, criterionDate);
         }
 
         if (!string.IsNullOrEmpty(criteria?.Author))
