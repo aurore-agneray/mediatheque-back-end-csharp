@@ -73,14 +73,17 @@ public class AdvancedSearchManager : SearchManager
         if (!string.IsNullOrEmpty(criteria?.Title))
         {
             expression = expression.Or(book =>
-                book.Title != null && book.Title.Contains(criteria.Title)
+                book.Title != null 
+                && book.Title.Contains(criteria.Title)
             );
         }
 
         if (!string.IsNullOrEmpty(criteria?.Author))
         {
             expression = expression.Or(book =>
-                book.Author != null && book.Author.CompleteName != null && book.Author.CompleteName.Contains(criteria.Author)
+                book.Author != null 
+                && book.Author.CompleteName != null 
+                && book.Author.CompleteName.Contains(criteria.Author)
             );
         }
 
@@ -102,7 +105,10 @@ public class AdvancedSearchManager : SearchManager
         if (!string.IsNullOrEmpty(criteria?.Isbn))
         {
             expression = expression.Or(book =>
-                book.Editions.Any(ed => ed.Isbn == criteria.Isbn)
+                book.Editions.Any(ed => 
+                    ed.Isbn != null
+                    && ed.Isbn.Replace("-", string.Empty) == criteria.Isbn.Replace("-", string.Empty)
+                )
             );
         }
 
@@ -117,7 +123,9 @@ public class AdvancedSearchManager : SearchManager
         {
             expression = expression.Or(book =>
                 book.Editions.Any(ed =>
-                    ed.Series != null && ed.Series.Name != null && ed.Series.Name.Contains(criteria.Series)
+                    ed.Series != null 
+                    && ed.Series.Name != null 
+                    && ed.Series.Name.Contains(criteria.Series)
                 )
             );
         }
