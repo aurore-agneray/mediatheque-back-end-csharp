@@ -4,6 +4,7 @@ using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
@@ -179,5 +180,22 @@ public class AdvancedSearchManager : SearchManager
         AddEditionsConditions(ref expression, criteria);
 
         return query.Where(expression);
+    }
+
+    protected override SearchArgsDTO DeserializeCriteria(string criteriaStr)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        SearchArgsDTO? criteria = JsonSerializer.Deserialize<SearchArgsDTO>(criteriaStr, options);
+
+        if (criteria == null)
+        {
+            return null;
+        }
+
+        return criteria;
     }
 }
