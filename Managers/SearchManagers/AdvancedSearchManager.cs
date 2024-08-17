@@ -180,23 +180,4 @@ public class AdvancedSearchManager : SearchManager
 
         return query.Where(expression);
     }
-
-    /// <summary>
-    /// Processes the advanced search
-    /// </summary>
-    /// <param name="criteria">Object containing the search criteria</param>
-    /// <returns>List of some SearchResultsDTO objects</returns>
-    public override async Task<List<SearchResultDTO>> SearchForResults(SearchArgsDTO criteria)
-    {
-        var query = GetOrderedBooksRequest(criteria);
-
-        if (query != null)
-        {
-            var asyncList = await query.ToListAsync();
-            var dtos = _mapper.Map<List<BookResultDTO>>(asyncList);
-            return dtos.Select(dto => new SearchResultDTO(dto)).ToList();
-        }
-
-        return new List<SearchResultDTO>();
-    }
 }
