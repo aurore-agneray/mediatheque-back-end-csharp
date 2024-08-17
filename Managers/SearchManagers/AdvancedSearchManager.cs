@@ -142,9 +142,9 @@ public class AdvancedSearchManager : SearchManager
     /// retrieve the books from the database,
     /// ordered by the title
     /// </summary>
-    /// <param name="criteria">Criteria sent by the client</param>
+    /// <param name="criteria">Criteria sent by the client</param>M
     /// <returns>A IQueryable<Book> object</returns>
-    private IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO criteria)
+    protected override IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO criteria)
     {
         if (criteria == null)
         {
