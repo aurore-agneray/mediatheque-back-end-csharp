@@ -5,6 +5,8 @@ using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
@@ -42,6 +44,8 @@ public abstract class SearchManager {
     /// <param name="criteria">Criteria sent by the client</param>M
     /// <returns>A IQueryable<Book> object</returns>
     protected abstract IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO criteria);
+
+    protected abstract object DeserializeCriteria(string criteria);
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 
@@ -101,15 +105,36 @@ public abstract class SearchManager {
     /// Processes the search that can be of type "simple" or "advanced".
     /// The difference is defined by the "GetOrderedBooksRequest" call.
     /// </summary>
-    /// <param name="criteria">Object containing the search criteria</param>
+    /// <param name="criteria">SERIALIZED Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
-    public async Task<List<SearchResultDTO>> SearchForResults(SearchArgsDTO criteria)
+    public async Task<List<SearchResultDTO>> SearchForResults(string criteria)
     {
+        List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
+        
+        // Deserializes the received criteria
+        object deserializedCriteria = DeserializeCriteria(criteria);
+        SearchArgsDTO criteriaDto;
+
+        if (deserializedCriteria is SearchArgsDTO args)
+        {
+            criteriaDto = args;
+        }
+        else if (deserializedCriteria is string criterion)
+        {
+            criteriaDto = new SearchArgsDTO
+            {
+                Criterion = criterion
+            };
+        }
+        else
+        {
+            return searchResultsDtos;
+        }
+
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
-        List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
 
-        var booksQuery = GetOrderedBooksRequest(criteria);
+        var booksQuery = GetOrderedBooksRequest(criteriaDto);
 
         // Completes the first list with the books
         if (booksQuery != null)

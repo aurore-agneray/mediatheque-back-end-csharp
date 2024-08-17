@@ -37,10 +37,11 @@ public abstract class SearchController : ControllerBase
     /// <summary>
     /// Post CRUD request for the research.
     /// </summary>
-    /// <param name="criteria">Object containing the search criteria</param>
+    /// <param name="criteria">SERIALIZED Object containing the search criteria, 
+    /// or a simple string for the simple search</param>
     /// <returns>List of some SearchResultsDTO objects OR an error</returns>
     [HttpPost]
-    public async Task<IActionResult> Post(SearchArgsDTO criteria)
+    public async Task<IActionResult> Post(string criteria)
     {
         if (_manager == null) {
             return NotFound();
