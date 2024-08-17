@@ -1,6 +1,7 @@
 using AutoMapper;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.Pocos;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
@@ -29,6 +30,15 @@ public abstract class SearchManager {
         _context = context;
         _mapper = mapper;
     }
+
+    /// <summary>
+    /// Generate the IQueryable object dedicated to 
+    /// retrieve the books from the database,
+    /// ordered by the title
+    /// </summary>
+    /// <param name="criteria">Criteria sent by the client</param>M
+    /// <returns>A IQueryable<Book> object</returns>
+    protected abstract IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO criteria);
 
     /// <summary>
     /// Abstract method that processes the simple or the advanced search
