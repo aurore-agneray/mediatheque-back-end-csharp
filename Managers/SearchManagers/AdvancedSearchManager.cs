@@ -69,7 +69,7 @@ public class AdvancedSearchManager : SearchManager
     /// </summary>
     /// <param name="expression">ExpressionStarter<Book> object</param>
     /// <param name="criteria">Criteria sent by the client</param>
-    private void AddBookConditions(ref ExpressionStarter<Book> expression, SearchArgsDTO criteria) {
+    private void AddBookConditions(ref ExpressionStarter<Book> expression, AdvancedSearchArgsDTO criteria) {
 
         if (!string.IsNullOrEmpty(criteria?.Title))
         {
@@ -99,7 +99,7 @@ public class AdvancedSearchManager : SearchManager
     /// </summary>
     /// <param name="expression">ExpressionStarter<Book> object</param>
     /// <param name="criteria">Criteria sent by the client</param>
-    private void AddEditionsConditions(ref ExpressionStarter<Book> expression, SearchArgsDTO criteria) {
+    private void AddEditionsConditions(ref ExpressionStarter<Book> expression, AdvancedSearchArgsDTO criteria) {
         
         DateTime criterionDate;
 
@@ -151,11 +151,11 @@ public class AdvancedSearchManager : SearchManager
     /// retrieve the books from the database,
     /// ordered by the title
     /// </summary>
-    /// <param name="criteria">Criteria sent by the client</param>M
+    /// <param name="searchArgs">Criteria sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    protected override IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO criteria)
+    protected override IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO searchArgs)
     {
-        if (criteria == null)
+        if (searchArgs?.Criteria == null)
         {
             return default;
         }
@@ -176,26 +176,9 @@ public class AdvancedSearchManager : SearchManager
 
         var expression = PredicateBuilder.New<Book>(false);
 
-        AddBookConditions(ref expression, criteria);
-        AddEditionsConditions(ref expression, criteria);
+        AddBookConditions(ref expression, searchArgs.Criteria);
+        AddEditionsConditions(ref expression, searchArgs.Criteria);
 
         return query.Where(expression);
-    }
-
-    protected override SearchArgsDTO DeserializeCriteria(string criteriaStr)
-    {
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
-
-        SearchArgsDTO? criteria = JsonSerializer.Deserialize<SearchArgsDTO>(criteriaStr, options);
-
-        if (criteria == null)
-        {
-            return null;
-        }
-
-        return criteria;
     }
 }
