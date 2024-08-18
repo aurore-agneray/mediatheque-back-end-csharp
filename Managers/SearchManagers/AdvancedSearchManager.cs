@@ -69,7 +69,7 @@ public class AdvancedSearchManager : SearchManager
     /// </summary>
     /// <param name="expression">ExpressionStarter<Book> object</param>
     /// <param name="criteria">Criteria sent by the client</param>
-    private void AddBookConditions(ref ExpressionStarter<Book> expression, AdvancedSearchArgsDTO criteria) {
+    private void AddBookConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria) {
 
         if (!string.IsNullOrEmpty(criteria?.Title))
         {
@@ -99,7 +99,7 @@ public class AdvancedSearchManager : SearchManager
     /// </summary>
     /// <param name="expression">ExpressionStarter<Book> object</param>
     /// <param name="criteria">Criteria sent by the client</param>
-    private void AddEditionsConditions(ref ExpressionStarter<Book> expression, AdvancedSearchArgsDTO criteria) {
+    private void AddEditionsConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria) {
         
         DateTime criterionDate;
 
