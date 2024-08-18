@@ -5,8 +5,6 @@ using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
