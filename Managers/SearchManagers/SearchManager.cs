@@ -137,7 +137,10 @@ public abstract class SearchManager {
         if (editionsList != null && editionsList.Any())
         {
             searchResultsDtos = booksList.Select(dto =>
-                new SearchResultDTO(dto)
+                new SearchResultDTO {
+                    BookId = dto.Id,
+                    Book = dto
+                }
             ).ToList();
 
             searchResultsDtos.ForEach(rDto => {
