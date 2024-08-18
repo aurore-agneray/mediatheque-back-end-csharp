@@ -22,10 +22,5 @@ public class CustomSwaggerFilter : IDocumentFilter
             .ToList();
 
         pathsToHide.ForEach(path => swaggerDoc.Paths.Remove(path));
-
-        foreach (var path in pathsToHide)
-        {
-            swaggerDoc.Paths.Remove(path);
-        }
     }
 }
