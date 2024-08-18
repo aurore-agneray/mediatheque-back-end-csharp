@@ -19,6 +19,7 @@ public static class ServicesOptions
         return c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Médiathèque", Version = "v1" });
+            c.DocumentFilter<CustomSwaggerFilter>();
             c.AddServer(new OpenApiServer
             {
                 Url = routePrefix,

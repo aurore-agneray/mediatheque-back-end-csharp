@@ -35,8 +35,9 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<AutoMapperProfile>();
 });
 
-// Injects my simple search manager
+// Injects my search managers
 builder.Services.AddScoped<SimpleSearchManager>();
+builder.Services.AddScoped<AdvancedSearchManager>();
 
 var app = builder.Build();
 
