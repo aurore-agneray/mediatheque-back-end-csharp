@@ -3,8 +3,6 @@ using LinqKit;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.Pocos;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
