@@ -15,5 +15,5 @@ public class SearchArgsDTO
     /// <summary>
     /// Object containing the criteria for the advanced search (title, author, genre, isbn, ...)
     /// </summary>
-    public AdvancedSearchArgsDTO Criteria { get; set; }
+    public AdvancedSearchCriteriaDTO Criteria { get; set; }
 }

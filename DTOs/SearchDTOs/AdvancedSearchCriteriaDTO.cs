@@ -5,7 +5,7 @@ namespace mediatheque_back_csharp.DTOs.SearchDTOs;
 /// <summary>
 /// Arguments received for the advanced search
 /// </summary>
-public class AdvancedSearchArgsDTO
+public class AdvancedSearchCriteriaDTO
 {
     /// <summary>
     /// Book's title
