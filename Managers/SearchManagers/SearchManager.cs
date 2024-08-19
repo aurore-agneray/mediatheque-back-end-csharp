@@ -27,14 +27,14 @@ public abstract class SearchManager {
     protected readonly IMapper _mapper;
 
     /// <summary>
-    /// Gives access to the texts of the app
-    /// </summary>
-    protected readonly ResourceManager _textsManager;
-
-    /// <summary>
     /// Type of search
     /// </summary>
     protected readonly string _searchType;
+
+    /// <summary>
+    /// Gives access to the texts of the app
+    /// </summary>
+    public ResourceManager TextsManager { get; private set; }
 
     /// <summary>
     /// Constructor of the SearchManager class
@@ -48,8 +48,8 @@ public abstract class SearchManager {
     {
         _context = context;
         _mapper = mapper;
-        _textsManager = textsManager;
         _searchType = RetrieveSearchType(defaultSearchType, resourceKey);
+        TextsManager = textsManager;
     }
 
     /// <summary>
@@ -70,12 +70,12 @@ public abstract class SearchManager {
     /// <returns>The word used for describing the search</returns>
     private string RetrieveSearchType(string defaultSearchType, string resourceKey)
     {
-        if (_textsManager == null)
+        if (TextsManager == null)
         {
             return defaultSearchType;
         }
 
-        var name = _textsManager.GetString(resourceKey);
+        var name = TextsManager.GetString(resourceKey);
 
         return !string.IsNullOrEmpty(name) ? name : defaultSearchType;
     }
@@ -86,7 +86,7 @@ public abstract class SearchManager {
     /// <exception cref="Exception"></exception>
     protected void ThrowExceptionForMissingCriteria()
     {
-        throw new Exception(_textsManager.GetString(TextsKeys.ERROR_MISSING_CRITERIA) + " " + _searchType);
+        throw new Exception(TextsManager.GetString(TextsKeys.ERROR_MISSING_CRITERIA) + " " + _searchType);
     }
 
     /// <summary>
@@ -144,6 +144,15 @@ public abstract class SearchManager {
     }
 
     /// <summary>
+    /// Indicates if the database is available or not
+    /// </summary>
+    /// <returns>A boolean value</returns>
+    public bool IsDatabaseAvailable()
+    {
+        return _context != null && _context.IsDatabaseAvailable();
+    }
+
+    /// <summary>
     /// Processes the search that can be of type "simple" or "advanced".
     /// The difference is defined by the "GetOrderedBooksRequest" call.
     /// </summary>
@@ -151,11 +160,6 @@ public abstract class SearchManager {
     /// <returns>List of some SearchResultsDTO objects</returns>
     public async Task<List<SearchResultDTO>> SearchForResults(SearchCriteriaDTO searchCriteria)
     {
-        if (_context == null || !_context.Database.CanConnect())
-        {
-            throw new Exception(_textsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION));
-        }
-
         List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();

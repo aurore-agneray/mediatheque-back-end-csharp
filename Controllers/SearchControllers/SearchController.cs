@@ -2,6 +2,7 @@ using System.Net;
 using mediatheque_back_csharp.Classes;
 using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Managers.SearchManagers;
+using mediatheque_back_csharp.Texts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers.SearchControllers;
@@ -44,6 +45,23 @@ public abstract class SearchController : ControllerBase
     {
         if (_manager == null || searchCriteria == null) {
             return NotFound();
+        }
+
+        if (_manager?.TextsManager == null) {
+            return new ErrorObject(
+                HttpStatusCode.InternalServerError,
+                Constants.ERROR_TEXTS_RESOURCES_READING
+            );
+        }
+
+        if (!_manager.IsDatabaseAvailable())
+        {
+            var errorMessage = _manager.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty;
+
+            return new ErrorObject(
+                HttpStatusCode.InternalServerError, 
+                errorMessage
+            );
         }
 
         try {

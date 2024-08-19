@@ -73,11 +73,21 @@ public class LoadController : ControllerBase
                        .ToListAsync();
         }
 
-        if (_context == null || !_context.Database.CanConnect())
+        if (_textsManager == null)
         {
             return new ErrorObject(
-                HttpStatusCode.InternalServerError, 
-                _textsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION)
+                HttpStatusCode.InternalServerError,
+                Constants.ERROR_TEXTS_RESOURCES_READING
+            );
+        }
+
+        if (!_context.IsDatabaseAvailable())
+        {
+            var errorMessage = _textsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty;
+
+            return new ErrorObject(
+                HttpStatusCode.InternalServerError,
+                errorMessage
             );
         }
 

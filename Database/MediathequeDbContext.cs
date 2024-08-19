@@ -86,5 +86,14 @@ namespace mediatheque_back_csharp.Database
                 ServerVersion.AutoDetect(connectionString)
             );
         }
+
+        /// <summary>
+        /// Indicates if the database is available or not
+        /// </summary>
+        /// <returns>A boolean value</returns>
+        public bool IsDatabaseAvailable()
+        {
+            return this.Database.CanConnect();
+        }
     }
 }
