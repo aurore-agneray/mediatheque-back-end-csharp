@@ -3,6 +3,8 @@ using mediatheque_back_csharp.Configuration;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
+using System.Reflection;
+using System.Resources;
 
 var routePrefix = "/api";
 
@@ -31,6 +33,11 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<AutoMapperProfile>();
 });
+
+// Injects texts resources
+builder.Services.AddScoped<ResourceManager>(provider => 
+    new ResourceManager(@"mediatheque_back_csharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
+);
 
 // Injects my search managers
 builder.Services.AddScoped<SimpleSearchManager>();

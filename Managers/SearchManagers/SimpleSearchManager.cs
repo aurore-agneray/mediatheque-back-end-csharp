@@ -2,6 +2,8 @@
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Pocos;
+using mediatheque_back_csharp.Texts;
+using System.Resources;
 using static System.Linq.Queryable;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
@@ -16,7 +18,9 @@ public class SimpleSearchManager : SearchManager
     /// </summary>
     /// <param name="context">HTTP Context</param>
     /// <param name="mapper">Given AutoMapper</param>
-    public SimpleSearchManager(MediathequeDbContext context, IMapper mapper) : base(context, mapper)
+    /// <param name="textsManager">Texts manager</param>
+    public SimpleSearchManager(MediathequeDbContext context, IMapper mapper, ResourceManager textsManager)
+        : base(context, mapper, textsManager, Constants.SIMPLE_SEARCH_TYPE, TextsKeys.SIMPLE_SEARCH_TYPE)
     {
     }
 

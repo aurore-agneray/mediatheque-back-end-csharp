@@ -6,6 +6,7 @@ using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
+using System.Resources;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
@@ -13,7 +14,7 @@ namespace mediatheque_back_csharp.Managers.SearchManagers;
 /// Methods for preparing the data sent by the SearchController
 /// </summary>
 public abstract class SearchManager {
-    
+
     /// <summary>
     /// HTTP Context for connecting to the database
     /// </summary>
@@ -25,14 +26,29 @@ public abstract class SearchManager {
     protected readonly IMapper _mapper;
 
     /// <summary>
+    /// Gives access to the texts of the app
+    /// </summary>
+    protected readonly ResourceManager _textsManager;
+
+    /// <summary>
+    /// Type of search
+    /// </summary>
+    protected readonly string _searchType;
+
+    /// <summary>
     /// Constructor of the SearchManager class
     /// </summary>
     /// <param name="context">HTTP Context</param>
     /// <param name="mapper">Given AutoMapper</param>
-    public SearchManager(MediathequeDbContext context, IMapper mapper)
+    /// <param name="textsManager">Texts manager</param>
+    /// <param name="defaultSearchType">Word used for describing the type of search if no one is found into the resources</param>
+    /// <param name="resourceKey">Key used for searching the type of search into the resources</param>
+    public SearchManager(MediathequeDbContext context, IMapper mapper, ResourceManager textsManager, string defaultSearchType, string resourceKey)
     {
         _context = context;
         _mapper = mapper;
+        _textsManager = textsManager;
+        _searchType = RetrieveSearchType(defaultSearchType, resourceKey);
     }
 
     /// <summary>
@@ -43,6 +59,25 @@ public abstract class SearchManager {
     /// <param name="searchCriteria">Criteria sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
     protected abstract IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria);
+
+    /// <summary>
+    /// Gets the name of the search thanks to the ResourceManager.
+    /// Returns a default value if the ResourceManager doesn't give anyone
+    /// </summary>
+    /// <param name="defaultSearchType">The word used by default</param>
+    /// <param name="resourceKey">The key used for reading the resource file</param>
+    /// <returns>The word used for describing the search</returns>
+    private string RetrieveSearchType(string defaultSearchType, string resourceKey)
+    {
+        if (_textsManager == null)
+        {
+            return defaultSearchType;
+        }
+
+        var name = _textsManager.GetString(resourceKey);
+
+        return !string.IsNullOrEmpty(name) ? name : defaultSearchType;
+    }
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 

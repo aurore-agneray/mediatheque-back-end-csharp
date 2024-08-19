@@ -3,6 +3,8 @@ using LinqKit;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Pocos;
+using mediatheque_back_csharp.Texts;
+using System.Resources;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
 
@@ -16,7 +18,9 @@ public class AdvancedSearchManager : SearchManager
     /// </summary>
     /// <param name="context">HTTP Context</param>
     /// <param name="mapper">Given AutoMapper</param>
-    public AdvancedSearchManager(MediathequeDbContext context, IMapper mapper) : base(context, mapper)
+    /// <param name="textsManager">Texts manager</param>
+    public AdvancedSearchManager(MediathequeDbContext context, IMapper mapper, ResourceManager textsManager) 
+        : base(context, mapper, textsManager, Constants.ADVANCED_SEARCH_TYPE, TextsKeys.ADVANCED_SEARCH_TYPE)
     {
     }
 
