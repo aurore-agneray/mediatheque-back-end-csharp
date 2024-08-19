@@ -1,6 +1,6 @@
 ﻿using mediatheque_back_csharp.Dtos;
 
-namespace mediatheque_back_csharp.DTOs.SearchDTOs;
+namespace mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 
 /// <summary>
 /// Arguments received for the advanced search

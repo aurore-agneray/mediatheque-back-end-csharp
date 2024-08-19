@@ -1,7 +1,7 @@
 using AutoMapper;
 using LinqKit;
 using mediatheque_back_csharp.Database;
-using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Pocos;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
@@ -149,11 +149,11 @@ public class AdvancedSearchManager : SearchManager
     /// retrieve the books from the database,
     /// ordered by the title
     /// </summary>
-    /// <param name="searchArgs">Criteria sent by the client</param>
+    /// <param name="searchCriteria">Criteria sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    protected override IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO searchArgs)
+    protected override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
     {
-        if (searchArgs?.Criteria == null)
+        if (searchCriteria?.AdvancedCriteria == null)
         {
             return default;
         }
@@ -174,8 +174,8 @@ public class AdvancedSearchManager : SearchManager
 
         var expression = PredicateBuilder.New<Book>(false);
 
-        AddBookConditions(ref expression, searchArgs.Criteria);
-        AddEditionsConditions(ref expression, searchArgs.Criteria);
+        AddBookConditions(ref expression, searchCriteria.AdvancedCriteria);
+        AddEditionsConditions(ref expression, searchCriteria.AdvancedCriteria);
 
         return query.Where(expression);
     }

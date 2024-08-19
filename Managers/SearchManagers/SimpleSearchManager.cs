@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using mediatheque_back_csharp.Database;
-using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Pocos;
 using static System.Linq.Queryable;
 
@@ -25,16 +25,16 @@ public class SimpleSearchManager : SearchManager
     /// retrieve the books from the database,
     /// ordered by the title
     /// </summary>
-    /// <param name="searchArgs">Contains the criterion sent by the client</param>
+    /// <param name="searchCriteria">Contains the criterion sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    protected override IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO searchArgs) {
+    protected override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria) {
 
-        if (string.IsNullOrEmpty(searchArgs?.Criterion))
+        if (string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
         {
             return default;
         }
 
-        string criterion = searchArgs?.Criterion;
+        string criterion = searchCriteria?.SimpleCriterion;
 
         return (
             from boo in _context.Books

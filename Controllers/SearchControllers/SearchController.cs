@@ -1,6 +1,6 @@
 using System.Net;
 using mediatheque_back_csharp.Classes;
-using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,17 +37,17 @@ public abstract class SearchController : ControllerBase
     /// <summary>
     /// Post CRUD request for the research.
     /// </summary>
-    /// <param name="searchArgs">Object containing the search criteria</param>
+    /// <param name="searchCriteria">Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects OR an error</returns>
     [HttpPost]
-    public async Task<IActionResult> Post(SearchArgsDTO searchArgs)
+    public async Task<IActionResult> Post(SearchCriteriaDTO searchCriteria)
     {
-        if (_manager == null || searchArgs == null) {
+        if (_manager == null || searchCriteria == null) {
             return NotFound();
         }
 
         try {
-            var results = await _manager.SearchForResults(searchArgs);
+            var results = await _manager.SearchForResults(searchCriteria);
             return Ok(results);
         }
         catch(Exception ex) {

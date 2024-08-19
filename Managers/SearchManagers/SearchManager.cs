@@ -2,6 +2,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.DTOs.SearchDTOs;
+using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +40,9 @@ public abstract class SearchManager {
     /// retrieve the books from the database,
     /// ordered by the title
     /// </summary>
-    /// <param name="searchArgs">Criteria sent by the client</param>
+    /// <param name="searchCriteria">Criteria sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    protected abstract IQueryable<Book> GetOrderedBooksRequest(SearchArgsDTO searchArgs);
+    protected abstract IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria);
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 
@@ -101,15 +102,15 @@ public abstract class SearchManager {
     /// Processes the search that can be of type "simple" or "advanced".
     /// The difference is defined by the "GetOrderedBooksRequest" call.
     /// </summary>
-    /// <param name="searchArgs">Object containing the search criteria</param>
+    /// <param name="searchCriteria">Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
-    public async Task<List<SearchResultDTO>> SearchForResults(SearchArgsDTO searchArgs)
+    public async Task<List<SearchResultDTO>> SearchForResults(SearchCriteriaDTO searchCriteria)
     {
         List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
-        var booksQuery = GetOrderedBooksRequest(searchArgs);
+        var booksQuery = GetOrderedBooksRequest(searchCriteria);
 
         // Completes the first list with the books
         if (booksQuery != null)
