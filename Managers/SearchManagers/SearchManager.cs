@@ -151,6 +151,11 @@ public abstract class SearchManager {
     /// <returns>List of some SearchResultsDTO objects</returns>
     public async Task<List<SearchResultDTO>> SearchForResults(SearchCriteriaDTO searchCriteria)
     {
+        if (_context == null || !_context.Database.CanConnect())
+        {
+            throw new Exception(_textsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION));
+        }
+
         List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();

@@ -126,4 +126,7 @@
   <data name="ADVANCED_SEARCH_TYPE" xml:space="preserve">
     <value>avancée</value>
   </data>
+  <data name="ERROR_DATABASE_CONNECTION" xml:space="preserve">
+    <value>base de données inaccessible, veuillez contacter l'administrateur</value>
+  </data>
 </root>
