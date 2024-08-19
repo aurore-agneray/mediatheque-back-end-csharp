@@ -5,6 +5,7 @@ using mediatheque_back_csharp.DTOs.SearchDTOs;
 using mediatheque_back_csharp.DTOs.SearchDTOs.CriteriaDTOs;
 using mediatheque_back_csharp.Extensions;
 using mediatheque_back_csharp.Pocos;
+using mediatheque_back_csharp.Texts;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
@@ -77,6 +78,15 @@ public abstract class SearchManager {
         var name = _textsManager.GetString(resourceKey);
 
         return !string.IsNullOrEmpty(name) ? name : defaultSearchType;
+    }
+
+    /// <summary>
+    /// Throws an exception with a message indicating that criteria are missing
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    protected void ThrowExceptionForMissingCriteria()
+    {
+        throw new Exception(_textsManager.GetString(TextsKeys.ERROR_MISSING_CRITERIA) + " " + _searchType);
     }
 
     /// <summary>

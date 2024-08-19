@@ -117,16 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ADVANCED_SEARCH_CTRL_ERROR" xml:space="preserve">
-    <value>Une erreur est survenue lors du lancement de la requête avancée</value>
-  </data>
-  <data name="SIMPLE_SEARCH_CTRL_ERROR" xml:space="preserve">
-    <value>Une erreur est survenue lors du lancement de la requête simple</value>
+  <data name="ERROR_MISSING_CRITERIA" xml:space="preserve">
+    <value>échec de lecture des critères de la recherche</value>
   </data>
   <data name="SIMPLE_SEARCH_TYPE" xml:space="preserve">
-    <value>simple TEST</value>
+    <value>simple</value>
   </data>
   <data name="ADVANCED_SEARCH_TYPE" xml:space="preserve">
-    <value>avancée TEST</value>
+    <value>avancée</value>
   </data>
 </root>

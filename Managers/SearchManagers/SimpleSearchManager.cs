@@ -35,7 +35,7 @@ public class SimpleSearchManager : SearchManager
 
         if (string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
         {
-            return default;
+            ThrowExceptionForMissingCriteria();
         }
 
         string criterion = searchCriteria?.SimpleCriterion;

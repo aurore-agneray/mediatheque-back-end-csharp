@@ -159,7 +159,7 @@ public class AdvancedSearchManager : SearchManager
     {
         if (searchCriteria?.AdvancedCriteria == null)
         {
-            return default;
+            ThrowExceptionForMissingCriteria();
         }
 
         IQueryable<Book> query = (
