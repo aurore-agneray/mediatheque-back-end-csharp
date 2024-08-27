@@ -1,13 +1,13 @@
 ﻿using ApplicationCore.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace mediatheque_back_csharp.Pocos;
+namespace ApplicationCore.Pocos;
 
 /// <summary>
-/// POCO for the Formats
+/// POCO for the Genres
 /// </summary>
-[Table("Format")]
-public class Format : INamed
+[Table("Genre")]
+public class Genre : INamed
 {
     /// <summary>
     /// ID (primary key)
@@ -18,6 +18,6 @@ public class Format : INamed
     /// <summary>
     /// Name
     /// </summary>
-    [Column("format_name")]
+    [Column("genre_name")]
     public string Name { get; set; } = null!;
 }

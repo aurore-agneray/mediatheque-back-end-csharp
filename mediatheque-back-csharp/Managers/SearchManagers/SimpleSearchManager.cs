@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+using ApplicationCore.Pocos;
+using AutoMapper;
 using mediatheque_back_csharp.Database;
-using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
-using mediatheque_back_csharp.Pocos;
 using mediatheque_back_csharp.Texts;
 using System.Resources;
 using static System.Linq.Queryable;

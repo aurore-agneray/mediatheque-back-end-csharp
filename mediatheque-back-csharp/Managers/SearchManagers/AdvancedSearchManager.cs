@@ -1,8 +1,8 @@
+using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+using ApplicationCore.Pocos;
 using AutoMapper;
 using LinqKit;
 using mediatheque_back_csharp.Database;
-using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
-using mediatheque_back_csharp.Pocos;
 using mediatheque_back_csharp.Texts;
 using System.Resources;
 

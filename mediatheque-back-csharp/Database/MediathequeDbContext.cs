@@ -1,5 +1,5 @@
-﻿using mediatheque_back_csharp.Configuration;
-using mediatheque_back_csharp.Pocos;
+﻿using ApplicationCore.Pocos;
+using mediatheque_back_csharp.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

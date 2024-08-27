@@ -1,10 +1,10 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using mediatheque_back_csharp.Database;
 using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Extensions;
-using mediatheque_back_csharp.Pocos;
+using ApplicationCore.Pocos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Texts;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;

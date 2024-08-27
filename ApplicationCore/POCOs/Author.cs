@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace mediatheque_back_csharp.Pocos;
+namespace ApplicationCore.Pocos;
 
 /// <summary>
 /// POCO for the Authors

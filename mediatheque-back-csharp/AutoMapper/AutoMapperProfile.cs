@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Dtos;
 using ApplicationCore.DTOs.SearchDTOs;
+using ApplicationCore.Pocos;
 using AutoMapper;
-using mediatheque_back_csharp.Pocos;
 
 namespace mediatheque_back_csharp.AutoMapper;
 
