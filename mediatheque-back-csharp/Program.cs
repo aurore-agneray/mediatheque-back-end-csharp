@@ -1,6 +1,6 @@
+using ApplicationCore.AutoMapper;
 using ApplicationCore.Configuration;
 using Infrastructure.MySQL;
-using mediatheque_back_csharp.AutoMapper;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
 using System.Reflection;

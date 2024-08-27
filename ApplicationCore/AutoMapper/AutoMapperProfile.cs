@@ -3,7 +3,7 @@ using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Pocos;
 using AutoMapper;
 
-namespace mediatheque_back_csharp.AutoMapper;
+namespace ApplicationCore.AutoMapper;
 
 /// <summary>
 /// Defines the profile used for configuring the AutoMapper package
