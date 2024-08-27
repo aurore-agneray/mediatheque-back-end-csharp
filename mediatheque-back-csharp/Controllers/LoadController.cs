@@ -1,10 +1,10 @@
 ﻿using ApplicationCore.Dtos;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Texts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Infrastructure.MySQL;
 using mediatheque_back_csharp.Classes;
-using mediatheque_back_csharp.Texts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;

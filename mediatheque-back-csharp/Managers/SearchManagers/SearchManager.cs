@@ -2,10 +2,10 @@ using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Extensions;
 using ApplicationCore.Pocos;
+using ApplicationCore.Texts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Infrastructure.MySQL;
-using mediatheque_back_csharp.Texts;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 

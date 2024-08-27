@@ -1,9 +1,9 @@
-using System.Net;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+using ApplicationCore.Texts;
 using mediatheque_back_csharp.Classes;
 using mediatheque_back_csharp.Managers.SearchManagers;
-using mediatheque_back_csharp.Texts;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace mediatheque_back_csharp.Controllers.SearchControllers;
 

@@ -1,9 +1,9 @@
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Pocos;
+using ApplicationCore.Texts;
 using AutoMapper;
 using Infrastructure.MySQL;
 using LinqKit;
-using mediatheque_back_csharp.Texts;
 using System.Resources;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;

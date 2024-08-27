@@ -1,4 +1,4 @@
-﻿namespace mediatheque_back_csharp.Texts;
+﻿namespace ApplicationCore.Texts;
 
 /// <summary>
 /// Contains the keys of the texts defined into the resources files

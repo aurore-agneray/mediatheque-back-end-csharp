@@ -8,7 +8,7 @@ namespace Infrastructure.MySQL
     /// <summary>
     /// Global context for the connection to the "Mediatheque" MySQL database
     /// </summary>
-    public class MySQLDbContext : DbContext
+    public class MySQLDbContext : DbContext, IMediathequeDbContext
     {
         /// <summary>
         /// Settings used for connecting to the database

@@ -1,8 +1,8 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Pocos;
+using ApplicationCore.Texts;
 using AutoMapper;
 using Infrastructure.MySQL;
-using mediatheque_back_csharp.Texts;
 using System.Resources;
 using static System.Linq.Queryable;
 
