@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace mediatheque_back_csharp.Configuration;
+namespace ApplicationCore.Configuration;
 
 /// <summary>
 /// Defines which functionalities must appear or not into the Swagger

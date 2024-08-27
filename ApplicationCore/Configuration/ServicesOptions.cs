@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using ApplicationCore.Interfaces;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace mediatheque_back_csharp.Configuration;
+namespace ApplicationCore.Configuration;
 
 /// <summary>
 /// Defines the options for the services declared into the Program.cs file
@@ -32,9 +34,9 @@ public static class ServicesOptions
     /// Generates the general options for the Cors service
     /// (for instance the accepted front domains)
     /// </summary>
-    /// <param name="settings">Settings defined into the appsettings.json file</param>
+    /// <param name="settings">Settings given for the concerned database</param>
     /// <returns>An Action object</returns>
-    public static Action<CorsOptions> GetCorsOptions(MySettingsModel settings)
+    public static Action<CorsOptions> GetCorsOptions(IDatabaseSettings settings)
     {
         if (settings == null)
         {

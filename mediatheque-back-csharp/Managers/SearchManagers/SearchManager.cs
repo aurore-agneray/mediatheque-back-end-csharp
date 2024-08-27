@@ -4,7 +4,7 @@ using ApplicationCore.Extensions;
 using ApplicationCore.Pocos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using mediatheque_back_csharp.Database;
+using Infrastructure.MySQL;
 using mediatheque_back_csharp.Texts;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
@@ -19,7 +19,7 @@ public abstract class SearchManager {
     /// <summary>
     /// HTTP Context for connecting to the database
     /// </summary>
-    protected readonly MediathequeDbContext _context;
+    protected readonly MySQLDbContext _context;
     
     /// <summary>
     /// Transforms the POCOs into DTOs
@@ -44,7 +44,7 @@ public abstract class SearchManager {
     /// <param name="textsManager">Texts manager</param>
     /// <param name="defaultSearchType">Word used for describing the type of search if no one is found into the resources</param>
     /// <param name="resourceKey">Key used for searching the type of search into the resources</param>
-    public SearchManager(MediathequeDbContext context, IMapper mapper, ResourceManager textsManager, string defaultSearchType, string resourceKey)
+    public SearchManager(MySQLDbContext context, IMapper mapper, ResourceManager textsManager, string defaultSearchType, string resourceKey)
     {
         _context = context;
         _mapper = mapper;

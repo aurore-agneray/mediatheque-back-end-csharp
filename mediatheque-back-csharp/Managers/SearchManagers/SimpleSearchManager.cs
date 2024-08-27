@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Pocos;
 using AutoMapper;
-using mediatheque_back_csharp.Database;
+using Infrastructure.MySQL;
 using mediatheque_back_csharp.Texts;
 using System.Resources;
 using static System.Linq.Queryable;
@@ -19,7 +19,7 @@ public class SimpleSearchManager : SearchManager
     /// <param name="context">HTTP Context</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public SimpleSearchManager(MediathequeDbContext context, IMapper mapper, ResourceManager textsManager)
+    public SimpleSearchManager(MySQLDbContext context, IMapper mapper, ResourceManager textsManager)
         : base(context, mapper, textsManager, Constants.SIMPLE_SEARCH_TYPE, TextsKeys.SIMPLE_SEARCH_TYPE)
     {
     }

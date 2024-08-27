@@ -2,8 +2,8 @@
 using ApplicationCore.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Infrastructure.MySQL;
 using mediatheque_back_csharp.Classes;
-using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Texts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ public class LoadController : ControllerBase
     /// <summary>
     /// Context for connecting to the database
     /// </summary>
-    protected readonly MediathequeDbContext _context;
+    protected readonly MySQLDbContext _context;
 
     /// <summary>
     /// Logger for the LoadController
@@ -47,7 +47,7 @@ public class LoadController : ControllerBase
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     public LoadController(
-        MediathequeDbContext context,
+        MySQLDbContext context,
         ILogger<LoadController> logger,
         IMapper mapper, 
         ResourceManager textsManager

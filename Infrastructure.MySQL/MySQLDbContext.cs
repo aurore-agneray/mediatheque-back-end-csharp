@@ -1,19 +1,19 @@
-﻿using ApplicationCore.Pocos;
-using mediatheque_back_csharp.Configuration;
+﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace mediatheque_back_csharp.Database
+namespace Infrastructure.MySQL
 {
     /// <summary>
     /// Global context for the connection to the "Mediatheque" MySQL database
     /// </summary>
-    public class MediathequeDbContext : DbContext
+    public class MySQLDbContext : DbContext
     {
         /// <summary>
-        /// Settings entered into the appsettings.json file, into the "MySettings" section
+        /// Settings used for connecting to the database
         /// </summary>
-        private readonly IOptions<MySettingsModel> _appSettings;
+        private readonly IOptions<MySQLDatabaseSettings> _appSettings;
 
         /// <summary>
         /// List of Authors from the database
@@ -54,11 +54,9 @@ namespace mediatheque_back_csharp.Database
         /// Constructor for the MediathequeDbContext
         /// </summary>
         /// <param name="settings">
-        /// Object representing the settings entered 
-        /// into the appsettings.json file, into the "MySettings" section.
-        /// Instanciated into the Program.cs file
+        /// Contains the settings used for connecting to the database
         /// </param>
-        public MediathequeDbContext(IOptions<MySettingsModel> settings)
+        public MySQLDbContext(IOptions<MySQLDatabaseSettings> settings)
         {
             _appSettings = settings;
         }
@@ -93,7 +91,7 @@ namespace mediatheque_back_csharp.Database
         /// <returns>A boolean value</returns>
         public bool IsDatabaseAvailable()
         {
-            return this.Database.CanConnect();
+            return Database.CanConnect();
         }
     }
 }

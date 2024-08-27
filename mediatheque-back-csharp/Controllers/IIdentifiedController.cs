@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Interfaces;
 using AutoMapper;
-using mediatheque_back_csharp.Database;
+using Infrastructure.MySQL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +17,7 @@ namespace mediatheque_back_csharp.Controllers
         /// <summary>
         /// Context for connecting to the database
         /// </summary>
-        protected readonly MediathequeDbContext _context;
+        protected readonly MySQLDbContext _context;
 
         /// <summary>
         /// Logger for the IIdentifiedController
@@ -36,7 +36,7 @@ namespace mediatheque_back_csharp.Controllers
         /// <param name="logger">Given Logger</param>
         /// <param name="isAParentController">Indicates if we want to instanciate a IIdentifiedController or a child</param>
         public IIdentifiedController(
-            MediathequeDbContext context, 
+            MySQLDbContext context, 
             ILogger<IIdentifiedController<SourceEntity, DestDTO>> logger,
             IMapper mapper)
         {

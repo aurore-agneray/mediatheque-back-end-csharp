@@ -1,6 +1,6 @@
+using ApplicationCore.Configuration;
+using Infrastructure.MySQL;
 using mediatheque_back_csharp.AutoMapper;
-using mediatheque_back_csharp.Configuration;
-using mediatheque_back_csharp.Database;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
 using System.Reflection;
@@ -11,9 +11,8 @@ var routePrefix = "/api";
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
 
-// Retrieves the configuration settings entered into the appsettings.json file
-builder.Services.Configure<MySettingsModel>(builder.Configuration.GetSection("MySettings"));
-var myAppSettings = builder.Configuration.GetSection("MySettings").Get<MySettingsModel>();
+// Retrieves the configuration settings entered into Infrastructure.MySQL project
+var myAppSettings = new MySQLDatabaseSettings();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -23,7 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(ServicesOptions.GetSwaggerGenOptions(routePrefix));
 
 // Add the connection to the database
-builder.Services.AddDbContext<MediathequeDbContext>();
+builder.Services.AddDbContext<MySQLDbContext>();
 
 // Configures CORS policy
 builder.Services.AddCors(ServicesOptions.GetCorsOptions(myAppSettings));

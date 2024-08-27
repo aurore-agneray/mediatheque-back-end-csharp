@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Dtos;
 using ApplicationCore.Pocos;
 using AutoMapper;
-using mediatheque_back_csharp.Database;
+using Infrastructure.MySQL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers
@@ -19,7 +19,7 @@ namespace mediatheque_back_csharp.Controllers
         /// <param name="context">Given database context</param>
         /// <param name="logger">Given Logger</param>
         /// <param name="mapper">Given AutoMapper</param>
-        public PublisherController(MediathequeDbContext context, ILogger<PublisherController> logger, IMapper mapper) : base(context, logger, mapper)
+        public PublisherController(MySQLDbContext context, ILogger<PublisherController> logger, IMapper mapper) : base(context, logger, mapper)
         {
         }
     }
