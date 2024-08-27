@@ -2,7 +2,6 @@
 using ApplicationCore.Interfaces;
 using ApplicationCore.Pocos;
 using AutoMapper;
-using Infrastructure.MySQL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers
@@ -17,10 +16,10 @@ namespace mediatheque_back_csharp.Controllers
         /// <summary>
         /// Constructor of the GenreController class
         /// </summary>
-        /// <param name="context">Given database context</param>
+        /// <param name="sourceRepository">Source of data</param>
         /// <param name="logger">Given Logger</param>
         /// <param name="mapper">Given AutoMapper</param>
-        public GenreController(MySQLDbContext context, ILogger<GenreController> logger, IMapper mapper) : base(context, logger, mapper)
+        public GenreController(IIdentifiedRepository<Genre> sourceRepository, ILogger<GenreController> logger, IMapper mapper) : base(sourceRepository, logger, mapper)
         {
         }
     }

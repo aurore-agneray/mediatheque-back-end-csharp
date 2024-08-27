@@ -15,9 +15,9 @@ namespace mediatheque_back_csharp.Controllers
         where DestDTO : class, IIdentified
     {
         /// <summary>
-        /// Context for connecting to the database
+        /// Source of data
         /// </summary>
-        protected readonly MySQLDbContext _context;
+        protected readonly IIdentifiedRepository<SourceEntity> _sourceRepository;
 
         /// <summary>
         /// Logger for the IIdentifiedController
@@ -32,37 +32,28 @@ namespace mediatheque_back_csharp.Controllers
         /// <summary>
         /// Constructor of the IIdentifiedController class
         /// </summary>
-        /// <param name="context">Given database context</param>
+        /// <param name="sourceRepository">Source of data</param>
         /// <param name="logger">Given Logger</param>
-        /// <param name="isAParentController">Indicates if we want to instanciate a IIdentifiedController or a child</param>
+        /// <param name="mapper">Transforms the entities into DTOs</param>
         public IIdentifiedController(
-            MySQLDbContext context, 
+            IIdentifiedRepository<SourceEntity> sourceRepository,
             ILogger<IIdentifiedController<SourceEntity, DestDTO>> logger,
             IMapper mapper)
         {
-            _context = context;
+            _sourceRepository = sourceRepository;
             _logger = logger;
             _mapper = mapper;
         }
 
         /// <summary>
-        /// Get CRUD request for the TEntity.
+        /// Get all CRUD request for the entities of IIdentified type.
         /// </summary>
         /// <returns>List of some IIdentified objects of the database</returns>
         [HttpGet]
-        public async Task<IEnumerable<DestDTO>> Get()
+        public async Task<IEnumerable<DestDTO>> GetAll()
         {
-            //List<IIdentified> output = new List<IIdentified>(this._context.Authors);
-            //output.AddRange(this._context.Books);
-            //output.AddRange(this._context.Editions);
-            //output.AddRange(this._context.Formats);
-            //output.AddRange(this._context.Genres);
-            //output.AddRange(this._context.Publishers);
-            //output.AddRange(this._context.Series);
-
-            //return output;
-            var pocosList = await this._context.Set<SourceEntity>().ToListAsync();
-            return _mapper.Map<List<SourceEntity>, List<DestDTO>>(pocosList);
+            var pocosList = await _sourceRepository.GetAll();
+            return _mapper.Map<IEnumerable<SourceEntity>, List<DestDTO>>(pocosList);
         }
     }
 }

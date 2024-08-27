@@ -1,5 +1,7 @@
 using ApplicationCore.AutoMapper;
 using ApplicationCore.Configuration;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Pocos;
 using Infrastructure.MySQL;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
@@ -16,6 +18,15 @@ var myAppSettings = new MySQLDatabaseSettings();
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Add repositories for the MySQL database
+builder.Services.AddScoped<IIdentifiedRepository<Author>, MySQLIIdentifiedRepository<Author>>();
+builder.Services.AddScoped<IIdentifiedRepository<Book>, MySQLIIdentifiedRepository<Book>>();
+builder.Services.AddScoped<IIdentifiedRepository<Edition>, MySQLIIdentifiedRepository<Edition>>();
+builder.Services.AddScoped<IIdentifiedRepository<Format>, MySQLIIdentifiedRepository<Format>>();
+builder.Services.AddScoped<IIdentifiedRepository<Genre>, MySQLIIdentifiedRepository<Genre>>();
+builder.Services.AddScoped<IIdentifiedRepository<Publisher>, MySQLIIdentifiedRepository<Publisher>>();
+builder.Services.AddScoped<IIdentifiedRepository<Series>, MySQLIIdentifiedRepository<Series>>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -2,7 +2,6 @@
 using ApplicationCore.Interfaces;
 using ApplicationCore.Pocos;
 using AutoMapper;
-using Infrastructure.MySQL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers
@@ -17,10 +16,10 @@ namespace mediatheque_back_csharp.Controllers
         /// <summary>
         /// Constructor of the EditionController class
         /// </summary>
-        /// <param name="context">Given database context</param>
+        /// <param name="sourceRepository">Source of data</param>
         /// <param name="logger">Given Logger</param>
         /// <param name="mapper">Given AutoMapper</param>
-        public EditionController(MySQLDbContext context, ILogger<EditionController> logger, IMapper mapper) : base(context, logger, mapper)
+        public EditionController(IIdentifiedRepository<Edition> sourceRepository, ILogger<EditionController> logger, IMapper mapper) : base(sourceRepository, logger, mapper)
         {
         }
     }
