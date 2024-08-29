@@ -4,7 +4,8 @@
 /// Represents data access layer for the POCOs (or Entities) of a given database
 /// </summary>
 /// <typeparam name="T">A type with an ID property</typeparam>
-public interface IIdentifiedRepository<T> where T : class, IIdentified
+public interface IIdentifiedRepository<T> : IRepository
+    where T : class, IIdentified
 {
     /// <summary>
     /// Get CRUD request for the T entity.
