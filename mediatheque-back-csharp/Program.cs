@@ -1,5 +1,5 @@
 using ApplicationCore.AutoMapper;
-using ApplicationCore.Configuration;
+using mediatheque_back_csharp.Configuration;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Pocos;
 using Infrastructure.MySQL;
@@ -30,13 +30,13 @@ builder.Services.AddScoped<IIdentifiedRepository<Series>, MySQLIIdentifiedReposi
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(ServicesOptions.GetSwaggerGenOptions(routePrefix));
+builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(routePrefix));
 
 // Add the connection to the database
 builder.Services.AddDbContext<MySQLDbContext>();
 
 // Configures CORS policy
-builder.Services.AddCors(ServicesOptions.GetCorsOptions(myAppSettings));
+builder.Services.AddCors(StartUpOptions.GetCorsOptions(myAppSettings));
 
 // Configures AutoMapper used for converting my POCOs into DTOs
 builder.Services.AddAutoMapper(cfg =>

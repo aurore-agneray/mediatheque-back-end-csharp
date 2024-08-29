@@ -1,15 +1,14 @@
 ﻿using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ApplicationCore.Configuration;
+namespace mediatheque_back_csharp.Configuration;
 
 /// <summary>
 /// Defines the options for the services declared into the Program.cs file
 /// </summary>
-public static class ServicesOptions
+public static class StartUpOptions
 {
     /// <summary>
     /// Generates the general options for the Swagger service
