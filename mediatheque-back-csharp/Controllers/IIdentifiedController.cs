@@ -1,5 +1,5 @@
-﻿using ApplicationCore.Interfaces;
-using ApplicationCore.Interfaces.Databases;
+﻿using ApplicationCore.Interfaces.Databases;
+using ApplicationCore.Interfaces.Entities;
 using AutoMapper;
 using Infrastructure.MySQL;
 using Microsoft.AspNetCore.Mvc;

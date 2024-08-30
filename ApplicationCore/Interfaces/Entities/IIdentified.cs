@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Interfaces
+﻿namespace ApplicationCore.Interfaces.Entities
 {
     /// <summary>
     /// Describes all entities with an ID property

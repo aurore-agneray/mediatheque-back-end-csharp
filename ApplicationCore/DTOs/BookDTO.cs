@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Entities;
 
 namespace ApplicationCore.Dtos;
 

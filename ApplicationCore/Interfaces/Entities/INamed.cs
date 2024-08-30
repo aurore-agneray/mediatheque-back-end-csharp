@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Interfaces;
+﻿namespace ApplicationCore.Interfaces.Entities;
 
 /// <summary>
 /// Represents elements which have an ID and a name

@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApplicationCore.Pocos;

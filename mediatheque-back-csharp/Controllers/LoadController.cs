@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Dtos;
-using ApplicationCore.Interfaces;
+using ApplicationCore.Interfaces.Entities;
 using ApplicationCore.Texts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
