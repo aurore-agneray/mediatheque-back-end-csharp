@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Dtos;
+﻿using ApplicationCore;
+using ApplicationCore.Dtos;
 using ApplicationCore.Interfaces.Entities;
 using ApplicationCore.Texts;
 using AutoMapper;

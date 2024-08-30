@@ -1,4 +1,5 @@
-﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+﻿using ApplicationCore;
+using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Pocos;
 using ApplicationCore.Texts;
 using AutoMapper;

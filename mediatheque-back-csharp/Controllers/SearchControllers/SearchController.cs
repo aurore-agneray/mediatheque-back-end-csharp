@@ -1,3 +1,4 @@
+using ApplicationCore;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Texts;
 using mediatheque_back_csharp.Classes;
