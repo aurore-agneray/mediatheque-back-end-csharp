@@ -13,9 +13,6 @@ var routePrefix = "/api";
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
 
-// Retrieves the configuration settings entered into Infrastructure.MySQL project
-var myAppSettings = new MySQLDatabaseSettings();
-
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -35,8 +32,11 @@ builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(routePrefix))
 // Add the connection to the database
 builder.Services.AddDbContext<MySQLDbContext>();
 
+// Retrieves the configuration settings entered into Infrastructure.MySQL project
+var mySQLSettings = new MySQLDatabaseSettings();
+
 // Configures CORS policy
-builder.Services.AddCors(StartUpOptions.GetCorsOptions(myAppSettings));
+builder.Services.AddCors(StartUpOptions.GetCorsOptions(mySQLSettings));
 
 // Configures AutoMapper used for converting my POCOs into DTOs
 builder.Services.AddAutoMapper(cfg =>
