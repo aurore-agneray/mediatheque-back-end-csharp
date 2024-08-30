@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApplicationCore.Interfaces;
+namespace ApplicationCore.Interfaces.Databases;
 
 /// <summary>
 /// Allows the use of several kinds of databases contexts

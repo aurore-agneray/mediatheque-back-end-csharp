@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

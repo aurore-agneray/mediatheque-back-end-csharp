@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Databases;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;

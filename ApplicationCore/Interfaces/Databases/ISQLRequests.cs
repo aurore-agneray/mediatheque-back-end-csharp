@@ -2,7 +2,7 @@
 using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApplicationCore.Interfaces;
+namespace ApplicationCore.Interfaces.Databases;
 
 /// <summary>
 /// Defines the structure of SQLRequests classes

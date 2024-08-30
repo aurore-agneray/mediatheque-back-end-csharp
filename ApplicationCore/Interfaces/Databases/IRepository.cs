@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Interfaces;
+﻿namespace ApplicationCore.Interfaces.Databases;
 
 /// <summary>
 /// Describes all repositories of all types

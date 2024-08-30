@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Databases;
 
 namespace Infrastructure.MySQL;
 

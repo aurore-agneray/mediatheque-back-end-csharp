@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
-using ApplicationCore.Interfaces;
+using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 

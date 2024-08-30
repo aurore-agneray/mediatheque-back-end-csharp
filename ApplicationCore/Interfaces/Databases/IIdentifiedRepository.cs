@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Interfaces;
+﻿namespace ApplicationCore.Interfaces.Databases;
 
 /// <summary>
 /// Represents data access layer for the POCOs (or Entities) of a given database
