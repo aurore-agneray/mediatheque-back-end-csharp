@@ -1,12 +1,15 @@
 using ApplicationCore.AutoMapper;
-using mediatheque_back_csharp.Configuration;
+using ApplicationCore.DatabasesSettings;
+using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
+using ApplicationCore.Services;
 using Infrastructure.MySQL;
+using mediatheque_back_csharp.Configuration;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Resources;
-using ApplicationCore.Interfaces.Databases;
 
 var routePrefix = "/api";
 
@@ -30,7 +33,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(routePrefix));
 
 // Add the connection to the database
-builder.Services.AddDbContext<MySQLDbContext>();
+builder.Services.AddScoped<IDatabaseSettings, MySQLDatabaseSettings>();
+builder.Services.AddDbContext<IMediathequeDbContext<MySQLDatabaseSettings>, MySQLDbContext>(optionsBuilder =>
+{
+    MySQLDatabaseSettings dbSettings = new();
+
+    if (string.IsNullOrEmpty(dbSettings.DbConnectionString))
+    {
+        throw new ArgumentNullException("Please insert the Connection String into the database's settings !");
+    }
+
+    optionsBuilder.UseMySql(
+        dbSettings.DbConnectionString,
+        ServerVersion.AutoDetect(dbSettings.DbConnectionString)
+    );
+});
 
 // Retrieves the configuration settings entered into Infrastructure.MySQL project
 var mySQLSettings = new MySQLDatabaseSettings();
@@ -48,6 +65,9 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddScoped<ResourceManager>(provider => 
     new ResourceManager(@"mediatheque_back_csharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
 );
+
+// Injects my search services
+builder.Services.AddScoped<MySQLSimpleSearchService>();
 
 // Injects my search managers
 builder.Services.AddScoped<SimpleSearchManager>();

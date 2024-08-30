@@ -1,10 +1,8 @@
-﻿using ApplicationCore;
+﻿using ApplicationCore.DatabasesSettings;
+using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Pocos;
-using ApplicationCore.Texts;
-using AutoMapper;
-using Infrastructure.MySQL;
-using System.Resources;
+using ApplicationCore.Services;
 using static System.Linq.Queryable;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;
@@ -12,16 +10,23 @@ namespace mediatheque_back_csharp.Managers.SearchManagers;
 /// <summary>
 /// Methods for preparing the data sent by the SimpleSearchController
 /// </summary>
-public class SimpleSearchManager : SearchManager
+public class SimpleSearchManager : SearchManager<MySQLDatabaseSettings>
 {
+    ///// <summary>
+    ///// Constructor of the SimpleSearchManager class
+    ///// </summary>
+    ///// <param name="context">HTTP Context</param>
+    ///// <param name="mapper">Given AutoMapper</param>
+    ///// <param name="textsManager">Texts manager</param>
+    //public SimpleSearchManager(MySQLDbContext context, IMapper mapper, ResourceManager textsManager)
+    //    : base(context, mapper, textsManager, Constants.SIMPLE_SEARCH_TYPE, TextsKeys.SIMPLE_SEARCH_TYPE)
+    //{
+    //}
+
     /// <summary>
     /// Constructor of the SimpleSearchManager class
     /// </summary>
-    /// <param name="context">HTTP Context</param>
-    /// <param name="mapper">Given AutoMapper</param>
-    /// <param name="textsManager">Texts manager</param>
-    public SimpleSearchManager(MySQLDbContext context, IMapper mapper, ResourceManager textsManager)
-        : base(context, mapper, textsManager, Constants.SIMPLE_SEARCH_TYPE, TextsKeys.SIMPLE_SEARCH_TYPE)
+    public SimpleSearchManager(MySQLSimpleSearchService mySqlService) : base(mySqlService)
     {
     }
 
@@ -32,7 +37,8 @@ public class SimpleSearchManager : SearchManager
     /// </summary>
     /// <param name="searchCriteria">Contains the criterion sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    protected override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria) {
+    protected override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
+    {
 
         if (string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
         {
@@ -55,5 +61,16 @@ public class SimpleSearchManager : SearchManager
         )
         .Distinct()
         .OrderBy(b => b.Title);
+    }
+
+    /// <summary>
+    /// Processes the search that can be of type "simple" or "advanced".
+    /// The difference is defined by the "GetOrderedBooksRequest" call.
+    /// </summary>
+    /// <param name="searchCriteria">Object containing the search criteria</param>
+    /// <returns>List of some SearchResultsDTO objects</returns>
+    public new async Task<List<SearchResultDTO>> SearchForResults(SearchCriteriaDTO searchCriteria)
+    {
+        return await _searchService.SearchForResults(searchCriteria);
     }
 }

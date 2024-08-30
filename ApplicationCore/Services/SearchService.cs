@@ -1,28 +1,27 @@
+﻿using ApplicationCore.AbstractClasses;
 using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces.Databases;
-using ApplicationCore.Pocos;
-using ApplicationCore.Services;
-using ApplicationCore.Texts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Infrastructure.MySQL;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
-namespace mediatheque_back_csharp.Managers.SearchManagers;
+namespace ApplicationCore.Services;
 
 /// <summary>
-/// Methods for preparing the data sent by the SearchController
+/// Defines the minimum needed methods for the search services
 /// </summary>
-public abstract class SearchManager<T> where T : IDatabaseSettings
+public abstract class SearchService<T> where T : IDatabaseSettings
 {
     /// <summary>
-    /// HTTP Context for connecting to the database
+    /// Context for connecting to the source of data
     /// </summary>
-    protected readonly MySQLDbContext _context;
-    
+    //protected DataAccessContext<IDatabaseSettings> DataAccessContext { get; private set; }
+
+    protected IMediathequeDbContext<T> Context { get; private set; }
+
     /// <summary>
     /// Transforms the POCOs into DTOs
     /// </summary>
@@ -33,45 +32,27 @@ public abstract class SearchManager<T> where T : IDatabaseSettings
     /// </summary>
     protected readonly string _searchType;
 
-    protected readonly SearchService<T> _searchService;
-
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    public ResourceManager TextsManager { get; private set; }
+    protected ResourceManager TextsManager { get; private set; }
 
     /// <summary>
-    /// Constructor of the SearchManager class
+    /// Constructor of the SearchService class
     /// </summary>
-    /// <param name="context">HTTP Context</param>
+    /// <param name="context">Context for connecting to the source of data</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     /// <param name="defaultSearchType">Word used for describing the type of search if no one is found into the resources</param>
     /// <param name="resourceKey">Key used for searching the type of search into the resources</param>
-    public SearchManager(MySQLDbContext context, IMapper mapper, ResourceManager textsManager, string defaultSearchType, string resourceKey)
+    public SearchService(IMediathequeDbContext<T> context, IMapper mapper, ResourceManager textsManager, string defaultSearchType, string resourceKey)
     {
-        _context = context;
+        //DataAccessContext = context;
+        Context = context;
         _mapper = mapper;
         _searchType = RetrieveSearchType(defaultSearchType, resourceKey);
         TextsManager = textsManager;
     }
-
-    /// <summary>
-    /// Constructor of the SearchManager class
-    /// </summary>
-    public SearchManager(SearchService<T> mySqlService)
-    {
-        _searchService = mySqlService;
-    }
-
-    /// <summary>
-    /// Generate the IQueryable object dedicated to 
-    /// retrieve the books from the database,
-    /// ordered by the title
-    /// </summary>
-    /// <param name="searchCriteria">Criteria sent by the client</param>
-    /// <returns>A IQueryable<Book> object</returns>
-    protected abstract IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria);
 
     /// <summary>
     /// Gets the name of the search thanks to the ResourceManager.
@@ -90,28 +71,6 @@ public abstract class SearchManager<T> where T : IDatabaseSettings
         var name = TextsManager.GetString(resourceKey);
 
         return !string.IsNullOrEmpty(name) ? name : defaultSearchType;
-    }
-
-    /// <summary>
-    /// Throws an exception with a message indicating that criteria are missing
-    /// </summary>
-    /// <exception cref="Exception"></exception>
-    protected void ThrowExceptionForMissingCriteria()
-    {
-        throw new Exception(TextsManager.GetString(TextsKeys.ERROR_MISSING_CRITERIA) + " " + _searchType);
-    }
-
-    /// <summary>
-    /// Generate the IQueryable object dedicated to 
-    /// retrieve the editions from the database
-    /// </summary>
-    /// <param name="bookIds">List of the IDs of the concerned books</param>
-    /// <returns>A IQueryable<Edition> object</returns>
-    protected IQueryable<Edition> GetEditionsForSeveralBooksRequest(int[] bookIds)
-    {
-        return from edition in _context.Editions
-               where bookIds.Contains(edition.BookId)
-               select edition;
     }
 
     /// <summary>
@@ -156,15 +115,6 @@ public abstract class SearchManager<T> where T : IDatabaseSettings
     }
 
     /// <summary>
-    /// Indicates if the database is available or not
-    /// </summary>
-    /// <returns>A boolean value</returns>
-    public bool IsDatabaseAvailable()
-    {
-        return _context != null && _context.IsDatabaseAvailable();
-    }
-
-    /// <summary>
     /// Processes the search that can be of type "simple" or "advanced".
     /// The difference is defined by the "GetOrderedBooksRequest" call.
     /// </summary>
@@ -176,7 +126,14 @@ public abstract class SearchManager<T> where T : IDatabaseSettings
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
-        var booksQuery = GetOrderedBooksRequest(searchCriteria);
+        //if (DataAccessContext == null
+        //    || DataAccessContext.WithDbContext && DataAccessContext?.DbContext?.ComplexRequests == null)
+        //{
+        //    throw new Exception("Le contexte d'accès aux données n'a pas été instancié");
+        //}
+
+        //var booksQuery = DataAccessContext.DbContext.ComplexRequests.GetOrderedBooksRequest(searchCriteria);
+        var booksQuery = Context.ComplexRequests.GetOrderedBooksRequest(searchCriteria);
 
         // Completes the first list with the books
         if (booksQuery != null)
@@ -190,7 +147,8 @@ public abstract class SearchManager<T> where T : IDatabaseSettings
         // Completes the second list with the editions
         if (booksList != null && booksList.Any())
         {
-            editionsList = await this.GetEditionsForSeveralBooksRequest(
+            //editionsList = await DataAccessContext.DbContext.ComplexRequests.GetEditionsForSeveralBooksRequest(
+            editionsList = await Context.ComplexRequests.GetEditionsForSeveralBooksRequest(
                 booksList.Select(bDto => bDto.Id).ToArray()
             )
             .Include(ed => ed.Format)

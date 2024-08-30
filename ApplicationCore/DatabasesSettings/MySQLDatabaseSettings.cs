@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Interfaces.Databases;
 
-namespace Infrastructure.MySQL;
+namespace ApplicationCore.DatabasesSettings;
 
 /// <summary>
 /// Object used to retrieve the settings from the appsettings.json file

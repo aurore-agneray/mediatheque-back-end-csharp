@@ -1,4 +1,5 @@
 using ApplicationCore;
+using ApplicationCore.DatabasesSettings;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Pocos;
 using ApplicationCore.Texts;
@@ -12,7 +13,7 @@ namespace mediatheque_back_csharp.Managers.SearchManagers;
 /// <summary>
 /// Methods for preparing the data sent by the AdvancedSearchController
 /// </summary>
-public class AdvancedSearchManager : SearchManager
+public class AdvancedSearchManager : SearchManager<MySQLDatabaseSettings>
 {
     /// <summary>
     /// Constructor of the AdvancedSearchManager class

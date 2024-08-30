@@ -1,15 +1,25 @@
-﻿using ApplicationCore.AbstractClasses;
+﻿using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
-namespace ApplicationCore.Interfaces.Databases;
+namespace ApplicationCore.AbstractClasses;
 
-public interface IMediathequeDbContext<T> where T : IDatabaseSettings
+/// <summary>
+/// Allows the use of several kinds of databases contexts
+/// </summary>
+public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContext<T>
+    where T : IDatabaseSettings
 {
+    /// <summary>
+    /// Settings used for connecting to the database
+    /// </summary>
+    protected abstract IOptions<T> DatabaseSettings { get; set; }
+
     /// <summary>
     /// Defines available complex requests used for retrieving books and editions
     /// </summary>
-    public ISQLRequests<T, MediathequeDbContext<T>> ComplexRequests { get; }
+    public abstract ISQLRequests<T, MediathequeDbContext<T>> ComplexRequests { get; }
 
     /// <summary>
     /// List of Authors from the database
@@ -47,8 +57,19 @@ public interface IMediathequeDbContext<T> where T : IDatabaseSettings
     public DbSet<Series> Series { get; set; }
 
     /// <summary>
+    /// Constructor for the MediathequeDbContext
+    /// </summary>
+    /// <param name="_databaseSettings">
+    /// Contains the settings used for connecting to the database
+    /// </param>
+    public MediathequeDbContext(IOptions<T> settings)
+    {
+        DatabaseSettings = settings;
+    }
+
+    /// <summary>
     /// Indicates if the database is available or not
     /// </summary>
     /// <returns>A boolean value</returns>
-    public bool IsDatabaseAvailable();
+    public abstract bool IsDatabaseAvailable();
 }

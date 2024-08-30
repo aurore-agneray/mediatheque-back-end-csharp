@@ -1,4 +1,6 @@
-﻿using ApplicationCore.Interfaces.Databases;
+﻿using ApplicationCore.AbstractClasses;
+using ApplicationCore.DatabasesSettings;
+using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,12 +10,17 @@ namespace Infrastructure.MySQL
     /// <summary>
     /// Global context for the connection to the "Mediatheque" MySQL database
     /// </summary>
-    public class MySQLDbContext : DbContext, IMediathequeDbContext
+    public class MySQLDbContext : MediathequeDbContext<MySQLDatabaseSettings>
     {
         /// <summary>
         /// Settings used for connecting to the database
         /// </summary>
-        private readonly IOptions<MySQLDatabaseSettings> _appSettings;
+        protected override IOptions<MySQLDatabaseSettings> DatabaseSettings { get; set; }
+
+        /// <summary>
+        /// Defines available complex requests used for retrieving books and editions
+        /// </summary>
+        public override ISQLRequests<MySQLDatabaseSettings, MediathequeDbContext<MySQLDatabaseSettings>> ComplexRequests { get; }
 
         /// <summary>
         /// List of Authors from the database
@@ -51,45 +58,20 @@ namespace Infrastructure.MySQL
         public DbSet<Series> Series { get; set; }
 
         /// <summary>
-        /// Constructor for the MediathequeDbContext
+        /// Constructor for the MySQLDbContext
         /// </summary>
         /// <param name="settings">
         /// Contains the settings used for connecting to the database
         /// </param>
-        public MySQLDbContext(IOptions<MySQLDatabaseSettings> settings)
+        public MySQLDbContext(IOptions<MySQLDatabaseSettings> settings) : base(settings)
         {
-            _appSettings = settings;
-        }
-
-        /// <summary>
-        /// Configures the Db Context
-        /// </summary>
-        /// <param name="optionsBuilder">
-        /// Tool used for binding the context with the database
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// Occurs when the connection string doesn't exist into the appsettings.json file
-        /// </exception>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string? connectionString = _appSettings.Value.DbConnectionString;
-
-            if (connectionString == null)
-            {
-                throw new ArgumentNullException("Please insert the Connection String into the appsettings.json file !");
-            }
-
-            optionsBuilder.UseMySql(
-                connectionString,
-                ServerVersion.AutoDetect(connectionString)
-            );
         }
 
         /// <summary>
         /// Indicates if the database is available or not
         /// </summary>
         /// <returns>A boolean value</returns>
-        public bool IsDatabaseAvailable()
+        public override bool IsDatabaseAvailable()
         {
             return Database.CanConnect();
         }

@@ -1,4 +1,5 @@
 using ApplicationCore;
+using ApplicationCore.DatabasesSettings;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Texts;
 using mediatheque_back_csharp.Classes;
@@ -23,14 +24,14 @@ public abstract class SearchController : ControllerBase
     /// <summary>
     /// Methods for preparing the data sent by the SearchController
     /// </summary>
-    public readonly SearchManager _manager;
+    public readonly SearchManager<MySQLDatabaseSettings> _manager;
 
     /// <summary>
     /// Constructor of the SearchController class
     /// </summary>
     /// <param name="logger">Given Logger</param>
     /// <param name="manager">Given SimpleSearchManager with data process methods</param>
-    public SearchController(ILogger<SearchController> logger, SearchManager manager)
+    public SearchController(ILogger<SearchController> logger, SearchManager<MySQLDatabaseSettings> manager)
     {
         _logger = logger;
         _manager = manager;
@@ -48,12 +49,12 @@ public abstract class SearchController : ControllerBase
             return NotFound();
         }
 
-        if (_manager?.TextsManager == null) {
-            return new ErrorObject(
-                HttpStatusCode.InternalServerError,
-                Constants.ERROR_TEXTS_RESOURCES_READING
-            );
-        }
+        //if (_manager?.TextsManager == null) {
+        //    return new ErrorObject(
+        //        HttpStatusCode.InternalServerError,
+        //        Constants.ERROR_TEXTS_RESOURCES_READING
+        //    );
+        //}
 
         if (!_manager.IsDatabaseAvailable())
         {

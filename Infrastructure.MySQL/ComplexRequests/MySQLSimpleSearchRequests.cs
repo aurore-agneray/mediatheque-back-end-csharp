@@ -1,14 +1,14 @@
-﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+﻿using ApplicationCore.DatabasesSettings;
+using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.MySQL.ComplexRequests;
 
 /// <summary>
 /// Requests used for the MySQL simple search
 /// </summary>
-public class MySQLSimpleSearchRequests : ISQLRequests<MySQLDbContext>
+public class MySQLSimpleSearchRequests : ISQLRequests<MySQLDatabaseSettings, MySQLDbContext>
 {
     /// <summary>
     /// Context for querying the MySQL database
@@ -45,5 +45,18 @@ public class MySQLSimpleSearchRequests : ISQLRequests<MySQLDbContext>
         )
         .Distinct()
         .OrderBy(b => b.Title);
+    }
+
+    /// <summary>
+    /// Generate the IQueryable object dedicated to 
+    /// retrieve the editions from the database
+    /// </summary>
+    /// <param name="bookIds">List of the IDs of the concerned books</param>
+    /// <returns>A IQueryable<Edition> object</returns>
+    public IQueryable<Edition> GetEditionsForSeveralBooksRequest(int[] bookIds)
+    {
+        return from edition in DbContext.Editions
+               where bookIds.Contains(edition.BookId)
+               select edition;
     }
 }
