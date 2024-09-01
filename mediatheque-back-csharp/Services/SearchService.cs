@@ -139,7 +139,6 @@ public abstract class SearchService
         // Completes the second list with the editions
         if (booksList != null && booksList.Any())
         {
-            //editionsList = await DataAccessContext.DbContext.ComplexRequests.GetEditionsForSeveralBooksRequest(
             editionsList = await _repository.GetEditionsForSeveralBooksRequest(
                 booksList.Select(bDto => bDto.Id).ToArray()
             )
