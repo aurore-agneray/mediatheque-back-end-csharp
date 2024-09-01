@@ -56,6 +56,11 @@ public abstract class SearchManager
     {
         SearchService? searchService = null;
 
+        if (this.TextsManager == null)
+        {
+            throw new ArgumentNullException(nameof(this.TextsManager));
+        }
+
         if (_services is not null)
         {
             searchService = searchType switch

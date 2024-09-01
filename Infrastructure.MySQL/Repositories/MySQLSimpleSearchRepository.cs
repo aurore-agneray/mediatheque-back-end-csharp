@@ -34,7 +34,7 @@ public class MySQLSimpleSearchRepository : MySQLSearchRepository
     {
         if (string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
         {
-            return new List<Book>().AsQueryable();
+            return default;
         }
 
         string criterion = searchCriteria?.SimpleCriterion;

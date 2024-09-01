@@ -29,4 +29,10 @@ public interface ISQLRepository<out T> where T : IMediathequeDbContextFields
     /// <param name="bookIds">List of the IDs of the concerned books</param>
     /// <returns>A IQueryable<Edition> object</returns>
     public IQueryable<Edition> GetEditionsForSeveralBooksRequest(int[] bookIds);
+
+    /// <summary>
+    /// Indicates if the database is available or not
+    /// </summary>
+    /// <returns>A boolean value</returns>
+    public bool IsDatabaseAvailable();
 }

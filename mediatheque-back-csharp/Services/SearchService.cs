@@ -2,6 +2,7 @@
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces.Databases;
+using ApplicationCore.Texts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ public abstract class SearchService
     /// <summary>
     /// Repository used for retrieving data from a particular database
     /// </summary>
-    protected ISQLRepository<IMediathequeDbContextFields> Repository { get; private set; }
+    protected readonly ISQLRepository<IMediathequeDbContextFields> _repository;
 
     /// <summary>
     /// Transforms the POCOs into DTOs
@@ -37,7 +38,7 @@ public abstract class SearchService
     /// <param name="textsManager">Texts manager</param>
     public SearchService(ISQLRepository<IMediathequeDbContextFields> repo, IMapper mapper, ResourceManager textsManager)
     {
-        Repository = repo;
+        _repository = repo;
         _mapper = mapper;
         TextsManager = textsManager;
     }
@@ -114,7 +115,17 @@ public abstract class SearchService
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
-        var booksQuery = Repository.GetOrderedBooksRequest(searchCriteria);
+        if (this._repository == null)
+        {
+            throw new ArgumentNullException(nameof(this._repository));
+        }
+
+        if (!_repository.IsDatabaseAvailable())
+        {
+            throw new Exception(this.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
+        }
+
+        var booksQuery = _repository.GetOrderedBooksRequest(searchCriteria);
 
         // Completes the first list with the books
         if (booksQuery != null)
@@ -129,7 +140,7 @@ public abstract class SearchService
         if (booksList != null && booksList.Any())
         {
             //editionsList = await DataAccessContext.DbContext.ComplexRequests.GetEditionsForSeveralBooksRequest(
-            editionsList = await Repository.GetEditionsForSeveralBooksRequest(
+            editionsList = await _repository.GetEditionsForSeveralBooksRequest(
                 booksList.Select(bDto => bDto.Id).ToArray()
             )
             .Include(ed => ed.Format)

@@ -47,26 +47,20 @@ public abstract class SearchController : ControllerBase
             return NotFound();
         }
 
-        //if (_manager?.TextsManager == null) {
-        //    return new ErrorObject(
-        //        HttpStatusCode.InternalServerError,
-        //        Constants.ERROR_TEXTS_RESOURCES_READING
-        //    );
-        //}
+        SearchTypeEnum searchType;
 
-        //if (!_manager.IsDatabaseAvailable())
-        //{
-        //    var errorMessage = _manager.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty;
-
-        //    return new ErrorObject(
-        //        HttpStatusCode.InternalServerError, 
-        //        errorMessage
-        //    );
-        //}
+        if (!string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
+        {
+            searchType = SearchTypeEnum.MySQLSimple;
+        }
+        else
+        {
+            searchType = SearchTypeEnum.MySQLAdvanced;
+        }
 
         try
         {
-            var results = await _manager.SearchForResults(searchCriteria, SearchTypeEnum.MySQLSimple);
+            var results = await _manager.SearchForResults(searchCriteria, searchType);
             return Ok(results);
         }
         catch (Exception ex)

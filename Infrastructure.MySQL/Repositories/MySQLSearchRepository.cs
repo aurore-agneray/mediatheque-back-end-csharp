@@ -44,4 +44,18 @@ public abstract class MySQLSearchRepository : ISQLRepository<MySQLDbContext>
                where bookIds.Contains(edition.BookId)
                select edition;
     }
+
+    /// <summary>
+    /// Indicates if the database is available or not
+    /// </summary>
+    /// <returns>A boolean value</returns>
+    public bool IsDatabaseAvailable()
+    {
+        if (DbContext is not null)
+        {
+            return DbContext.IsDatabaseAvailable();
+        }
+
+        return false;
+    }
 }

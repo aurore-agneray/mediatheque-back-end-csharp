@@ -65,12 +65,12 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
         return expression;
     }
 
-    ///// <summary>
-    ///// Completes the concerned Expression with the condition on the book object and its properties,
-    ///// except the editions
-    ///// </summary>
-    ///// <param name="expression">ExpressionStarter<Book> object</param>
-    ///// <param name="criteria">Criteria sent by the client</param>
+    /// <summary>
+    /// Completes the concerned Expression with the condition on the book object and its properties,
+    /// except the editions
+    /// </summary>
+    /// <param name="expression">ExpressionStarter<Book> object</param>
+    /// <param name="criteria">Criteria sent by the client</param>
     private void AddBookConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria)
     {
 
@@ -97,14 +97,13 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
         }
     }
 
-    ///// <summary>
-    ///// Completes the concerned Expression with the condition on the editions and their properties
-    ///// </summary>
-    ///// <param name="expression">ExpressionStarter<Book> object</param>
-    ///// <param name="criteria">Criteria sent by the client</param>
+    /// <summary>
+    /// Completes the concerned Expression with the condition on the editions and their properties
+    /// </summary>
+    /// <param name="expression">ExpressionStarter<Book> object</param>
+    /// <param name="criteria">Criteria sent by the client</param>
     private void AddEditionsConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria)
     {
-
         DateTime criterionDate;
 
         if (!string.IsNullOrEmpty(criteria?.Isbn))
@@ -159,9 +158,9 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
     /// <returns>A IQueryable<Book> object</returns>
     public override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
     {
-        if (string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
+        if (searchCriteria?.AdvancedCriteria is null)
         {
-            return new List<Book>().AsQueryable();
+            return default;
         }
 
         IQueryable<Book> query = (
