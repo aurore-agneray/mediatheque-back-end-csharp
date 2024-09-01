@@ -1,13 +1,13 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
-using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
+using Infrastructure.MySQL.Repositories;
 
 namespace Infrastructure.MySQL.ComplexRequests;
 
 /// <summary>
 /// Requests used for the MySQL simple search
 /// </summary>
-public class MySQLSimpleSearchRepository : ISQLRepository<MySQLDbContext>
+public class MySQLSimpleSearchRepository : MySQLSearchRepository
 {
     /// <summary>
     /// Context for querying the MySQL database
@@ -18,7 +18,7 @@ public class MySQLSimpleSearchRepository : ISQLRepository<MySQLDbContext>
     /// Main constructor
     /// </summary>
     /// <param name="context">Database context</param>
-    public MySQLSimpleSearchRepository(MySQLDbContext context)
+    public MySQLSimpleSearchRepository(MySQLDbContext context) : base(context)
     {
         DbContext = context;
     }
@@ -30,7 +30,7 @@ public class MySQLSimpleSearchRepository : ISQLRepository<MySQLDbContext>
     /// </summary>
     /// <param name="searchCriteria">Contains the criterion sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    public IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
+    public override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
     {
         if (string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
         {
@@ -53,18 +53,5 @@ public class MySQLSimpleSearchRepository : ISQLRepository<MySQLDbContext>
         )
         .Distinct()
         .OrderBy(b => b.Title);
-    }
-
-    /// <summary>
-    /// Generate the IQueryable object dedicated to 
-    /// retrieve the editions from the database
-    /// </summary>
-    /// <param name="bookIds">List of the IDs of the concerned books</param>
-    /// <returns>A IQueryable<Edition> object</returns>
-    public IQueryable<Edition> GetEditionsForSeveralBooksRequest(int[] bookIds)
-    {
-        return from edition in DbContext.Editions
-               where bookIds.Contains(edition.BookId)
-               select edition;
     }
 }
