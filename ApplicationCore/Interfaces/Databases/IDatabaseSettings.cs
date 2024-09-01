@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ApplicationCore.Interfaces.Databases;
+﻿namespace ApplicationCore.Interfaces.Databases;
 
 /// <summary>
 /// Object used to configure a database access
 /// </summary>
-public class IDatabaseSettings
+public interface IDatabaseSettings
 {
     /// <summary>
     /// Connection string used for connecting to the database, that depends on the execution environment

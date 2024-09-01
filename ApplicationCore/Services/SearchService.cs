@@ -13,7 +13,7 @@ namespace ApplicationCore.Services;
 /// <summary>
 /// Defines the minimum needed methods for the search services
 /// </summary>
-public abstract class SearchService<T> where T : IDatabaseSettings
+public abstract class SearchService<T> where T : class, IDatabaseSettings
 {
     /// <summary>
     /// Context for connecting to the source of data

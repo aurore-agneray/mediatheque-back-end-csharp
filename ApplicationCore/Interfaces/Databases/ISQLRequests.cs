@@ -7,7 +7,7 @@ namespace ApplicationCore.Interfaces.Databases;
 /// Defines the structure of SQLRequests classes
 /// </summary>
 public interface ISQLRequests<T, U> 
-    where T : IDatabaseSettings
+    where T : class, IDatabaseSettings
     where U : IMediathequeDbContext<T>
 {
     /// <summary>

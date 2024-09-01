@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationCore.Interfaces.Databases;
 
-public interface IMediathequeDbContext<T> where T : IDatabaseSettings
+public interface IMediathequeDbContext<T> where T : class, IDatabaseSettings
 {
     /// <summary>
     /// Defines available complex requests used for retrieving books and editions

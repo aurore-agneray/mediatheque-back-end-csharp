@@ -16,7 +16,7 @@ namespace mediatheque_back_csharp.Managers.SearchManagers;
 /// <summary>
 /// Methods for preparing the data sent by the SearchController
 /// </summary>
-public abstract class SearchManager<T> where T : IDatabaseSettings
+public abstract class SearchManager<T> where T : class, IDatabaseSettings
 {
     /// <summary>
     /// HTTP Context for connecting to the database
