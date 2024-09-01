@@ -7,7 +7,7 @@ namespace ApplicationCore.Interfaces.Databases;
 /// <summary>
 /// Indicates which lists have to be implemented into the db contexts of the app
 /// </summary>
-public interface IMediathequeDbContext
+public interface IMediathequeDbContextFields
 {
     /// <summary>
     /// List of Authors from the database
@@ -43,10 +43,4 @@ public interface IMediathequeDbContext
     /// List of Series from the database
     /// </summary>
     public DbSet<Series> Series { get; set; }
-
-    /// <summary>
-    /// Indicates if the database is available or not
-    /// </summary>
-    /// <returns>A boolean value</returns>
-    public bool IsDatabaseAvailable();
 }

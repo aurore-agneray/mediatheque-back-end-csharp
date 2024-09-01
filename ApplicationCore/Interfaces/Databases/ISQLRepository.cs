@@ -6,7 +6,7 @@ namespace ApplicationCore.Interfaces.Databases;
 /// <summary>
 /// Defines the structure of SQL Repositories classes
 /// </summary>
-public interface ISQLRepository<out T> where T : IMediathequeDbContext
+public interface ISQLRepository<out T> where T : IMediathequeDbContextFields
 {
     /// <summary>
     /// Context for querying a SQL database

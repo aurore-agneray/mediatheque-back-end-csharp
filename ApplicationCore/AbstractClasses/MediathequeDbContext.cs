@@ -7,7 +7,7 @@ namespace ApplicationCore.AbstractClasses;
 /// <summary>
 /// Allows the use of several kinds of databases contexts
 /// </summary>
-public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContext
+public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContextFields
     where T : class, IDatabaseSettings
 {
     /// <summary>

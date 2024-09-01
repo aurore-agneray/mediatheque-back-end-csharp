@@ -17,7 +17,7 @@ public class MySQLAdvancedSearchService : SearchService
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     public MySQLAdvancedSearchService(MySQLAdvancedSearchRepository repo, IMapper mapper, ResourceManager textsManager)
-        : base((ISQLRepository<IMediathequeDbContext>)repo, mapper, textsManager)
+        : base((ISQLRepository<IMediathequeDbContextFields>)repo, mapper, textsManager)
     {
     }
 

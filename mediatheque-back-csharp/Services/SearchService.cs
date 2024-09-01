@@ -17,7 +17,7 @@ public abstract class SearchService
     /// <summary>
     /// Repository used for retrieving data from a particular database
     /// </summary>
-    protected ISQLRepository<IMediathequeDbContext> Repository { get; private set; }
+    protected ISQLRepository<IMediathequeDbContextFields> Repository { get; private set; }
 
     /// <summary>
     /// Transforms the POCOs into DTOs
@@ -35,7 +35,7 @@ public abstract class SearchService
     /// <param name="repo">Repository for collecting data</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public SearchService(ISQLRepository<IMediathequeDbContext> repo, IMapper mapper, ResourceManager textsManager)
+    public SearchService(ISQLRepository<IMediathequeDbContextFields> repo, IMapper mapper, ResourceManager textsManager)
     {
         Repository = repo;
         _mapper = mapper;
