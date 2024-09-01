@@ -1,26 +1,15 @@
 ﻿using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace ApplicationCore.AbstractClasses;
 
 /// <summary>
 /// Allows the use of several kinds of databases contexts
 /// </summary>
-public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContext<T>
+public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContext
     where T : class, IDatabaseSettings
 {
-    /// <summary>
-    /// Settings used for connecting to the database
-    /// </summary>
-    protected abstract IOptions<T> DatabaseSettings { get; set; }
-
-    /// <summary>
-    /// Defines available complex requests used for retrieving books and editions
-    /// </summary>
-    public abstract ISQLRequests<T, MediathequeDbContext<T>> ComplexRequests { get; }
-
     /// <summary>
     /// List of Authors from the database
     /// </summary>
@@ -59,12 +48,11 @@ public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContext
     /// <summary>
     /// Constructor for the MediathequeDbContext
     /// </summary>
-    /// <param name="_databaseSettings">
+    /// <param name="settings">
     /// Contains the settings used for connecting to the database
     /// </param>
-    public MediathequeDbContext(IOptions<T> settings)
+    public MediathequeDbContext(DbContextOptions settings) : base(settings)
     {
-        DatabaseSettings = settings;
     }
 
     /// <summary>

@@ -2,11 +2,12 @@ using ApplicationCore.AutoMapper;
 using ApplicationCore.DatabasesSettings;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
-using ApplicationCore.Services;
 using Infrastructure.MySQL;
+using Infrastructure.MySQL.ComplexRequests;
 using mediatheque_back_csharp.Configuration;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
+using mediatheque_back_csharp.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Resources;
@@ -33,8 +34,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(routePrefix));
 
 // Add the connection to the database
-builder.Services.AddScoped<IDatabaseSettings, MySQLDatabaseSettings>();
-builder.Services.AddDbContext<IMediathequeDbContext<MySQLDatabaseSettings>, MySQLDbContext>(optionsBuilder =>
+builder.Services.AddDbContext<MySQLDbContext>(optionsBuilder =>
 {
     MySQLDatabaseSettings dbSettings = new();
 
@@ -66,8 +66,14 @@ builder.Services.AddScoped<ResourceManager>(provider =>
     new ResourceManager(@"mediatheque_back_csharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
 );
 
+// Injects my repositories
+builder.Services.AddScoped<MySQLSimpleSearchRepository>();
+builder.Services.AddScoped<MySQLAdvancedSearchRepository>();
+
 // Injects my search services
 builder.Services.AddScoped<MySQLSimpleSearchService>();
+builder.Services.AddScoped<MySQLAdvancedSearchService>();
+builder.Services.AddScoped<AllSearchServices>();
 
 // Injects my search managers
 builder.Services.AddScoped<SimpleSearchManager>();

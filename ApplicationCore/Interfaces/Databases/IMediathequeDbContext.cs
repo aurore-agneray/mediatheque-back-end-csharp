@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationCore.Interfaces.Databases;
 
-public interface IMediathequeDbContext<T> where T : class, IDatabaseSettings
+/// <summary>
+/// Indicates which lists have to be implemented into the db contexts of the app
+/// </summary>
+public interface IMediathequeDbContext
 {
-    /// <summary>
-    /// Defines available complex requests used for retrieving books and editions
-    /// </summary>
-    public ISQLRequests<T, MediathequeDbContext<T>> ComplexRequests { get; }
-
     /// <summary>
     /// List of Authors from the database
     /// </summary>

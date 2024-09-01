@@ -1,7 +1,5 @@
-using ApplicationCore;
-using ApplicationCore.DatabasesSettings;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
-using ApplicationCore.Texts;
+using ApplicationCore.Enums;
 using mediatheque_back_csharp.Classes;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using Microsoft.AspNetCore.Mvc;
@@ -24,14 +22,14 @@ public abstract class SearchController : ControllerBase
     /// <summary>
     /// Methods for preparing the data sent by the SearchController
     /// </summary>
-    public readonly SearchManager<MySQLDatabaseSettings> _manager;
+    public readonly SearchManager _manager;
 
     /// <summary>
     /// Constructor of the SearchController class
     /// </summary>
     /// <param name="logger">Given Logger</param>
     /// <param name="manager">Given SimpleSearchManager with data process methods</param>
-    public SearchController(ILogger<SearchController> logger, SearchManager<MySQLDatabaseSettings> manager)
+    public SearchController(ILogger<SearchController> logger, SearchManager manager)
     {
         _logger = logger;
         _manager = manager;
@@ -56,21 +54,23 @@ public abstract class SearchController : ControllerBase
         //    );
         //}
 
-        if (!_manager.IsDatabaseAvailable())
+        //if (!_manager.IsDatabaseAvailable())
+        //{
+        //    var errorMessage = _manager.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty;
+
+        //    return new ErrorObject(
+        //        HttpStatusCode.InternalServerError, 
+        //        errorMessage
+        //    );
+        //}
+
+        try
         {
-            var errorMessage = _manager.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty;
-
-            return new ErrorObject(
-                HttpStatusCode.InternalServerError, 
-                errorMessage
-            );
-        }
-
-        try {
-            var results = await _manager.SearchForResults(searchCriteria);
+            var results = await _manager.SearchForResults(searchCriteria, SearchTypeEnum.MySQLSimple);
             return Ok(results);
         }
-        catch(Exception ex) {
+        catch (Exception ex)
+        {
             return new ErrorObject(HttpStatusCode.InternalServerError, ex.Message);
         }
     }

@@ -1,5 +1,4 @@
-﻿using ApplicationCore.AbstractClasses;
-using ApplicationCore.DTOs.SearchDTOs;
+﻿using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces.Databases;
@@ -8,29 +7,22 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
-namespace ApplicationCore.Services;
+namespace mediatheque_back_csharp.Services;
 
 /// <summary>
 /// Defines the minimum needed methods for the search services
 /// </summary>
-public abstract class SearchService<T> where T : class, IDatabaseSettings
+public abstract class SearchService
 {
     /// <summary>
-    /// Context for connecting to the source of data
+    /// Repository used for retrieving data from a particular database
     /// </summary>
-    //protected DataAccessContext<IDatabaseSettings> DataAccessContext { get; private set; }
-
-    protected IMediathequeDbContext<T> Context { get; private set; }
+    protected ISQLRepository<IMediathequeDbContext> Repository { get; private set; }
 
     /// <summary>
     /// Transforms the POCOs into DTOs
     /// </summary>
     protected readonly IMapper _mapper;
-
-    /// <summary>
-    /// Type of search
-    /// </summary>
-    protected readonly string _searchType;
 
     /// <summary>
     /// Gives access to the texts of the app
@@ -40,17 +32,13 @@ public abstract class SearchService<T> where T : class, IDatabaseSettings
     /// <summary>
     /// Constructor of the SearchService class
     /// </summary>
-    /// <param name="context">Context for connecting to the source of data</param>
+    /// <param name="repo">Repository for collecting data</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    /// <param name="defaultSearchType">Word used for describing the type of search if no one is found into the resources</param>
-    /// <param name="resourceKey">Key used for searching the type of search into the resources</param>
-    public SearchService(IMediathequeDbContext<T> context, IMapper mapper, ResourceManager textsManager, string defaultSearchType, string resourceKey)
+    public SearchService(ISQLRepository<IMediathequeDbContext> repo, IMapper mapper, ResourceManager textsManager)
     {
-        //DataAccessContext = context;
-        Context = context;
+        Repository = repo;
         _mapper = mapper;
-        _searchType = RetrieveSearchType(defaultSearchType, resourceKey);
         TextsManager = textsManager;
     }
 
@@ -126,14 +114,7 @@ public abstract class SearchService<T> where T : class, IDatabaseSettings
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
-        //if (DataAccessContext == null
-        //    || DataAccessContext.WithDbContext && DataAccessContext?.DbContext?.ComplexRequests == null)
-        //{
-        //    throw new Exception("Le contexte d'accès aux données n'a pas été instancié");
-        //}
-
-        //var booksQuery = DataAccessContext.DbContext.ComplexRequests.GetOrderedBooksRequest(searchCriteria);
-        var booksQuery = Context.ComplexRequests.GetOrderedBooksRequest(searchCriteria);
+        var booksQuery = Repository.GetOrderedBooksRequest(searchCriteria);
 
         // Completes the first list with the books
         if (booksQuery != null)
@@ -148,7 +129,7 @@ public abstract class SearchService<T> where T : class, IDatabaseSettings
         if (booksList != null && booksList.Any())
         {
             //editionsList = await DataAccessContext.DbContext.ComplexRequests.GetEditionsForSeveralBooksRequest(
-            editionsList = await Context.ComplexRequests.GetEditionsForSeveralBooksRequest(
+            editionsList = await Repository.GetEditionsForSeveralBooksRequest(
                 booksList.Select(bDto => bDto.Id).ToArray()
             )
             .Include(ed => ed.Format)

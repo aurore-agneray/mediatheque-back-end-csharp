@@ -4,16 +4,14 @@ using ApplicationCore.Pocos;
 namespace ApplicationCore.Interfaces.Databases;
 
 /// <summary>
-/// Defines the structure of SQLRequests classes
+/// Defines the structure of SQL Repositories classes
 /// </summary>
-public interface ISQLRequests<T, U> 
-    where T : class, IDatabaseSettings
-    where U : IMediathequeDbContext<T>
+public interface ISQLRepository<out T> where T : IMediathequeDbContext
 {
     /// <summary>
     /// Context for querying a SQL database
     /// </summary>
-    public U DbContext { get; }
+    public T DbContext { get; }
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 

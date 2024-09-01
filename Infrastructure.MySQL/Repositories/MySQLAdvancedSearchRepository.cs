@@ -9,12 +9,21 @@ namespace Infrastructure.MySQL.ComplexRequests;
 /// <summary>
 /// Requests used for the MySQL advanced search
 /// </summary>
-public class MySQLAdvancedSearchRequests : ISQLRequests<MySQLDatabaseSettings, MySQLDbContext>
+public class MySQLAdvancedSearchRepository : ISQLRepository<MySQLDbContext>
 {
     /// <summary>
     /// Context for querying the MySQL database
     /// </summary>
     public MySQLDbContext DbContext { get; }
+
+    /// <summary>
+    /// Main constructor
+    /// </summary>
+    /// <param name="context">Database context</param>
+    public MySQLAdvancedSearchRepository(MySQLDbContext context)
+    {
+        DbContext = context;
+    }
 
     /// <summary>
     /// Completes the concerned Expression with the condition on the publication date

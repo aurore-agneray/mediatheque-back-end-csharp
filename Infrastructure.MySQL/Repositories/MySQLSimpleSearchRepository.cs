@@ -1,5 +1,4 @@
-﻿using ApplicationCore.DatabasesSettings;
-using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 
@@ -8,12 +7,21 @@ namespace Infrastructure.MySQL.ComplexRequests;
 /// <summary>
 /// Requests used for the MySQL simple search
 /// </summary>
-public class MySQLSimpleSearchRequests : ISQLRequests<MySQLDatabaseSettings, MySQLDbContext>
+public class MySQLSimpleSearchRepository : ISQLRepository<MySQLDbContext>
 {
     /// <summary>
     /// Context for querying the MySQL database
     /// </summary>
     public MySQLDbContext DbContext { get; }
+
+    /// <summary>
+    /// Main constructor
+    /// </summary>
+    /// <param name="context">Database context</param>
+    public MySQLSimpleSearchRepository(MySQLDbContext context)
+    {
+        DbContext = context;
+    }
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 

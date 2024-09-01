@@ -1,33 +1,34 @@
+using ApplicationCore.Interfaces.Databases;
 using AutoMapper;
-using mediatheque_back_csharp.Services;
+using Infrastructure.MySQL.ComplexRequests;
 using System.Resources;
 
-namespace mediatheque_back_csharp.Managers.SearchManagers;
+namespace mediatheque_back_csharp.Services;
 
 /// <summary>
-/// Methods for preparing the data sent by the AdvancedSearchController
+/// Methods for preparing the data extracted from the MySQL database with the advanced search
 /// </summary>
-public class AdvancedSearchManager : SearchManager
+public class MySQLAdvancedSearchService : SearchService
 {
     /// <summary>
-    /// Constructor of the AdvancedSearchManager class
+    /// Constructor of the MySQLSimpleSearchService class
     /// </summary>
-    /// <param name="services">An object with all available search services</param>
+    /// <param name="repo">Repository for collecting data</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public AdvancedSearchManager(AllSearchServices services, IMapper mapper, ResourceManager textsManager) 
-        : base(services, mapper, textsManager)
+    public MySQLAdvancedSearchService(MySQLAdvancedSearchRepository repo, IMapper mapper, ResourceManager textsManager)
+        : base((ISQLRepository<IMediathequeDbContext>)repo, mapper, textsManager)
     {
     }
 
-    ///// <summary>
-    ///// Completes the concerned Expression with the condition on the publication date
-    ///// </summary>
-    ///// <param name="expression">ExpressionStarter<Book> object</param>
-    ///// <param name="op">Operator ("=", "<", ">")</param>
-    ///// <param name="criterionDate">Date used for comparison with the database</param>
-    ///// <returns>Returns the completed expression</returns>
-    ///// <exception cref="ArgumentException">Occured when the operator has an inappropriate value</exception>
+    /// <summary>
+    /// Completes the concerned Expression with the condition on the publication date
+    /// </summary>
+    /// <param name="expression">ExpressionStarter<Book> object</param>
+    /// <param name="op">Operator ("=", "<", ">")</param>
+    /// <param name="criterionDate">Date used for comparison with the database</param>
+    /// <returns>Returns the completed expression</returns>
+    /// <exception cref="ArgumentException">Occured when the operator has an inappropriate value</exception>
     //private ExpressionStarter<Book> AddPublicationDateCondition(ExpressionStarter<Book> expression, string op, DateTime criterionDate)
     //{
     //    /* WARNING : I'd like to factorize more this part but it seems impossible because of the request translation */
@@ -98,7 +99,7 @@ public class AdvancedSearchManager : SearchManager
     ///// <param name="expression">ExpressionStarter<Book> object</param>
     ///// <param name="criteria">Criteria sent by the client</param>
     //private void AddEditionsConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria) {
-        
+
     //    DateTime criterionDate;
 
     //    if (!string.IsNullOrEmpty(criteria?.Isbn))
@@ -144,13 +145,13 @@ public class AdvancedSearchManager : SearchManager
     //    }
     //}
 
-    ///// <summary>
-    ///// Generate the IQueryable object dedicated to 
-    ///// retrieve the books from the database,
-    ///// ordered by the title
-    ///// </summary>
-    ///// <param name="searchCriteria">Criteria sent by the client</param>
-    ///// <returns>A IQueryable<Book> object</returns>
+    /// <summary>
+    /// Generate the IQueryable object dedicated to 
+    /// retrieve the books from the database,
+    /// ordered by the title
+    /// </summary>
+    /// <param name="searchCriteria">Criteria sent by the client</param>
+    /// <returns>A IQueryable<Book> object</returns>
     //protected override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
     //{
     //    if (searchCriteria?.AdvancedCriteria == null)
