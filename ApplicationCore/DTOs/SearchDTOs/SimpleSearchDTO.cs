@@ -1,4 +1,4 @@
-using ApplicationCore.Interfaces;
+using ApplicationCore.Interfaces.DTOs;
 using System.Text.Json.Serialization;
 
 namespace ApplicationCore.DTOs.SearchDTOs;

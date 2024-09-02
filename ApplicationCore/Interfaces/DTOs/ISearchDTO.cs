@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Interfaces;
+﻿namespace ApplicationCore.Interfaces.DTOs;
 
 /// <summary>
 /// General properties transmitted by all types of search

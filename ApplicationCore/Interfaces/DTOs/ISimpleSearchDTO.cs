@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Interfaces;
+﻿namespace ApplicationCore.Interfaces.DTOs;
 
 /// <summary>
 /// Arguments received for a simple search

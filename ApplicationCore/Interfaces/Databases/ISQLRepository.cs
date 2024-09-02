@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Pocos;
+﻿using ApplicationCore.Interfaces.DTOs;
+using ApplicationCore.Pocos;
 
 namespace ApplicationCore.Interfaces.Databases;
 

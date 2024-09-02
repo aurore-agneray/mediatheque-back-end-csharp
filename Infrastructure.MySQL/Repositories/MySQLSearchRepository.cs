@@ -1,5 +1,5 @@
-﻿using ApplicationCore.Interfaces;
-using ApplicationCore.Interfaces.Databases;
+﻿using ApplicationCore.Interfaces.Databases;
+using ApplicationCore.Interfaces.DTOs;
 using ApplicationCore.Pocos;
 
 namespace Infrastructure.MySQL.Repositories;
