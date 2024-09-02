@@ -1,4 +1,4 @@
-﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+﻿using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Pocos;
 using Infrastructure.MySQL.Repositories;
 
@@ -30,14 +30,25 @@ public class MySQLSimpleSearchRepository : MySQLSearchRepository
     /// </summary>
     /// <param name="searchCriteria">Contains the criterion sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    public override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
+    public override IQueryable<Book> GetOrderedBooksRequest<ISimpleSearchDTO>(ISimpleSearchDTO searchCriteria)
     {
-        if (string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
+        SimpleSearchDTO? criteriaDto = null;
+
+        if (searchCriteria is ISimpleSearchDTO idto)
+        {
+            criteriaDto = searchCriteria as SimpleSearchDTO;
+        }
+        else
         {
             return default;
         }
 
-        string criterion = searchCriteria?.SimpleCriterion;
+        if (string.IsNullOrEmpty(criteriaDto?.SimpleCriterion))
+        {
+            return default;
+        }
+
+        string criterion = criteriaDto?.SimpleCriterion;
 
         return (
             from boo in DbContext.Books

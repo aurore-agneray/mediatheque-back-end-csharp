@@ -1,5 +1,4 @@
-﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
-using ApplicationCore.Pocos;
+﻿using ApplicationCore.Pocos;
 
 namespace ApplicationCore.Interfaces.Databases;
 
@@ -20,7 +19,7 @@ public interface ISQLRepository<out T> where T : IMediathequeDbContextFields
     /// </summary>
     /// <param name="searchCriteria">Contains the criterion sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    public IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria);
+    public IQueryable<Book> GetOrderedBooksRequest<U>(U searchCriteria) where U : class, ISearchDTO;
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 

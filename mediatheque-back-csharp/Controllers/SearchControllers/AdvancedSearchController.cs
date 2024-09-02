@@ -1,4 +1,6 @@
-﻿using mediatheque_back_csharp.Managers.SearchManagers;
+﻿using ApplicationCore.DTOs.SearchDTOs;
+using ApplicationCore.Enums;
+using mediatheque_back_csharp.Managers.SearchManagers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers.SearchControllers;
@@ -18,5 +20,17 @@ public class AdvancedSearchController : SearchController
     /// <param name="manager">Given SimpleSearchManager with data process methods</param>
     public AdvancedSearchController(ILogger<AdvancedSearchController> logger, AdvancedSearchManager manager) : base(logger, manager)
     {
+    }
+
+    /// <summary>
+    /// Post CRUD request for the research.
+    /// </summary>
+    /// <param name="searchCriteria">Object containing the search criteria</param>
+    /// <returns>List of some SearchResultsDTO objects OR an error</returns>
+    [HttpPost]
+    public async Task<IActionResult> Post(AdvancedSearchDTO searchCriteria)
+    {
+        SearchTypeEnum searchType = SearchTypeEnum.MySQLAdvanced;
+        return await ExecutePostRequest(searchCriteria, searchType);
     }
 }

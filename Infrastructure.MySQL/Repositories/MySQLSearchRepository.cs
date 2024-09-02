@@ -1,4 +1,4 @@
-﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 
@@ -30,7 +30,7 @@ public abstract class MySQLSearchRepository : ISQLRepository<MySQLDbContext>
     /// </summary>
     /// <param name="searchCriteria">Criteria sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    public abstract IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria);
+    public abstract IQueryable<Book> GetOrderedBooksRequest<T>(T searchCriteria) where T : class, ISearchDTO;
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 

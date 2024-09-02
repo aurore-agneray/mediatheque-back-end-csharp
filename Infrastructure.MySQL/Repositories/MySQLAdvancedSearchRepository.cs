@@ -1,4 +1,4 @@
-﻿using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+﻿using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Pocos;
 using Infrastructure.MySQL.Repositories;
 using LinqKit;
@@ -156,9 +156,20 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
     /// </summary>
     /// <param name="searchCriteria">Criteria sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    public override IQueryable<Book> GetOrderedBooksRequest(SearchCriteriaDTO searchCriteria)
+    public override IQueryable<Book> GetOrderedBooksRequest<IAdvancedSearchDTO>(IAdvancedSearchDTO searchCriteria)
     {
-        if (searchCriteria?.AdvancedCriteria is null)
+        AdvancedSearchDTO? criteriaDto = null;
+
+        if (searchCriteria is IAdvancedSearchDTO idto)
+        {
+            criteriaDto = searchCriteria as AdvancedSearchDTO;
+        }
+        else
+        {
+            return default;
+        }
+
+        if (criteriaDto?.AdvancedCriteria is null)
         {
             return default;
         }
@@ -179,8 +190,8 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
 
         var expression = PredicateBuilder.New<Book>(false);
 
-        AddBookConditions(ref expression, searchCriteria.AdvancedCriteria);
-        AddEditionsConditions(ref expression, searchCriteria.AdvancedCriteria);
+        AddBookConditions(ref expression, criteriaDto.AdvancedCriteria);
+        AddEditionsConditions(ref expression, criteriaDto.AdvancedCriteria);
 
         return query.Where(expression);
     }

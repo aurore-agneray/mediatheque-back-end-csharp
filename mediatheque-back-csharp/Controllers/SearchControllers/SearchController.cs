@@ -1,4 +1,4 @@
-using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using mediatheque_back_csharp.Classes;
@@ -36,22 +36,17 @@ public abstract class SearchController : ControllerBase
     }
 
     /// <summary>
-    /// Post CRUD request for the research.
+    /// Execute the POST request common instructions for all kind of SearchControllers
     /// </summary>
-    /// <param name="searchCriteria">Object containing the search criteria</param>
-    /// <returns>List of some SearchResultsDTO objects OR an error</returns>
-    [HttpPost]
-    public async Task<IActionResult> Post(SearchCriteriaDTO searchCriteria)
+    /// <param name="searchCriteria">Criteria for searching the books</param>
+    /// <param name="searchType">Type of search (simple, advanced, MySQL, BnF, etc)</param>
+    /// <returns>Returns the result for the client</returns>
+    protected async Task<IActionResult> ExecutePostRequest(SearchDTO searchCriteria, SearchTypeEnum searchType)
     {
-        if (_manager == null || searchCriteria == null) {
+        if (_manager == null || searchCriteria == null)
+        {
             return NotFound();
         }
-
-        SearchTypeEnum searchType;
-
-        searchType = !string.IsNullOrEmpty(searchCriteria?.SimpleCriterion)
-                     ? SearchTypeEnum.MySQLSimple
-                     : SearchTypeEnum.MySQLAdvanced;
 
         try
         {

@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
-using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Texts;
@@ -109,7 +108,7 @@ public abstract class SearchService
     /// </summary>
     /// <param name="searchCriteria">Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
-    public async Task<List<SearchResultDTO>> SearchForResults(SearchCriteriaDTO searchCriteria)
+    public async Task<List<SearchResultDTO>> SearchForResults(SearchDTO searchCriteria)
     {
         List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
         List<BookResultDTO> booksList = new List<BookResultDTO>();

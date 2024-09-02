@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
-using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Enums;
 
 namespace ApplicationCore.Interfaces;
@@ -17,5 +16,5 @@ public interface ISearchManager<out T> where T : class, IAllSearchServices
     /// <param name="searchCriteria">Object containing the search criteria</param>
     /// <param name="searchType">Type of search</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
-    public Task<List<SearchResultDTO>> SearchForResults(SearchCriteriaDTO searchCriteria, SearchTypeEnum searchType);
+    public Task<List<SearchResultDTO>> SearchForResults(SearchDTO searchCriteria, SearchTypeEnum searchType);
 }

@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Dtos;
 
-namespace ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
+namespace ApplicationCore.DTOs.SearchDTOs;
 
 /// <summary>
 /// Arguments received for the advanced search
