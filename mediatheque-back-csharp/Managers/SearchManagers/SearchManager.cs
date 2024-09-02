@@ -1,6 +1,7 @@
 using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Enums;
+using ApplicationCore.Interfaces;
 using AutoMapper;
 using mediatheque_back_csharp.Services;
 using System.Resources;
@@ -10,7 +11,8 @@ namespace mediatheque_back_csharp.Managers.SearchManagers;
 /// <summary>
 /// Methods for preparing the data sent by the SearchController
 /// </summary>
-public abstract class SearchManager
+/// <typeparam name="T">Defines the type of the available services for the concerned manager</typeparam>
+public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAllSearchServices
 {
     /// <summary>
     /// Transforms the POCOs into DTOs
@@ -25,12 +27,12 @@ public abstract class SearchManager
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    protected ResourceManager TextsManager { get; private set; }
+    protected T AllSearchServices { get; set; }
 
     /// <summary>
-    /// An object containing all available search services, injected by DI
+    /// Gives access to the texts of the app
     /// </summary>
-    protected readonly AllSearchServices _services;
+    protected ResourceManager TextsManager { get; private set; }
 
     /// <summary>
     /// Constructor of the SearchManager class
@@ -38,12 +40,19 @@ public abstract class SearchManager
     /// <param name="services">An object with all available search services</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public SearchManager(AllSearchServices services, IMapper mapper, ResourceManager textsManager)
+    public SearchManager(T services, IMapper mapper, ResourceManager textsManager)
     {
-        _services = services;
+        AllSearchServices = services;
         _mapper = mapper;
         TextsManager = textsManager;
     }
+
+    /// <summary>
+    /// Gets the search service needed for the given type of search
+    /// </summary>
+    /// <param name="searchType">Type of search</param>
+    /// <returns>Returns a unique SearchService object</returns>
+    protected abstract SearchService? GetSearchService(SearchTypeEnum searchType);
 
     /// <summary>
     /// Processes the search that can be of type "simple" or "advanced".
@@ -61,16 +70,7 @@ public abstract class SearchManager
             throw new ArgumentNullException(nameof(this.TextsManager));
         }
 
-        if (_services is not null)
-        {
-            searchService = searchType switch
-            {
-                SearchTypeEnum.MySQLSimple => _services.MySQLSimpleSearchService,
-                SearchTypeEnum.MySQLAdvanced => _services.MySQLAdvancedSearchService,
-                SearchTypeEnum.BnfAPISimple => throw new NotImplementedException(),
-                _ => throw new NotImplementedException()
-            };
-        }
+        searchService = GetSearchService(searchType);
 
         if (searchService is not null)
         {

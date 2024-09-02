@@ -73,7 +73,8 @@ builder.Services.AddScoped<MySQLAdvancedSearchRepository>();
 // Injects my search services
 builder.Services.AddScoped<MySQLSimpleSearchService>();
 builder.Services.AddScoped<MySQLAdvancedSearchService>();
-builder.Services.AddScoped<AllSearchServices>();
+builder.Services.AddScoped<AllSimpleSearchServices>();
+builder.Services.AddScoped<AllAdvancedSearchServices>();
 
 // Injects my search managers
 builder.Services.AddScoped<SimpleSearchManager>();

@@ -1,5 +1,4 @@
-﻿using ApplicationCore.DTOs.SearchDTOs;
-using mediatheque_back_csharp.Managers.SearchManagers;
+﻿using mediatheque_back_csharp.Managers.SearchManagers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace mediatheque_back_csharp.Controllers.SearchControllers;

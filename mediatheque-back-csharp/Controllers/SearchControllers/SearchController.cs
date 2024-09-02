@@ -1,7 +1,7 @@
 using ApplicationCore.DTOs.SearchDTOs.CriteriaDTOs;
 using ApplicationCore.Enums;
+using ApplicationCore.Interfaces;
 using mediatheque_back_csharp.Classes;
-using mediatheque_back_csharp.Managers.SearchManagers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -22,14 +22,14 @@ public abstract class SearchController : ControllerBase
     /// <summary>
     /// Methods for preparing the data sent by the SearchController
     /// </summary>
-    public readonly SearchManager _manager;
+    public readonly ISearchManager<IAllSearchServices> _manager;
 
     /// <summary>
     /// Constructor of the SearchController class
     /// </summary>
     /// <param name="logger">Given Logger</param>
     /// <param name="manager">Given SimpleSearchManager with data process methods</param>
-    public SearchController(ILogger<SearchController> logger, SearchManager manager)
+    public SearchController(ILogger<SearchController> logger, ISearchManager<IAllSearchServices> manager)
     {
         _logger = logger;
         _manager = manager;
@@ -49,14 +49,9 @@ public abstract class SearchController : ControllerBase
 
         SearchTypeEnum searchType;
 
-        if (!string.IsNullOrEmpty(searchCriteria?.SimpleCriterion))
-        {
-            searchType = SearchTypeEnum.MySQLSimple;
-        }
-        else
-        {
-            searchType = SearchTypeEnum.MySQLAdvanced;
-        }
+        searchType = !string.IsNullOrEmpty(searchCriteria?.SimpleCriterion)
+                     ? SearchTypeEnum.MySQLSimple
+                     : SearchTypeEnum.MySQLAdvanced;
 
         try
         {
