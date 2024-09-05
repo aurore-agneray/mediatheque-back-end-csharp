@@ -13,11 +13,11 @@ public class MySQLSimpleSearchService : SearchService
     /// <summary>
     /// Constructor of the MySQLSimpleSearchService class
     /// </summary>
-    /// <param name="repo">Repository for collecting data</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public MySQLSimpleSearchService(MySQLSimpleSearchRepository repo, IMapper mapper, ResourceManager textsManager)
-        : base((ISQLRepository<IMediathequeDbContextFields>)repo, mapper, textsManager)
+    /// <param name="repo">Repository for collecting data</param>
+    public MySQLSimpleSearchService(IMapper mapper, ResourceManager textsManager, MySQLSimpleSearchRepository repo)
+        : base(mapper, textsManager, (ISQLRepository<IMediathequeDbContextFields>)repo)
     {
     }
 }

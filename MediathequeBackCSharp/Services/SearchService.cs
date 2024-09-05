@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Extensions;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Texts;
 using AutoMapper;
@@ -17,7 +18,12 @@ public abstract class SearchService
     /// <summary>
     /// Repository used for retrieving data from a particular database
     /// </summary>
-    protected readonly ISQLRepository<IMediathequeDbContextFields> _repository;
+    protected readonly ISQLRepository<IMediathequeDbContextFields>? _sqlRepository;
+
+    /// <summary>
+    /// Repository used for retrieving data from an XML source
+    /// </summary>
+    protected readonly IXMLRepository? _xmlRepository;
 
     /// <summary>
     /// Transforms the POCOs into DTOs
@@ -32,14 +38,16 @@ public abstract class SearchService
     /// <summary>
     /// Constructor of the SearchService class
     /// </summary>
-    /// <param name="repo">Repository for collecting data</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public SearchService(ISQLRepository<IMediathequeDbContextFields> repo, IMapper mapper, ResourceManager textsManager)
+    /// <param name="sqlRepo">Repository for collecting data from SQL databases</param>
+    /// <param name="xmlRepo">Repository for collecting data from XML sources</param>
+    public SearchService(IMapper mapper, ResourceManager textsManager, ISQLRepository<IMediathequeDbContextFields>? sqlRepo = null, IXMLRepository? xmlRepo = null)
     {
-        _repository = repo;
         _mapper = mapper;
         TextsManager = textsManager;
+        _sqlRepository = sqlRepo;
+        _xmlRepository = xmlRepo;
     }
 
     /// <summary>
@@ -114,17 +122,17 @@ public abstract class SearchService
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
-        if (this._repository == null)
+        if (this._sqlRepository == null)
         {
-            throw new ArgumentNullException(nameof(this._repository));
+            throw new ArgumentNullException(nameof(this._sqlRepository));
         }
 
-        if (!_repository.IsDatabaseAvailable())
+        if (!_sqlRepository.IsDatabaseAvailable())
         {
             throw new Exception(this.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
         }
 
-        var booksQuery = _repository.GetOrderedBooksRequest(searchCriteria);
+        var booksQuery = _sqlRepository.GetOrderedBooksRequest(searchCriteria);
 
         // Completes the first list with the books
         if (booksQuery != null)
@@ -138,7 +146,7 @@ public abstract class SearchService
         // Completes the second list with the editions
         if (booksList != null && booksList.Any())
         {
-            editionsList = await _repository.GetEditionsForSeveralBooksRequest(
+            editionsList = await _sqlRepository.GetEditionsForSeveralBooksRequest(
                 booksList.Select(bDto => bDto.Id).ToArray()
             )
             .Include(ed => ed.Format)

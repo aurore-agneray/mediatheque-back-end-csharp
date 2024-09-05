@@ -13,11 +13,11 @@ public class MySQLAdvancedSearchService : SearchService
     /// <summary>
     /// Constructor of the MySQLSimpleSearchService class
     /// </summary>
-    /// <param name="repo">Repository for collecting data</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public MySQLAdvancedSearchService(MySQLAdvancedSearchRepository repo, IMapper mapper, ResourceManager textsManager)
-        : base((ISQLRepository<IMediathequeDbContextFields>)repo, mapper, textsManager)
+    /// <param name="repo">Repository for collecting data</param>
+    public MySQLAdvancedSearchService(IMapper mapper, ResourceManager textsManager, MySQLAdvancedSearchRepository repo)
+        : base(mapper, textsManager, (ISQLRepository<IMediathequeDbContextFields>)repo)
     {
     }
 }
