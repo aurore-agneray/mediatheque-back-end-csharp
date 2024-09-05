@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.AbstractClasses;
-using ApplicationCore.DatabasesSettings;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.MySQL;

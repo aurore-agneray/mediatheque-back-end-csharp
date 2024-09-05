@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Enums;
 using AutoMapper;
 using mediatheque_back_csharp.Services;
+using mediatheque_back_csharp.Services.Aggregates;
 using System.Resources;
 
 namespace mediatheque_back_csharp.Managers.SearchManagers;

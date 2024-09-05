@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Interfaces;
 
-namespace mediatheque_back_csharp.Services;
+namespace mediatheque_back_csharp.Services.Aggregates;
 
 /// <summary>
 /// An object with all simple search services, injected by DI.

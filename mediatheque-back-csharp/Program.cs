@@ -1,5 +1,4 @@
 using ApplicationCore.AutoMapper;
-using ApplicationCore.DatabasesSettings;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 using Infrastructure.MySQL;
@@ -8,6 +7,7 @@ using mediatheque_back_csharp.Configuration;
 using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
 using mediatheque_back_csharp.Services;
+using mediatheque_back_csharp.Services.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Resources;
