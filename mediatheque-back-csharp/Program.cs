@@ -1,14 +1,7 @@
 using ApplicationCore.AutoMapper;
-using ApplicationCore.Interfaces.Databases;
-using ApplicationCore.Pocos;
 using Infrastructure.MySQL;
-using Infrastructure.MySQL.ComplexRequests;
 using mediatheque_back_csharp.Configuration;
-using mediatheque_back_csharp.Managers.SearchManagers;
 using mediatheque_back_csharp.Middlewares;
-using mediatheque_back_csharp.Services;
-using mediatheque_back_csharp.Services.Aggregates;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Resources;
 
@@ -17,37 +10,24 @@ var routePrefix = "/api";
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Injects tools for using controllers
 builder.Services.AddControllers();
 
-// Add repositories for the MySQL database
-builder.Services.AddScoped<IIdentifiedRepository<Author>, MySQLIIdentifiedRepository<Author>>();
-builder.Services.AddScoped<IIdentifiedRepository<Book>, MySQLIIdentifiedRepository<Book>>();
-builder.Services.AddScoped<IIdentifiedRepository<Edition>, MySQLIIdentifiedRepository<Edition>>();
-builder.Services.AddScoped<IIdentifiedRepository<Format>, MySQLIIdentifiedRepository<Format>>();
-builder.Services.AddScoped<IIdentifiedRepository<Genre>, MySQLIIdentifiedRepository<Genre>>();
-builder.Services.AddScoped<IIdentifiedRepository<Publisher>, MySQLIIdentifiedRepository<Publisher>>();
-builder.Services.AddScoped<IIdentifiedRepository<Series>, MySQLIIdentifiedRepository<Series>>();
+// Injects databases' contexts
+StartUpDI.InjectDbContexts(builder);
+
+// Injects repositories for the MySQL database
+StartUpDI.InjectMySQLRepositories(builder);
+
+// Injects my search services
+StartUpDI.InjectServices(builder);
+
+// Injects my search managers
+StartUpDI.InjectManagers(builder);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(routePrefix));
-
-// Add the connection to the database
-builder.Services.AddDbContext<MySQLDbContext>(optionsBuilder =>
-{
-    MySQLDatabaseSettings dbSettings = new();
-
-    if (string.IsNullOrEmpty(dbSettings.DbConnectionString))
-    {
-        throw new ArgumentNullException("Please insert the Connection String into the database's settings !");
-    }
-
-    optionsBuilder.UseMySql(
-        dbSettings.DbConnectionString,
-        ServerVersion.AutoDetect(dbSettings.DbConnectionString)
-    );
-});
 
 // Retrieves the configuration settings entered into Infrastructure.MySQL project
 var mySQLSettings = new MySQLDatabaseSettings();
@@ -65,20 +45,6 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddScoped<ResourceManager>(provider => 
     new ResourceManager(@"mediatheque_back_csharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
 );
-
-// Injects my repositories
-builder.Services.AddScoped<MySQLSimpleSearchRepository>();
-builder.Services.AddScoped<MySQLAdvancedSearchRepository>();
-
-// Injects my search services
-builder.Services.AddScoped<MySQLSimpleSearchService>();
-builder.Services.AddScoped<MySQLAdvancedSearchService>();
-builder.Services.AddScoped<AllSimpleSearchServices>();
-builder.Services.AddScoped<AllAdvancedSearchServices>();
-
-// Injects my search managers
-builder.Services.AddScoped<SimpleSearchManager>();
-builder.Services.AddScoped<AdvancedSearchManager>();
 
 var app = builder.Build();
 
