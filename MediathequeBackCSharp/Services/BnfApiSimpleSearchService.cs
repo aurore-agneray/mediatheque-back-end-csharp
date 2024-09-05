@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Enums;
+using ApplicationCore.Interfaces;
 using AutoMapper;
 using System.Resources;
 
@@ -16,7 +17,7 @@ public class BnfApiSimpleSearchService : SearchService
     /// <param name="textsManager">Texts manager</param>
     /// <param name="repo">Repository for collecting data</param>
     public BnfApiSimpleSearchService(IMapper mapper, ResourceManager textsManager, IXMLRepository repo) 
-        : base(mapper, textsManager, null, repo)
+        : base(mapper, textsManager, SourceTypeEnum.XML, null, repo)
     {
     }
 }

@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Interfaces.Databases;
+﻿using ApplicationCore.Enums;
+using ApplicationCore.Interfaces.Databases;
 using AutoMapper;
 using Infrastructure.MySQL.ComplexRequests;
 using System.Resources;
@@ -17,7 +18,7 @@ public class MySQLSimpleSearchService : SearchService
     /// <param name="textsManager">Texts manager</param>
     /// <param name="repo">Repository for collecting data</param>
     public MySQLSimpleSearchService(IMapper mapper, ResourceManager textsManager, MySQLSimpleSearchRepository repo)
-        : base(mapper, textsManager, (ISQLRepository<IMediathequeDbContextFields>)repo)
+        : base(mapper, textsManager, SourceTypeEnum.SQL, (ISQLRepository<IMediathequeDbContextFields>)repo)
     {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
+using ApplicationCore.Enums;
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Interfaces.Databases;
@@ -31,6 +32,11 @@ public abstract class SearchService
     protected readonly IMapper _mapper;
 
     /// <summary>
+    /// Indicates the type of the data's source
+    /// </summary>
+    protected readonly SourceTypeEnum _sourceType;
+
+    /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
     protected ResourceManager TextsManager { get; private set; }
@@ -40,12 +46,14 @@ public abstract class SearchService
     /// </summary>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
+    /// <param name="sourceType">Indicates the type of the data's source</param>
     /// <param name="sqlRepo">Repository for collecting data from SQL databases</param>
     /// <param name="xmlRepo">Repository for collecting data from XML sources</param>
-    public SearchService(IMapper mapper, ResourceManager textsManager, ISQLRepository<IMediathequeDbContextFields>? sqlRepo = null, IXMLRepository? xmlRepo = null)
+    public SearchService(IMapper mapper, ResourceManager textsManager, SourceTypeEnum sourceType, ISQLRepository<IMediathequeDbContextFields>? sqlRepo = null, IXMLRepository? xmlRepo = null)
     {
         _mapper = mapper;
         TextsManager = textsManager;
+        _sourceType = sourceType;
         _sqlRepository = sqlRepo;
         _xmlRepository = xmlRepo;
     }
@@ -111,17 +119,16 @@ public abstract class SearchService
     }
 
     /// <summary>
-    /// Processes the search that can be of type "simple" or "advanced".
-    /// The difference is defined by the "GetOrderedBooksRequest" call.
+    /// Processes the search into an SQL database that can be of type "simple" or "advanced".
     /// </summary>
     /// <param name="searchCriteria">Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects</returns>
-    public async Task<List<SearchResultDTO>> SearchForResults(SearchDTO searchCriteria)
+    private async Task<Tuple<List<BookResultDTO>, List<EditionResultDTO>>> SearchForSQLResults(SearchDTO searchCriteria)
     {
-        List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
+        // Checks the availability of the repository and the database
         if (this._sqlRepository == null)
         {
             throw new ArgumentNullException(nameof(this._sqlRepository));
@@ -132,6 +139,7 @@ public abstract class SearchService
             throw new Exception(this.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
         }
 
+        // Retrieves data
         var booksQuery = _sqlRepository.GetOrderedBooksRequest(searchCriteria);
 
         // Completes the first list with the books
@@ -156,7 +164,28 @@ public abstract class SearchService
             .ToListAsync();
         }
 
-        // Constructs the DTOs
+        return new (booksList, editionsList);
+    }
+
+    /// <summary>
+    /// Processes the search that can be of type "simple" or "advanced".
+    /// The process depends on the source of data
+    /// </summary>
+    /// <param name="searchCriteria">Object containing the search criteria</param>
+    /// <returns>List of some SearchResultsDTO objects</returns>
+    public async Task<List<SearchResultDTO>> SearchForResults(SearchDTO searchCriteria)
+    {
+        List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
+        List<BookResultDTO> booksList = new List<BookResultDTO>();
+        List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
+
+        (booksList, editionsList) = this._sourceType switch
+        {
+            SourceTypeEnum.SQL => await SearchForSQLResults(searchCriteria),
+            _ => await SearchForSQLResults(searchCriteria)
+        };
+
+        // Constructs the final DTOs
         if (editionsList != null && editionsList.Any())
         {
             searchResultsDtos = booksList.Select(dto =>
