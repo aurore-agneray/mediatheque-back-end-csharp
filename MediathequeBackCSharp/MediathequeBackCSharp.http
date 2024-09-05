@@ -1,0 +1,29 @@
+@MediathequeBackCSharp_HostAddress = https://localhost:8080
+
+GET {{MediathequeBackCSharp_HostAddress}}/author/
+Accept: application/json
+
+###
+
+GET {{MediathequeBackCSharp_HostAddress}}/book/
+Accept: application/json
+
+###
+
+GET {{MediathequeBackCSharp_HostAddress}}/edition/
+Accept: application/json
+
+###
+
+GET {{MediathequeBackCSharp_HostAddress}}/format/
+Accept: application/json
+
+###
+
+GET {{MediathequeBackCSharp_HostAddress}}/genre/
+Accept: application/json
+
+###
+
+GET {{MediathequeBackCSharp_HostAddress}}/publisher/
+Accept: application/json

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+	<RootNamespace>MediathequeBackCSharp</RootNamespace>
+	<AssemblyName>MediathequeBack</AssemblyName>
+	<Version>1.0.0</Version>
+	<Authors>Aurore Agneray</Authors>
+	<Copyright>Aurore Agneray</Copyright>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />
+    <ProjectReference Include="..\Infrastructure.MySQL\Infrastructure.MySQL.csproj" />
+  </ItemGroup>
+
+</Project>
