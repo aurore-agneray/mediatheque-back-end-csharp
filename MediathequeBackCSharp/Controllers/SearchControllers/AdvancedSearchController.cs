@@ -23,10 +23,15 @@ public class AdvancedSearchController : SearchController
     }
 
     /// <summary>
-    /// Post CRUD request for the research.
+    /// Processes the advanced search with several criteria
     /// </summary>
     /// <param name="searchCriteria">Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects OR an error</returns>
+    /// <remarks>
+    /// The available search types are :
+    /// - from the MySQL database
+    /// - from the BnF API : NOT YET IMPLEMENTED --> the values of "apiBnf" parameters are not used
+    /// </remarks>
     [HttpPost]
     public async Task<IActionResult> Post(AdvancedSearchDTO searchCriteria)
     {

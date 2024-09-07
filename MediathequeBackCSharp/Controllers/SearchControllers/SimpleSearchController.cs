@@ -23,10 +23,18 @@ public class SimpleSearchController : SearchController
     }
 
     /// <summary>
-    /// Post CRUD request for the research.
+    /// Processes the simple search with a unique criterion
     /// </summary>
     /// <param name="searchCriteria">Object containing the search criteria</param>
     /// <returns>List of some SearchResultsDTO objects OR an error</returns>
+    /// <remarks>
+    /// The available search types are :
+    /// - from the MySQL database
+    /// - from the BnF API
+    /// 
+    /// The available values for the BnF's notices quantity are 20, 100, 200, 500 and 1000.
+    /// With other values, the API will return an error.
+    /// </remarks>
     [HttpPost]
     public async Task<IActionResult> Post(SimpleSearchDTO searchCriteria)
     {
