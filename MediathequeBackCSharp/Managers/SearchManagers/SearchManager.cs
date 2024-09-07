@@ -1,8 +1,8 @@
+using ApplicationCore.AbstractServices;
 using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using AutoMapper;
-using MediathequeBackCSharp.Services;
 using System.Resources;
 
 namespace MediathequeBackCSharp.Managers.SearchManagers;

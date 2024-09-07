@@ -6,7 +6,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
-namespace MediathequeBackCSharp.Services;
+namespace ApplicationCore.AbstractServices;
 
 /// <summary>
 /// Abstract class that has to be inherited by simple and advanced MySQL search services
@@ -24,7 +24,7 @@ public abstract class MySQLSearchService : SearchService
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     /// <param name="sqlRepo">Repository for collecting data from SQL databases</param>
-    protected MySQLSearchService(IMapper mapper, ResourceManager textsManager, ISQLRepository<IMediathequeDbContextFields> sqlRepo) 
+    protected MySQLSearchService(IMapper mapper, ResourceManager textsManager, ISQLRepository<IMediathequeDbContextFields> sqlRepo)
         : base(mapper, textsManager)
     {
         _sqlRepository = sqlRepo;
@@ -41,14 +41,14 @@ public abstract class MySQLSearchService : SearchService
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
         // Checks the availability of the repository and the database
-        if (this._sqlRepository == null)
+        if (_sqlRepository == null)
         {
-            throw new ArgumentNullException(nameof(this._sqlRepository));
+            throw new ArgumentNullException(nameof(_sqlRepository));
         }
 
         if (!_sqlRepository.IsDatabaseAvailable())
         {
-            throw new Exception(this.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
+            throw new Exception(TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
         }
 
         // Retrieves data

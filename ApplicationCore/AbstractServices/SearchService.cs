@@ -3,7 +3,7 @@ using ApplicationCore.Extensions;
 using AutoMapper;
 using System.Resources;
 
-namespace MediathequeBackCSharp.Services;
+namespace ApplicationCore.AbstractServices;
 
 /// <summary>
 /// Defines the minimum needed methods for the search services
@@ -110,7 +110,7 @@ public abstract class SearchService
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
-        (booksList, editionsList) = await this.ExtractDataFromRepository(searchCriteria);
+        (booksList, editionsList) = await ExtractDataFromRepository(searchCriteria);
 
         // Constructs the final DTOs
         if (editionsList != null && editionsList.Any())
@@ -119,7 +119,8 @@ public abstract class SearchService
                 new SearchResultDTO(dto)
             ).ToList();
 
-            searchResultsDtos.ForEach(rDto => {
+            searchResultsDtos.ForEach(rDto =>
+            {
                 rDto.Editions = GroupEditionsBySeriesName(
                     OrderEditionsByVolume(
                         editionsList.Where(ed => ed.BookId == rDto.BookId)

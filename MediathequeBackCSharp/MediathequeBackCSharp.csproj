@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />
+    <ProjectReference Include="..\Infrastructure.BnfApi\Infrastructure.BnfApi.csproj" />
     <ProjectReference Include="..\Infrastructure.MySQL\Infrastructure.MySQL.csproj" />
   </ItemGroup>
 

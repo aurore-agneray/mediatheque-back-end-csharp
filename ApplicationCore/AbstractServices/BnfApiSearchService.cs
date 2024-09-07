@@ -3,7 +3,7 @@ using ApplicationCore.Interfaces;
 using AutoMapper;
 using System.Resources;
 
-namespace MediathequeBackCSharp.Services;
+namespace ApplicationCore.AbstractServices;
 
 public abstract class BnfApiSearchService : SearchService
 {
@@ -18,7 +18,7 @@ public abstract class BnfApiSearchService : SearchService
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     /// <param name="xmlRepo">Repository for collecting data from XML content</param>
-    protected BnfApiSearchService(IMapper mapper, ResourceManager textsManager, IXMLRepository xmlRepo) 
+    protected BnfApiSearchService(IMapper mapper, ResourceManager textsManager, IXMLRepository xmlRepo)
         : base(mapper, textsManager)
     {
         _xmlRepository = xmlRepo;
