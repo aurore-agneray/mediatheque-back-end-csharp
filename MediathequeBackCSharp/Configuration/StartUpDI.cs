@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
+using Infrastructure.BnfApi.Repositories;
 using Infrastructure.MySQL;
 using Infrastructure.MySQL.ComplexRequests;
 using MediathequeBackCSharp.Managers.SearchManagers;
@@ -43,11 +44,11 @@ public static class StartUpDI
     }
 
     /// <summary>
-    /// Injects the repositories which provinding datas
-    /// from the MySQL database
+    /// Injects the repositories which providing data
+    /// from any source
     /// </summary>
     /// <param name="builder">The application builder</param>
-    public static void InjectMySQLRepositories(WebApplicationBuilder builder)
+    public static void InjectRepositories(WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<IIdentifiedRepository<Author>, MySQLIIdentifiedRepository<Author>>();
         builder.Services.AddScoped<IIdentifiedRepository<Book>, MySQLIIdentifiedRepository<Book>>();
@@ -59,6 +60,8 @@ public static class StartUpDI
 
         builder.Services.AddScoped<MySQLSimpleSearchRepository>();
         builder.Services.AddScoped<MySQLAdvancedSearchRepository>();
+
+        builder.Services.AddScoped<BnfApiSimpleSearchRepository>();
     }
 
     /// <summary>
@@ -69,6 +72,9 @@ public static class StartUpDI
     {
         builder.Services.AddScoped<MySQLSimpleSearchService>();
         builder.Services.AddScoped<MySQLAdvancedSearchService>();
+
+        builder.Services.AddScoped<BnfApiSimpleSearchService>();
+
         builder.Services.AddScoped<AllSimpleSearchServices>();
         builder.Services.AddScoped<AllAdvancedSearchServices>();
     }

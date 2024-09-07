@@ -16,8 +16,8 @@ builder.Services.AddControllers();
 // Injects databases' contexts
 StartUpDI.InjectDbContexts(builder);
 
-// Injects repositories for the MySQL database
-StartUpDI.InjectMySQLRepositories(builder);
+// Injects repositories for any source of data
+StartUpDI.InjectRepositories(builder);
 
 // Injects my search services
 StartUpDI.InjectServices(builder);

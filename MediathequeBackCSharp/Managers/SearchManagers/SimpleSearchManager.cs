@@ -34,6 +34,7 @@ public class SimpleSearchManager : SearchManager<AllSimpleSearchServices>
             return searchType switch
             {
                 SearchTypeEnum.MySQLSimple => AllSearchServices.MySQLSimpleSearchService,
+                SearchTypeEnum.BnfAPISimple => AllSearchServices.BnfApiSimpleSearchService,
                 _ => throw new NotImplementedException()
             };
         }
