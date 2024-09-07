@@ -7,6 +7,7 @@ using Infrastructure.BnfApi.Constants;
 using Infrastructure.BnfApi.POCOs;
 using LinqKit;
 using MediathequeBackCSharp.Generators;
+using MediathequeBackCSharp.Texts;
 using System.Resources;
 using System.Text;
 using System.Xml.Linq;
@@ -201,6 +202,14 @@ public abstract class BnfApiSearchService : SearchService
     {
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
+
+        // Checks the given notices' quantity before continuing
+        if (!BnfGlobalConsts.ALLOWED_NOTICES_NUMBERS.Contains(searchCriteria.BnfNoticesQuantity))
+        {
+            throw new Exception(
+                TextsManager.GetString(TextsKeys.ERROR_BNF_NOTICES_NUMBER) ?? string.Empty
+            );
+        }
 
         // Checks the availability of the repository
         if (_xmlRepository == null)

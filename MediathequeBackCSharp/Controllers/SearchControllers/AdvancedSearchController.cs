@@ -32,6 +32,7 @@ public class AdvancedSearchController : SearchController
     /// - from the MySQL database
     /// - from the BnF API : NOT YET IMPLEMENTED --> the values of "apiBnf" parameters are not used
     /// </remarks>
+    /// <response code="500">If an error occurred into the process, with an explicit information message</response>
     [HttpPost]
     public async Task<IActionResult> Post(AdvancedSearchDTO searchCriteria)
     {

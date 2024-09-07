@@ -16,6 +16,12 @@ public class BnfGlobalConsts
     public const int DEFAULT_NOTICES_NUMBER = 20;
 
     /// <summary>
+    /// The numbers allowed by the BnF API for defining the quantity of retrieved notices.
+    /// Check here : http://catalogue.bnf.fr/api/test.do
+    /// </summary>
+    public static readonly int[] ALLOWED_NOTICES_NUMBERS = [20, 100, 200, 500, 1000];
+
+    /// <summary>
     /// Defines the default value for the properties Ind1 and Ind2 of the Datafields
     /// </summary>
     public const string IND_DEFAULT_VALUE = " ";

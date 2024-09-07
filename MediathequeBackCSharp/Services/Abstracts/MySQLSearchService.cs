@@ -1,9 +1,9 @@
 ﻿using ApplicationCore.AbstractServices;
 using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Interfaces.Databases;
-using ApplicationCore.Texts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using MediathequeBackCSharp.Texts;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 

@@ -1,11 +1,11 @@
 ﻿using ApplicationCore;
 using ApplicationCore.Dtos;
 using ApplicationCore.Interfaces.Entities;
-using ApplicationCore.Texts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Infrastructure.MySQL;
 using MediathequeBackCSharp.Classes;
+using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -65,6 +65,7 @@ public class LoadController : ControllerBase
     /// genres, publishers and formats lists
     /// </summary>
     /// <returns>Returns a DTO with several lists</returns>
+    /// <response code="500">If an error occurred into the process, with an explicit information message</response>
     [HttpGet]
     public async Task<IActionResult> Get()
     {
