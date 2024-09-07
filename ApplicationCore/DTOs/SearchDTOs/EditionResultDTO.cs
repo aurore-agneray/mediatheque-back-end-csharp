@@ -31,6 +31,11 @@
         public DateTime? PublicationDate { get; set; }
 
         /// <summary>
+        /// Publication date exclusively returned by the Bnf's API
+        /// </summary>
+        public string? PublicationDateBnf { get; set; }
+
+        /// <summary>
         /// Publication year
         /// </summary>
         public int? PublicationYear { get; set; }

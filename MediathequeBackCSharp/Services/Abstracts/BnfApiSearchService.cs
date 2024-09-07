@@ -5,6 +5,8 @@ using AutoMapper;
 using Infrastructure.BnfApi;
 using Infrastructure.BnfApi.Constants;
 using Infrastructure.BnfApi.POCOs;
+using LinqKit;
+using MediathequeBackCSharp.Generators;
 using System.Resources;
 using System.Text;
 using System.Xml.Linq;
@@ -170,7 +172,7 @@ public abstract class BnfApiSearchService : SearchService
     /// <param name="xmlNodes">XML nodes</param>
     /// <returns>Returns objects whose keys are into the format "AUTHORNAME_BOOKNAME" 
     /// and the values are dictionaries containing editions data</returns>
-    private List<KeyValuePair<string, Dictionary<string, string>>> ExtractResultsFromXmlNodes(IEnumerable<XElement> xmlNodes)
+    private List<KeyValuePair<string, Dictionary<string, string>>> ExtractEditionsFromXmlNodes(IEnumerable<XElement> xmlNodes)
     {
         IEnumerable<BnfDataField> datafields;
         KeyValuePair<string, Dictionary<string, string>> extractedEditionData;
@@ -197,6 +199,47 @@ public abstract class BnfApiSearchService : SearchService
     /// <returns>List of some SearchResultsDTO objects</returns>
     protected override async Task<Tuple<List<BookResultDTO>, List<EditionResultDTO>>> ExtractDataFromRepository(SearchDTO searchCriteria)
     {
-        return default;
+        List<BookResultDTO> booksList = new List<BookResultDTO>();
+        List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
+
+        // Checks the availability of the repository
+        if (_xmlRepository == null)
+        {
+            throw new ArgumentNullException(nameof(_xmlRepository));
+        }
+
+        // Extracts and formats data
+        IEnumerable<XElement> xmlExtractedData = await _xmlRepository.GetXMLResultsNodes(searchCriteria);
+        List<KeyValuePair<string, Dictionary<string, string>>> editionsDefinedByBookAndAuthor = ExtractEditionsFromXmlNodes(xmlExtractedData);
+
+        // Groups the results by book and author's name
+        var editionsGroupedByBook = editionsDefinedByBookAndAuthor.GroupBy(res => res.Key);
+
+        // Creates the DTOs with fictional IDs
+        int bookId = 1;
+        int editionId = 1;
+
+        foreach (var bookGroup in editionsGroupedByBook)
+        {
+            // Add the book in the final list
+            booksList.Add(
+                BnfResultsDtosGenerator.GenerateBookResultDTO(bookGroup.Key, bookId)
+            );
+
+            // Generates the editions' DTOs
+            var editionsDtos = bookGroup.Select(edition =>
+                BnfResultsDtosGenerator.GenerateEditionResultDTO(edition.Value, bookId)
+            );
+
+            editionsDtos.ForEach(ed => ed.Id = editionId++);
+
+            // Add its editions into the final list
+            editionsList.AddRange(editionsDtos);
+
+            bookId++;
+            editionId = 1;
+        }
+
+        return new (booksList, editionsList);
     }
 }
