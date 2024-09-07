@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Enums;
-using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces;
 using AutoMapper;
 using System.Resources;
 
@@ -8,7 +7,7 @@ namespace MediathequeBackCSharp.Services;
 /// <summary>
 /// Methods for preparing the data extracted from the Bnf API with the simple search
 /// </summary>
-public class BnfApiSimpleSearchService : SearchService
+public class BnfApiSimpleSearchService : BnfApiSearchService
 {
     /// <summary>
     /// Constructor of the BnfApiSimpleSearchService class
@@ -17,7 +16,7 @@ public class BnfApiSimpleSearchService : SearchService
     /// <param name="textsManager">Texts manager</param>
     /// <param name="repo">Repository for collecting data</param>
     public BnfApiSimpleSearchService(IMapper mapper, ResourceManager textsManager, IXMLRepository repo) 
-        : base(mapper, textsManager, SourceTypeEnum.XML, null, repo)
+        : base(mapper, textsManager, repo)
     {
     }
 }

@@ -1,12 +1,6 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
-using ApplicationCore.Enums;
 using ApplicationCore.Extensions;
-using ApplicationCore.Interfaces;
-using ApplicationCore.Interfaces.Databases;
-using ApplicationCore.Texts;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
 namespace MediathequeBackCSharp.Services;
@@ -17,24 +11,9 @@ namespace MediathequeBackCSharp.Services;
 public abstract class SearchService
 {
     /// <summary>
-    /// Repository used for retrieving data from a particular database
-    /// </summary>
-    protected readonly ISQLRepository<IMediathequeDbContextFields>? _sqlRepository;
-
-    /// <summary>
-    /// Repository used for retrieving data from an XML source
-    /// </summary>
-    protected readonly IXMLRepository? _xmlRepository;
-
-    /// <summary>
     /// Transforms the POCOs into DTOs
     /// </summary>
     protected readonly IMapper _mapper;
-
-    /// <summary>
-    /// Indicates the type of the data's source
-    /// </summary>
-    protected readonly SourceTypeEnum _sourceType;
 
     /// <summary>
     /// Gives access to the texts of the app
@@ -46,17 +25,18 @@ public abstract class SearchService
     /// </summary>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    /// <param name="sourceType">Indicates the type of the data's source</param>
-    /// <param name="sqlRepo">Repository for collecting data from SQL databases</param>
-    /// <param name="xmlRepo">Repository for collecting data from XML sources</param>
-    public SearchService(IMapper mapper, ResourceManager textsManager, SourceTypeEnum sourceType, ISQLRepository<IMediathequeDbContextFields>? sqlRepo = null, IXMLRepository? xmlRepo = null)
+    public SearchService(IMapper mapper, ResourceManager textsManager)
     {
         _mapper = mapper;
         TextsManager = textsManager;
-        _sourceType = sourceType;
-        _sqlRepository = sqlRepo;
-        _xmlRepository = xmlRepo;
     }
+
+    /// <summary>
+    /// Extracts the books and their editions from the concerned repository
+    /// </summary>
+    /// <param name="searchCriteria">Object containing the search criteria</param>
+    /// <returns>List of some SearchResultsDTO objects</returns>
+    protected abstract Task<Tuple<List<BookResultDTO>, List<EditionResultDTO>>> ExtractDataFromRepository(SearchDTO searchCriteria);
 
     /// <summary>
     /// Gets the name of the search thanks to the ResourceManager.
@@ -119,55 +99,6 @@ public abstract class SearchService
     }
 
     /// <summary>
-    /// Processes the search into an SQL database that can be of type "simple" or "advanced".
-    /// </summary>
-    /// <param name="searchCriteria">Object containing the search criteria</param>
-    /// <returns>List of some SearchResultsDTO objects</returns>
-    private async Task<Tuple<List<BookResultDTO>, List<EditionResultDTO>>> SearchForSQLResults(SearchDTO searchCriteria)
-    {
-        List<BookResultDTO> booksList = new List<BookResultDTO>();
-        List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
-
-        // Checks the availability of the repository and the database
-        if (this._sqlRepository == null)
-        {
-            throw new ArgumentNullException(nameof(this._sqlRepository));
-        }
-
-        if (!_sqlRepository.IsDatabaseAvailable())
-        {
-            throw new Exception(this.TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
-        }
-
-        // Retrieves data
-        var booksQuery = _sqlRepository.GetOrderedBooksRequest(searchCriteria);
-
-        // Completes the first list with the books
-        if (booksQuery != null)
-        {
-            booksList = await booksQuery.Include(b => b.Author)
-                                        .Include(b => b.Genre)
-                                        .ProjectTo<BookResultDTO>(_mapper.ConfigurationProvider)
-                                        .ToListAsync();
-        }
-
-        // Completes the second list with the editions
-        if (booksList != null && booksList.Any())
-        {
-            editionsList = await _sqlRepository.GetEditionsForSeveralBooksRequest(
-                booksList.Select(bDto => bDto.Id).ToArray()
-            )
-            .Include(ed => ed.Format)
-            .Include(ed => ed.Series)
-            .Include(ed => ed.Publisher)
-            .ProjectTo<EditionResultDTO>(_mapper.ConfigurationProvider)
-            .ToListAsync();
-        }
-
-        return new (booksList, editionsList);
-    }
-
-    /// <summary>
     /// Processes the search that can be of type "simple" or "advanced".
     /// The process depends on the source of data
     /// </summary>
@@ -179,11 +110,7 @@ public abstract class SearchService
         List<BookResultDTO> booksList = new List<BookResultDTO>();
         List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
 
-        (booksList, editionsList) = this._sourceType switch
-        {
-            SourceTypeEnum.SQL => await SearchForSQLResults(searchCriteria),
-            _ => await SearchForSQLResults(searchCriteria)
-        };
+        (booksList, editionsList) = await this.ExtractDataFromRepository(searchCriteria);
 
         // Constructs the final DTOs
         if (editionsList != null && editionsList.Any())
