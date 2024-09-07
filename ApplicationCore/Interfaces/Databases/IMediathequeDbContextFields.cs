@@ -1,5 +1,4 @@
-﻿using ApplicationCore.AbstractClasses;
-using ApplicationCore.Pocos;
+﻿using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationCore.Interfaces.Databases;

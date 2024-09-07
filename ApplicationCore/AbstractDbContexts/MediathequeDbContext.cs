@@ -2,7 +2,7 @@
 using ApplicationCore.Pocos;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApplicationCore.AbstractClasses;
+namespace ApplicationCore.AbstractDbContexts;
 
 /// <summary>
 /// Allows the use of several kinds of databases contexts
