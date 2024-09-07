@@ -16,6 +16,17 @@ public class BnfGlobalConsts
     public const int DEFAULT_NOTICES_NUMBER = 20;
 
     /// <summary>
+    /// Defines the default value for the properties Ind1 and Ind2 of the Datafields
+    /// </summary>
+    public const string IND_DEFAULT_VALUE = " ";
+
+    /// <summary>
+    /// Used for separating the title and the author's name
+    /// when they are concatenated
+    /// </summary>
+    public const string TITLE_AND_AUTHOR_NAME_SEPARATOR = ";;;";
+
+    /// <summary>
     /// Returns the parametered part of the simple search request's url
     /// </summary>
     public static readonly Func<string, int, string> SIMPLE_SEARCH_PARAMETERED_CONDITIONS = (string criterion, int noticesQty) => {

@@ -1,4 +1,5 @@
-﻿using ApplicationCore.DTOs.SearchDTOs;
+﻿using ApplicationCore.AbstractServices;
+using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Texts;
 using AutoMapper;
@@ -6,7 +7,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Resources;
 
-namespace ApplicationCore.AbstractServices;
+namespace MediathequeBackCSharp.Services.Abstracts;
 
 /// <summary>
 /// Abstract class that has to be inherited by simple and advanced MySQL search services
