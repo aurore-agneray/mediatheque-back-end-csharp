@@ -6,6 +6,7 @@ using Infrastructure.MySQL.ComplexRequests;
 using MediathequeBackCSharp.Managers.SearchManagers;
 using MediathequeBackCSharp.Services;
 using MediathequeBackCSharp.Services.Aggregates;
+using MediathequeBackCSharp.Texts;
 using Microsoft.EntityFrameworkCore;
 
 namespace MediathequeBackCSharp.Configuration;
@@ -33,7 +34,7 @@ public static class StartUpDI
 
             if (string.IsNullOrEmpty(dbSettings.DbConnectionString))
             {
-                throw new ArgumentNullException("Please insert the Connection String into the database's settings !");
+                throw new ArgumentNullException(InternalErrorTexts.ERROR_MISSING_CONNEXION_STRING);
             }
 
             optionsBuilder.UseMySql(

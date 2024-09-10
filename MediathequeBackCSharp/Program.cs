@@ -10,6 +10,15 @@ var routePrefix = "/api";
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
 
+// Injects texts resources
+builder.Services.AddScoped<ResourceManager>(provider =>
+    new ResourceManager(@"MediathequeBackCSharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
+);
+
+// Store the TextManager into a variable that can be injected into StartUp static methods
+//var serviceProvider = builder.Services.BuildServiceProvider();
+//var textManager = serviceProvider.GetService<ResourceManager>();
+
 // Injects tools for using controllers
 builder.Services.AddControllers();
 
@@ -40,11 +49,6 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<AutoMapperProfile>();
 });
-
-// Injects texts resources
-builder.Services.AddScoped<ResourceManager>(provider => 
-    new ResourceManager(@"MediathequeBackCSharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
-);
 
 var app = builder.Build();
 
