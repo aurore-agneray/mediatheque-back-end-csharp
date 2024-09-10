@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Interfaces.Databases;
+using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -20,12 +21,12 @@ public static class StartUpOptions
     {
         return c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Médiathèque", Version = "v1" });
+            c.SwaggerDoc(SwaggerOptionsTexts.VERSION, new OpenApiInfo { Title = SwaggerOptionsTexts.TITLE, Version = SwaggerOptionsTexts.VERSION });
             c.DocumentFilter<CustomSwaggerFilter>();
             c.AddServer(new OpenApiServer
             {
                 Url = routePrefix,
-                Description = "Base path for the API"
+                Description = SwaggerOptionsTexts.ROUTE_PREFIX_DESCRIPTION
             });
 
             /* Using System.Reflection for injecting XML's documentation of the project.
