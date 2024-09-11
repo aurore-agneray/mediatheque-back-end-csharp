@@ -1,12 +1,12 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace MediathequeBackCSharp.Configuration;
+namespace MediathequeBackCSharp.Configuration.Swagger;
 
 /// <summary>
 /// Defines which functionalities must appear or not into the Swagger
 /// </summary>
-public class CustomSwaggerFilter : IDocumentFilter
+public class SwaggerFilter : IDocumentFilter
 {
     /// <summary>
     /// Defines which functionalities must appear or not into the Swagger

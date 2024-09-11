@@ -1,11 +1,15 @@
 using ApplicationCore.AutoMapper;
 using Infrastructure.MySQL;
+using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Configuration;
 using MediathequeBackCSharp.Middlewares;
 using System.Reflection;
 using System.Resources;
 
 var routePrefix = "/api";
+
+// Get the version number of the assembly (currently used for the Swagger)
+string? assemblyVersion = AssemblyInfo.GetVersionNumber();
 
 // Creates a dependency injection container
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +40,7 @@ StartUpDI.InjectManagers(builder);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(routePrefix));
+builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(assemblyVersion, routePrefix));
 
 // Retrieves the configuration settings entered into Infrastructure.MySQL project
 var mySQLSettings = new MySQLDatabaseSettings();
@@ -56,7 +60,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint($"/swagger/{assemblyVersion}/swagger.json", $"{assemblyVersion}");
+    });
 }
 
 app.UseHttpsRedirection();
