@@ -31,7 +31,7 @@ public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAll
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    protected ResourceManager TextsManager { get; private set; }
+    public ResourceManager TextsManager { get; init; }
 
     /// <summary>
     /// Constructor of the SearchManager class

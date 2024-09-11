@@ -2,6 +2,7 @@ using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using MediathequeBackCSharp.Classes;
+using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -41,11 +42,20 @@ public abstract class SearchController : ControllerBase
     /// <param name="searchCriteria">Criteria for searching the books</param>
     /// <param name="searchType">Type of search (simple, advanced, MySQL, BnF, etc)</param>
     /// <returns>Returns the result for the client</returns>
+    /// <response code="500">If the wanted type search has not been implemented</response>
     protected async Task<IActionResult> ExecutePostRequest(SearchDTO searchCriteria, SearchTypeEnum searchType)
     {
         if (_manager == null || searchCriteria == null)
         {
             return NotFound();
+        }
+
+        if (searchType == SearchTypeEnum.NotImplemented)
+        {
+            return new ErrorObject(
+                HttpStatusCode.InternalServerError, 
+                _manager.TextsManager.GetString(TextsKeys.ERROR_NO_IMPLEMENTED_SEARCH_TYPE) ?? string.Empty
+            );
         }
 
         try

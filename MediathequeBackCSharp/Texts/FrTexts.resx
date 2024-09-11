@@ -132,4 +132,7 @@
   <data name="ERROR_BNF_NOTICES_NUMBER" xml:space="preserve">
     <value>Le nombre de notices voulu n'est pas valide ! Il ne peut qu'être égal à l'une des valeurs suivantes : 20, 100, 200, 500, 1000</value>
   </data>
+  <data name="ERROR_NO_IMPLEMENTED_SEARCH_TYPE" xml:space="preserve">
+    <value>Type de recherche non implémenté</value>
+  </data>
 </root>

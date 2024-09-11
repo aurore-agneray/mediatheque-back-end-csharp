@@ -35,10 +35,16 @@ public class SimpleSearchController : SearchController
     /// The available values for the BnF's notices quantity are 20, 100, 200, 500 and 1000.
     /// With other values, the API will return an error.
     /// </remarks>
+    /// <response code="404">If the search criteria object is null</response>
     /// <response code="500">If an error occurred into the process, with an explicit information message</response>
     [HttpPost]
     public async Task<IActionResult> Post(SimpleSearchDTO searchCriteria)
     {
+        if (searchCriteria == null)
+        {
+            return NotFound();
+        }
+
         SearchTypeEnum searchType = searchCriteria.UseBnfApi
                                     ? SearchTypeEnum.BnfAPISimple
                                     : SearchTypeEnum.MySQLSimple;

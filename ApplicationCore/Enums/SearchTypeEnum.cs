@@ -7,5 +7,6 @@ public enum SearchTypeEnum
 {
     MySQLSimple,
     MySQLAdvanced,
-    BnfAPISimple
+    BnfAPISimple,
+    NotImplemented
 }
