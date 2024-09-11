@@ -85,7 +85,7 @@ public abstract class SearchService
 
         return editions.GroupBy(ed =>
         {
-            if (ed?.Series?.SeriesName != null)
+            if (!string.IsNullOrEmpty(ed?.Series?.SeriesName))
             {
                 return ed.Series.SeriesName;
             }
