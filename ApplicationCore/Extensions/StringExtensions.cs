@@ -5,8 +5,21 @@ namespace ApplicationCore.Extensions
     /// <summary>
     /// Extension methods dedicated to "string" objects
     /// </summary>
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
+        /// <remarks>
+        /// The attribute improves the performances of the regex while
+        /// preparing it within compile time. That avoids the use of
+        /// reflection at runtime. It also gives extra information
+        /// about the regex conditions when the developer hovers above
+        /// the name of the source method.
+        /// </remarks>
+        [GeneratedRegex(@"^\D+")]
+        private static partial Regex ExtractPrefixRegex();
+
+        [GeneratedRegex(@"\d+")]
+        private static partial Regex ExtractNumberRegex();
+
         /// <summary>
         /// Extracts the ALPHABETICAL prefix of the given string
         /// </summary>
@@ -20,7 +33,7 @@ namespace ApplicationCore.Extensions
                 return string.Empty;
             }
 
-            var match = Regex.Match(input, @"^\D+");
+            var match = ExtractPrefixRegex().Match(input);
             return match.Success ? match.Value.Trim() : string.Empty;
         }
 
@@ -37,7 +50,7 @@ namespace ApplicationCore.Extensions
                 return 0;
             }
 
-            var match = Regex.Match(input, @"\d+");
+            var match = ExtractNumberRegex().Match(input);
             return match.Success ? int.Parse(match.Value) : 0;
         }
     }

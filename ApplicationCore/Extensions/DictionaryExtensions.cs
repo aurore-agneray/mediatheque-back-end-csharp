@@ -14,8 +14,10 @@ public static class DictionaryExtensions
     /// <returns>Returns a string value, or an empty string</returns>
     public static string GetValueOrEmptyString(this Dictionary<string, string> dict, string key)
     {
-        return dict.ContainsKey(key)
-                ? dict[key]
-                : string.Empty;
+        if (dict.TryGetValue(key, out string? value)) {
+            return value;
+        }
+        
+        return string.Empty;
     }
 }

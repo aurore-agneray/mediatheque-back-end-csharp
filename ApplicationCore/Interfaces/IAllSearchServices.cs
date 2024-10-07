@@ -1,6 +1,4 @@
-﻿using ApplicationCore.Enums;
-
-namespace ApplicationCore.Interfaces;
+﻿namespace ApplicationCore.Interfaces;
 
 /// <summary>
 /// A common interface for all classes of type "AllSearchServices"

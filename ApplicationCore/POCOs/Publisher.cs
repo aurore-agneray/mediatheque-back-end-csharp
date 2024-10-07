@@ -42,5 +42,5 @@ public class Publisher : IIdentified
     /// <summary>
     /// List of editions
     /// </summary>
-    public virtual ICollection<Edition> Editions { get; set; } = new List<Edition>();
+    public virtual ICollection<Edition> Editions { get; set; } = [];
 }

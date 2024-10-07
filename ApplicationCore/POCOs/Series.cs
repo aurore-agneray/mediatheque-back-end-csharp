@@ -25,7 +25,7 @@ public class Series : INamed
     /// Name
     /// </summary>
     [Column("series_name")]
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     /// Number of planned volumes

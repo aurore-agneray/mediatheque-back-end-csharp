@@ -7,7 +7,13 @@ namespace ApplicationCore.AbstractDbContexts;
 /// <summary>
 /// Allows the use of several kinds of databases contexts
 /// </summary>
-public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContextFields
+/// <remarks>
+/// Constructor for the MediathequeDbContext
+/// </remarks>
+/// <param name="settings">
+/// Contains the settings used for connecting to the database
+/// </param>
+public abstract class MediathequeDbContext<T>(DbContextOptions settings) : DbContext(settings), IMediathequeDbContextFields
     where T : class, IDatabaseSettings
 {
     /// <summary>
@@ -44,16 +50,6 @@ public abstract class MediathequeDbContext<T> : DbContext, IMediathequeDbContext
     /// List of Series from the database
     /// </summary>
     public DbSet<Series> Series { get; set; }
-
-    /// <summary>
-    /// Constructor for the MediathequeDbContext
-    /// </summary>
-    /// <param name="settings">
-    /// Contains the settings used for connecting to the database
-    /// </param>
-    public MediathequeDbContext(DbContextOptions settings) : base(settings)
-    {
-    }
 
     /// <summary>
     /// Indicates if the database is available or not
