@@ -17,7 +17,7 @@ public class BnfApiSimpleSearchRepository : BnfApiSearchRepository
     /// <param name="criterion">Criterion entered by the user to launch the searching process</param>
     /// <param name="noticesQty">The quantity of notices returned by the API</param>
     /// <returns>Returns the conditions part of the URL for the request</returns>
-    protected string GetSimpleSearchConditions(string criterion, int noticesQty)
+    protected static string GetSimpleSearchConditions(string criterion, int noticesQty)
     {
         var stringBuilder = new StringBuilder();
 
@@ -32,9 +32,15 @@ public class BnfApiSimpleSearchRepository : BnfApiSearchRepository
         }
 
         stringBuilder = stringBuilder.Clear();
+        
+#pragma warning disable CA1834
+/* The compiler considers DOUBLE_QUOTES as a unit char, even if it's not the case !
+** https://learn.microsoft.com/fr-fr/dotnet/fundamentals/code-analysis/quality-rules/ca1834 */
         stringBuilder.Append(DOUBLE_QUOTES)
                      .Append(criterion.Replace(SPACE, PLUS))
                      .Append(DOUBLE_QUOTES);
+#pragma warning restore CA1834
+
         criterion = stringBuilder.ToString();
 
         return BnfGlobalConsts.SIMPLE_SEARCH_PARAMETERED_CONDITIONS(criterion, noticesQty);
@@ -54,12 +60,12 @@ public class BnfApiSimpleSearchRepository : BnfApiSearchRepository
         }
         else
         {
-            return default;
+            return [];
         }
 
         if (string.IsNullOrEmpty(criteriaDto?.SimpleCriterion))
         {
-            return default;
+            return [];
         }
 
         string stringCriterion = criteriaDto.SimpleCriterion;
@@ -92,7 +98,7 @@ public class BnfApiSimpleSearchRepository : BnfApiSearchRepository
 
         if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0)
         {
-            return default;
+            return [];
         }
 
         // Checks the results nodes
