@@ -7,20 +7,6 @@
 public class SearchResultDTO
 {
     /// <summary>
-    /// Constructor with one BookDTO parameter.
-    /// Generates all sub-DTOs
-    /// </summary>
-    /// <param name="book">A BookDTO object</param>
-    public SearchResultDTO(BookResultDTO book)
-    {
-        if (book != null)
-        {
-            BookId = book.Id;
-            Book = book;
-        }
-    }
-
-    /// <summary>
     /// ID of the book
     /// </summary>
     public int BookId { get; set; }
@@ -34,5 +20,19 @@ public class SearchResultDTO
     /// Objects representing the editions of the book
     /// They are grouped by series' name ! (the key of string type)
     /// </summary>
-    public Dictionary<string, List<EditionResultDTO>> Editions { get; set; }
+    public Dictionary<string, List<EditionResultDTO>> Editions { get; set; } = [];
+
+    /// <summary>
+    /// Constructor with one BookDTO parameter.
+    /// Generates all sub-DTOs
+    /// </summary>
+    /// <param name="book">A BookDTO object</param>
+    public SearchResultDTO(BookResultDTO book)
+    {
+        if (book != null)
+        {
+            BookId = book.Id;
+            Book = book;
+        }
+    }
 }

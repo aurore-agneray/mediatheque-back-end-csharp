@@ -20,7 +20,7 @@ public class SeriesDTO : INamed
     /// <summary>
     /// Name
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     /// Number of planned volumes

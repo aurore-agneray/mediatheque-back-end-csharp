@@ -8,28 +8,22 @@ namespace ApplicationCore.AbstractServices;
 /// <summary>
 /// Defines the minimum needed methods for the search services
 /// </summary>
-public abstract class SearchService
+/// <remarks>
+/// Constructor of the SearchService class
+/// </remarks>
+/// <param name="mapper">Given AutoMapper</param>
+/// <param name="textsManager">Texts manager</param>
+public abstract class SearchService(IMapper mapper, ResourceManager textsManager)
 {
     /// <summary>
     /// Transforms the POCOs into DTOs
     /// </summary>
-    protected readonly IMapper _mapper;
+    protected readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    protected ResourceManager TextsManager { get; private set; }
-
-    /// <summary>
-    /// Constructor of the SearchService class
-    /// </summary>
-    /// <param name="mapper">Given AutoMapper</param>
-    /// <param name="textsManager">Texts manager</param>
-    public SearchService(IMapper mapper, ResourceManager textsManager)
-    {
-        _mapper = mapper;
-        TextsManager = textsManager;
-    }
+    protected ResourceManager TextsManager { get; private set; } = textsManager;
 
     /// <summary>
     /// Extracts the books and their editions from the concerned repository
@@ -62,7 +56,7 @@ public abstract class SearchService
     /// </summary>
     /// <param name="editions">List of EditionResultDTO objects</param>
     /// <returns>Ordered list of EditionResultDTO objects</returns>
-    protected List<EditionResultDTO> OrderEditionsByVolume(IEnumerable<EditionResultDTO> editions)
+    protected static List<EditionResultDTO> OrderEditionsByVolume(IEnumerable<EditionResultDTO> editions)
     {
         return editions.OrderBy(item => item?.Volume != null ? item.Volume.ExtractPrefix() : string.Empty)
                        .ThenBy(item => item?.Volume != null ? item.Volume.ExtractNumber() : 0)
@@ -76,11 +70,11 @@ public abstract class SearchService
     /// <param name="editions">List of EditionResultDTOs objects</param>
     /// <returns>Returns a dictionary where the keys are the series' names
     /// and the elements are some lists containing editions</returns>
-    protected Dictionary<string, List<EditionResultDTO>> GroupEditionsBySeriesName(IEnumerable<EditionResultDTO> editions)
+    protected static Dictionary<string, List<EditionResultDTO>> GroupEditionsBySeriesName(IEnumerable<EditionResultDTO> editions)
     {
-        if (editions == null || editions.Count() == 0)
+        if (editions == null || !editions.Any())
         {
-            return new Dictionary<string, List<EditionResultDTO>>();
+            return [];
         }
 
         return editions.GroupBy(ed =>
@@ -106,14 +100,14 @@ public abstract class SearchService
     /// <returns>List of some SearchResultsDTO objects</returns>
     public async Task<List<SearchResultDTO>> SearchForResults(SearchDTO searchCriteria)
     {
-        List<SearchResultDTO> searchResultsDtos = new List<SearchResultDTO>();
-        List<BookResultDTO> booksList = new List<BookResultDTO>();
-        List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
+        List<SearchResultDTO> searchResultsDtos = [];
+        List<BookResultDTO> booksList = [];
+        List<EditionResultDTO> editionsList = [];
 
         (booksList, editionsList) = await ExtractDataFromRepository(searchCriteria);
 
         // Constructs the final DTOs
-        if (editionsList != null && editionsList.Any())
+        if (editionsList != null && editionsList.Count > 0)
         {
             searchResultsDtos = booksList.Select(dto =>
                 new SearchResultDTO(dto)
