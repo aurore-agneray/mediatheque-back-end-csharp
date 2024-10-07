@@ -19,8 +19,8 @@ public interface ISQLRepository<out T> where T : IMediathequeDbContextFields
     /// ordered by the title
     /// </summary>
     /// <param name="searchCriteria">Contains the criterion sent by the client</param>
-    /// <returns>A IQueryable<Book> object</returns>
-    public IQueryable<Book> GetOrderedBooksRequest<U>(U searchCriteria) where U : class, ISearchDTO;
+    /// <returns>A IQueryable<Book> object or null</returns>
+    public IQueryable<Book>? GetOrderedBooksRequest<U>(U searchCriteria) where U : class, ISearchDTO;
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 

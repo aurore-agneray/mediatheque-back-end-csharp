@@ -8,22 +8,12 @@ namespace Infrastructure.MySQL.ComplexRequests;
 /// <summary>
 /// Requests used for the MySQL advanced search
 /// </summary>
-public class MySQLAdvancedSearchRepository : MySQLSearchRepository
+/// <remarks>
+/// Main constructor
+/// </remarks>
+/// <param name="context">Database context</param>
+public class MySQLAdvancedSearchRepository(MySQLDbContext context) : MySQLSearchRepository(context)
 {
-    /// <summary>
-    /// Context for querying the MySQL database
-    /// </summary>
-    public MySQLDbContext DbContext { get; }
-
-    /// <summary>
-    /// Main constructor
-    /// </summary>
-    /// <param name="context">Database context</param>
-    public MySQLAdvancedSearchRepository(MySQLDbContext context) : base(context)
-    {
-        DbContext = context;
-    }
-
     /// <summary>
     /// Completes the concerned Expression with the condition on the publication date
     /// </summary>
@@ -32,36 +22,32 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
     /// <param name="criterionDate">Date used for comparison with the database</param>
     /// <returns>Returns the completed expression</returns>
     /// <exception cref="ArgumentException">Occured when the operator has an inappropriate value</exception>
-    private ExpressionStarter<Book> AddPublicationDateCondition(ExpressionStarter<Book> expression, string op, DateTime criterionDate)
+    private static ExpressionStarter<Book> AddPublicationDateCondition(ExpressionStarter<Book> expression, string op, DateTime criterionDate)
     {
         /* WARNING : I'd like to factorize more this part but it seems impossible because of the request translation */
-        switch (op)
+        expression = op switch
         {
-            case "=":
-                expression = expression.Or(book =>
+            "=" => (ExpressionStarter<Book>)expression.Or(book =>
                     book.Editions.Any(ed =>
                         ed.PublicationDate.HasValue && ed.PublicationDate.Value.Date == criterionDate.Date
                         || ed.PublicationYear.HasValue && ed.PublicationYear.Value == criterionDate.Year
-                    ));
-                break;
-            case "<":
-                expression = expression.Or(book =>
+                    )
+                ),
+            "<" => (ExpressionStarter<Book>)expression.Or(book =>
                     book.Editions.Any(ed =>
                         ed.PublicationDate.HasValue && ed.PublicationDate.Value.Date < criterionDate.Date
                         || ed.PublicationYear.HasValue && ed.PublicationYear.Value < criterionDate.Year
-                    ));
-                break;
-            case ">":
-                expression = expression.Or(book =>
+                    )
+                ),
+            ">" => (ExpressionStarter<Book>)expression.Or(book =>
                     book.Editions.Any(ed =>
                         ed.PublicationDate.HasValue && ed.PublicationDate.Value.Date > criterionDate.Date
                         || ed.PublicationYear.HasValue && ed.PublicationYear.Value > criterionDate.Year
-                    ));
-                break;
-            default:
-                throw new ArgumentException("Invalid operator for dates' comparison", nameof(op));
-        }
-
+                    )
+                ),
+            _ => throw new ArgumentException("Invalid operator for dates' comparison", nameof(op)),
+        };
+        
         return expression;
     }
 
@@ -71,7 +57,7 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
     /// </summary>
     /// <param name="expression">ExpressionStarter<Book> object</param>
     /// <param name="criteria">Criteria sent by the client</param>
-    private void AddBookConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria)
+    private static void AddBookConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria)
     {
 
         if (!string.IsNullOrEmpty(criteria?.Title))
@@ -102,10 +88,8 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
     /// </summary>
     /// <param name="expression">ExpressionStarter<Book> object</param>
     /// <param name="criteria">Criteria sent by the client</param>
-    private void AddEditionsConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria)
+    private static void AddEditionsConditions(ref ExpressionStarter<Book> expression, AdvancedSearchCriteriaDTO criteria)
     {
-        DateTime criterionDate;
-
         if (!string.IsNullOrEmpty(criteria?.Isbn))
         {
             expression = expression.Or(book =>
@@ -143,7 +127,7 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
 
         if (!string.IsNullOrEmpty(criteria?.PubDate?.Criterion)
             && !string.IsNullOrEmpty(criteria?.PubDate?.Operator)
-            && DateTime.TryParse(criteria.PubDate.Criterion, out criterionDate))
+            && DateTime.TryParse(criteria.PubDate.Criterion, out DateTime criterionDate))
         {
             expression = AddPublicationDateCondition(expression, criteria.PubDate.Operator, criterionDate);
         }
@@ -155,8 +139,8 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
     /// ordered by the title
     /// </summary>
     /// <param name="searchCriteria">Criteria sent by the client</param>
-    /// <returns>A IQueryable<Book> object</returns>
-    public override IQueryable<Book> GetOrderedBooksRequest<IAdvancedSearchDTO>(IAdvancedSearchDTO searchCriteria)
+    /// <returns>A IQueryable<Book> object or null</returns>
+    public override IQueryable<Book>? GetOrderedBooksRequest<IAdvancedSearchDTO>(IAdvancedSearchDTO searchCriteria)
     {
         AdvancedSearchDTO? criteriaDto = null;
 
@@ -166,12 +150,12 @@ public class MySQLAdvancedSearchRepository : MySQLSearchRepository
         }
         else
         {
-            return default;
+            return null;
         }
 
         if (criteriaDto?.AdvancedCriteria is null)
         {
-            return default;
+            return null;
         }
 
         IQueryable<Book> query = (
