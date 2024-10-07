@@ -1,6 +1,5 @@
 ﻿using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Interfaces.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.MySQL;
@@ -9,21 +8,16 @@ namespace Infrastructure.MySQL;
 /// Retrieves the data from the concerned database
 /// </summary>
 /// <typeparam name="T">Type with an ID property</typeparam>
-public class MySQLIIdentifiedRepository<T> : IIdentifiedRepository<T> where T : class, IIdentified
+/// <remarks>
+/// Constructor of the IIdentifiedController class
+/// </remarks>
+/// <param name="context">Given database context</param>
+public class MySQLIIdentifiedRepository<T>(MySQLDbContext context) : IIdentifiedRepository<T> where T : class, IIdentified
 {
     /// <summary>
     /// Context for connecting to the database
     /// </summary>
-    protected readonly MySQLDbContext _context;
-
-    /// <summary>
-    /// Constructor of the IIdentifiedController class
-    /// </summary>
-    /// <param name="context">Given database context</param>
-    public MySQLIIdentifiedRepository(MySQLDbContext context)
-    {
-        _context = context;
-    }
+    //protected readonly MySQLDbContext _context = context;
 
     /// <summary>
     /// Get all CRUD request for the IIdentifieds objects
@@ -40,6 +34,6 @@ public class MySQLIIdentifiedRepository<T> : IIdentifiedRepository<T> where T : 
         //output.AddRange(this._context.Series);
 
         //return output;
-        return await this._context.Set<T>().ToListAsync();
+        return await context.Set<T>().ToListAsync();
     }
 }

@@ -6,18 +6,14 @@ namespace Infrastructure.MySQL;
 /// <summary>
 /// Global context for the connection to the "Mediatheque" MySQL database
 /// </summary>
-public class MySQLDbContext : MediathequeDbContext<MySQLDatabaseSettings>
+/// <remarks>
+/// Constructor for the MySQLDbContext
+/// </remarks>
+/// <param name="settings">
+/// Contains the settings used for connecting to the database
+/// </param>
+public class MySQLDbContext(DbContextOptions settings) : MediathequeDbContext<MySQLDatabaseSettings>(settings)
 {
-    /// <summary>
-    /// Constructor for the MySQLDbContext
-    /// </summary>
-    /// <param name="settings">
-    /// Contains the settings used for connecting to the database
-    /// </param>
-    public MySQLDbContext(DbContextOptions settings) : base(settings)
-    {
-    }
-
     /// <summary>
     /// Indicates if the database is available or not
     /// </summary>

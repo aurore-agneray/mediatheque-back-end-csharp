@@ -7,30 +7,20 @@ namespace Infrastructure.MySQL.ComplexRequests;
 /// <summary>
 /// Requests used for the MySQL simple search
 /// </summary>
-public class MySQLSimpleSearchRepository : MySQLSearchRepository
+/// <remarks>
+/// Main constructor
+/// </remarks>
+/// <param name="context">Database context</param>
+public class MySQLSimpleSearchRepository(MySQLDbContext context) : MySQLSearchRepository(context)
 {
-    /// <summary>
-    /// Context for querying the MySQL database
-    /// </summary>
-    public MySQLDbContext DbContext { get; }
-
-    /// <summary>
-    /// Main constructor
-    /// </summary>
-    /// <param name="context">Database context</param>
-    public MySQLSimpleSearchRepository(MySQLDbContext context) : base(context)
-    {
-        DbContext = context;
-    }
-
     /// <summary>
     /// Generate the IQueryable object dedicated to 
     /// retrieve the books from the database,
     /// ordered by the title
     /// </summary>
     /// <param name="searchCriteria">Contains the criterion sent by the client</param>
-    /// <returns>A IQueryable<Book> object</returns>
-    public override IQueryable<Book> GetOrderedBooksRequest<ISimpleSearchDTO>(ISimpleSearchDTO searchCriteria)
+    /// <returns>A IQueryable<Book> object or null</returns>
+    public override IQueryable<Book>? GetOrderedBooksRequest<ISimpleSearchDTO>(ISimpleSearchDTO searchCriteria)
     {
         SimpleSearchDTO? criteriaDto = null;
 
@@ -40,7 +30,7 @@ public class MySQLSimpleSearchRepository : MySQLSearchRepository
         }
         else
         {
-            return default;
+            return null;
         }
 
         if (string.IsNullOrEmpty(criteriaDto?.SimpleCriterion))
@@ -48,8 +38,10 @@ public class MySQLSimpleSearchRepository : MySQLSearchRepository
             return default;
         }
 
-        string criterion = criteriaDto?.SimpleCriterion;
+        string criterion = criteriaDto.SimpleCriterion;
 
+#pragma warning disable CS8602
+/* The compiler considers that boo.Title and author.CompleteName can be null even if I checked for avoiding that */
         return (
             from boo in DbContext.Books
             join author in DbContext.Authors on boo.AuthorId equals author.Id
@@ -64,5 +56,6 @@ public class MySQLSimpleSearchRepository : MySQLSearchRepository
         )
         .Distinct()
         .OrderBy(b => b.Title);
+#pragma warning restore CS8602
     }
 }

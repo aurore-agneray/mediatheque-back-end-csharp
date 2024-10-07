@@ -30,7 +30,7 @@ public abstract class MySQLSearchRepository : ISQLRepository<MySQLDbContext>
     /// </summary>
     /// <param name="searchCriteria">Criteria sent by the client</param>
     /// <returns>A IQueryable<Book> object</returns>
-    public abstract IQueryable<Book> GetOrderedBooksRequest<T>(T searchCriteria) where T : class, ISearchDTO;
+    public abstract IQueryable<Book>? GetOrderedBooksRequest<T>(T searchCriteria) where T : class, ISearchDTO;
 
     /// <summary>
     /// Generate the IQueryable object dedicated to 
