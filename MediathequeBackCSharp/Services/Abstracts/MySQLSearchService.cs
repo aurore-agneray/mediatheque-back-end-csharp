@@ -68,7 +68,7 @@ public abstract class MySQLSearchService : SearchService
         }
 
         // Completes the second list with the editions
-        if (booksList != null && booksList.Any())
+        if (booksList != null && booksList.Count == 0)
         {
             editionsList = await _sqlRepository.GetEditionsForSeveralBooksRequest(
                 booksList.Select(bDto => bDto.Id).ToArray()
