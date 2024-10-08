@@ -16,49 +16,41 @@ namespace MediathequeBackCSharp.Controllers;
 /// <summary>
 /// API requests for the loading of the search front-end application
 /// </summary>
+/// <remarks>
+/// Constructor of the LoadController class
+/// </remarks>
+/// <param name="context">Given database context</param>
+/// <param name="logger">Given Logger</param>
+/// <param name="mapper">Given AutoMapper</param>
+/// <param name="textsManager">Texts manager</param>
 [ApiController]
 [Route("/load")]
-public class LoadController : ControllerBase
+public class LoadController(
+    MySQLDbContext context,
+    ILogger<LoadController> logger,
+    IMapper mapper,
+    ResourceManager textsManager
+    ) : ControllerBase
 {
     /// <summary>
     /// Context for connecting to the database
     /// </summary>
-    protected readonly MySQLDbContext _context;
+    protected readonly MySQLDbContext _context = context;
 
     /// <summary>
     /// Logger for the LoadController
     /// </summary>
-    protected readonly ILogger<LoadController> _logger;
+    protected readonly ILogger<LoadController> _logger = logger;
 
     /// <summary>
     /// Mapper for the LoadController
     /// </summary>
-    protected readonly IMapper _mapper;
+    protected readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    protected readonly ResourceManager _textsManager;
-
-    /// <summary>
-    /// Constructor of the LoadController class
-    /// </summary>
-    /// <param name="context">Given database context</param>
-    /// <param name="logger">Given Logger</param>
-    /// <param name="mapper">Given AutoMapper</param>
-    /// <param name="textsManager">Texts manager</param>
-    public LoadController(
-        MySQLDbContext context,
-        ILogger<LoadController> logger,
-        IMapper mapper, 
-        ResourceManager textsManager
-    )
-    {
-        _context = context;
-        _logger = logger;
-        _mapper = mapper;
-        _textsManager = textsManager;
-    }
+    protected readonly ResourceManager _textsManager = textsManager;
 
     /// <summary>
     /// Get the data used for initializing the front-end application :

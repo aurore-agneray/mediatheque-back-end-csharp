@@ -9,18 +9,16 @@ namespace MediathequeBackCSharp.Controllers
     /// <summary>
     /// API requests for the SQL table "Author"
     /// </summary>
+    /// <remarks>
+    /// Constructor of the AuthorController class
+    /// </remarks>
+    /// <param name="sourceRepository">Source of data</param>
+    /// <param name="logger">Given Logger</param>
+    /// <param name="mapper">Given AutoMapper</param>
     [ApiController]
     [Route("[controller]")]
-    public class AuthorController : IIdentifiedController<Author, AuthorDTO>
+    public class AuthorController(IIdentifiedRepository<Author> sourceRepository, ILogger<AuthorController> logger, IMapper mapper) 
+        : IIdentifiedController<Author, AuthorDTO>(sourceRepository, logger, mapper)
     {
-        /// <summary>
-        /// Constructor of the AuthorController class
-        /// </summary>
-        /// <param name="sourceRepository">Source of data</param>
-        /// <param name="logger">Given Logger</param>
-        /// <param name="mapper">Given AutoMapper</param>
-        public AuthorController(IIdentifiedRepository<Author> sourceRepository, ILogger<AuthorController> logger, IMapper mapper) : base(sourceRepository, logger, mapper)
-        {
-        }
     }
 }

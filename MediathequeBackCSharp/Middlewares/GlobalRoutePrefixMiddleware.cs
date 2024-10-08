@@ -3,30 +3,13 @@
 /// <summary>
 /// Configures the prefix used by all routes of the API
 /// </summary>
-public class GlobalRoutePrefixMiddleware
+/// <remarks>
+/// Main constructor
+/// </remarks>
+/// <param name="next">Delegate used for launching the current request</param>
+/// <param name="routePrefix">Prefix</param>
+public class GlobalRoutePrefixMiddleware(RequestDelegate next, string routePrefix)
 {
-    /// <summary>
-    /// Delegate used for launching the current request
-    /// after the prefix has been inserted into it
-    /// </summary>
-    private readonly RequestDelegate _next;
-
-    /// <summary>
-    /// The prefix we want to use
-    /// </summary>
-    private readonly string _routePrefix;
-
-    /// <summary>
-    /// Main constructor
-    /// </summary>
-    /// <param name="next">Delegate used for launching the current request</param>
-    /// <param name="routePrefix">Prefix</param>
-    public GlobalRoutePrefixMiddleware(RequestDelegate next, string routePrefix)
-    {
-        _next = next;
-        _routePrefix = routePrefix;
-    }
-
     /// <summary>
     /// Launches the middleware treatments
     /// </summary>
@@ -35,12 +18,12 @@ public class GlobalRoutePrefixMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         // Wait for the request to begin with the prefix
-        if (!context.Request.Path.StartsWithSegments(_routePrefix))
+        if (!context.Request.Path.StartsWithSegments(routePrefix))
         {
             context.Response.StatusCode = StatusCodes.Status404NotFound;
             await context.Response.WriteAsync("Not Found");
             return;
         }
-        await _next(context);
+        await next(context);
     }
 }

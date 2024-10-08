@@ -29,6 +29,17 @@ public abstract class MySQLSearchService : SearchService
         : base(mapper, textsManager)
     {
         _sqlRepository = sqlRepo;
+
+        // Checks the availability of the repository and the database
+        if (_sqlRepository == null)
+        {
+            throw new ArgumentException(nameof(_sqlRepository));
+        }
+
+        if (!_sqlRepository.IsDatabaseAvailable())
+        {
+            throw new Exception(TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
+        }
     }
 
     /// <summary>
@@ -38,22 +49,14 @@ public abstract class MySQLSearchService : SearchService
     /// <returns>List of some SearchResultsDTO objects</returns>
     protected override async Task<Tuple<List<BookResultDTO>, List<EditionResultDTO>>> ExtractDataFromRepository(SearchDTO searchCriteria)
     {
-        List<BookResultDTO> booksList = new List<BookResultDTO>();
-        List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
+        List<BookResultDTO> booksList = [];
+        List<EditionResultDTO> editionsList = [];
 
-        // Checks the availability of the repository and the database
-        if (_sqlRepository == null)
-        {
-            throw new ArgumentNullException(nameof(_sqlRepository));
-        }
-
-        if (!_sqlRepository.IsDatabaseAvailable())
-        {
-            throw new Exception(TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
-        }
-
-        // Retrieves data
+#pragma warning disable CS8602
+        // Retrieves data --> the repository can't be null because an exception is thrown into the controller if that's the case
         var booksQuery = _sqlRepository.GetOrderedBooksRequest(searchCriteria);
+
+#pragma warning restore CS8602
 
         // Completes the first list with the books
         if (booksQuery != null)
@@ -77,6 +80,6 @@ public abstract class MySQLSearchService : SearchService
             .ToListAsync();
         }
 
-        return new(booksList, editionsList);
+        return new(booksList ?? [], editionsList);
     }
 }

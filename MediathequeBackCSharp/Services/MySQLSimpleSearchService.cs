@@ -9,16 +9,13 @@ namespace MediathequeBackCSharp.Services;
 /// <summary>
 /// Methods for preparing the data extracted from the MySQL database with the simple search
 /// </summary>
-public class MySQLSimpleSearchService : MySQLSearchService
+/// <remarks>
+/// Constructor of the MySQLSimpleSearchService class
+/// </remarks>
+/// <param name="mapper">Given AutoMapper</param>
+/// <param name="textsManager">Texts manager</param>
+/// <param name="repo">Repository for collecting data</param>
+public class MySQLSimpleSearchService(IMapper mapper, ResourceManager textsManager, MySQLSimpleSearchRepository repo) 
+    : MySQLSearchService(mapper, textsManager, repo)
 {
-    /// <summary>
-    /// Constructor of the MySQLSimpleSearchService class
-    /// </summary>
-    /// <param name="mapper">Given AutoMapper</param>
-    /// <param name="textsManager">Texts manager</param>
-    /// <param name="repo">Repository for collecting data</param>
-    public MySQLSimpleSearchService(IMapper mapper, ResourceManager textsManager, MySQLSimpleSearchRepository repo)
-        : base(mapper, textsManager, (ISQLRepository<IMediathequeDbContextFields>)repo)
-    {
-    }
 }

@@ -9,19 +9,14 @@ namespace MediathequeBackCSharp.Managers.SearchManagers;
 /// <summary>
 /// Methods for preparing the data sent by the SimpleSearchController
 /// </summary>
-public class SimpleSearchManager : SearchManager<AllSimpleSearchServices>
+/// <remarks>
+/// Constructor of the SimpleSearchManager class
+/// </remarks>
+/// <param name="services">An object with all available search services</param>
+/// <param name="mapper">Given AutoMapper</param>
+/// <param name="textsManager">Texts manager</param>
+public class SimpleSearchManager(AllSimpleSearchServices services, IMapper mapper, ResourceManager textsManager) : SearchManager<AllSimpleSearchServices>(services, mapper, textsManager)
 {
-    /// <summary>
-    /// Constructor of the SimpleSearchManager class
-    /// </summary>
-    /// <param name="services">An object with all available search services</param>
-    /// <param name="mapper">Given AutoMapper</param>
-    /// <param name="textsManager">Texts manager</param>
-    public SimpleSearchManager(AllSimpleSearchServices services, IMapper mapper, ResourceManager textsManager)
-        : base(services, mapper, textsManager)
-    {
-    }
-
     /// <summary>
     /// Gets the SIMPLE search service needed for the given type of search
     /// </summary>

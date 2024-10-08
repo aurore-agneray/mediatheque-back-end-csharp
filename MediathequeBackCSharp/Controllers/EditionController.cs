@@ -9,18 +9,16 @@ namespace MediathequeBackCSharp.Controllers
     /// <summary>
     /// API requests for the SQL table "Edition"
     /// </summary>
+    /// <remarks>
+    /// Constructor of the EditionController class
+    /// </remarks>
+    /// <param name="sourceRepository">Source of data</param>
+    /// <param name="logger">Given Logger</param>
+    /// <param name="mapper">Given AutoMapper</param>
     [ApiController]
     [Route("[controller]")]
-    public class EditionController : IIdentifiedController<Edition, EditionDTO>
+    public class EditionController(IIdentifiedRepository<Edition> sourceRepository, ILogger<EditionController> logger, IMapper mapper) 
+        : IIdentifiedController<Edition, EditionDTO>(sourceRepository, logger, mapper)
     {
-        /// <summary>
-        /// Constructor of the EditionController class
-        /// </summary>
-        /// <param name="sourceRepository">Source of data</param>
-        /// <param name="logger">Given Logger</param>
-        /// <param name="mapper">Given AutoMapper</param>
-        public EditionController(IIdentifiedRepository<Edition> sourceRepository, ILogger<EditionController> logger, IMapper mapper) : base(sourceRepository, logger, mapper)
-        {
-        }
     }
 }

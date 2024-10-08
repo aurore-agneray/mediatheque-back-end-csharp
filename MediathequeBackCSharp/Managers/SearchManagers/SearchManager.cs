@@ -3,6 +3,7 @@ using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using AutoMapper;
+using MediathequeBackCSharp.Texts;
 using System.Resources;
 
 namespace MediathequeBackCSharp.Managers.SearchManagers;
@@ -33,6 +34,7 @@ public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAll
     /// </summary>
     public ResourceManager TextsManager { get; init; }
 
+#pragma warning disable IDE0290
     /// <summary>
     /// Constructor of the SearchManager class
     /// </summary>
@@ -43,8 +45,9 @@ public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAll
     {
         AllSearchServices = services;
         _mapper = mapper;
-        TextsManager = textsManager;
+        TextsManager = textsManager ?? throw new ArgumentException(InternalErrorTexts.ERROR_TEXT_MANAGER_RETRIEVAL);
     }
+#pragma warning restore IDE0290
 
     /// <summary>
     /// Gets the search service needed for the given type of search
@@ -62,12 +65,7 @@ public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAll
     /// <returns>List of some SearchResultsDTO objects</returns>
     public async Task<List<SearchResultDTO>> SearchForResults(SearchDTO searchCriteria, SearchTypeEnum searchType)
     {
-        SearchService? searchService = null;
-
-        if (this.TextsManager == null)
-        {
-            throw new ArgumentNullException(nameof(this.TextsManager));
-        }
+        SearchService? searchService;
 
         searchService = GetSearchService(searchType);
 
@@ -76,6 +74,6 @@ public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAll
             return await searchService.SearchForResults(searchCriteria);
         }
         
-        return new List<SearchResultDTO>();
+        return [];
     }
 }

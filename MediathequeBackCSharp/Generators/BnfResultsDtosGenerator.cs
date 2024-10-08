@@ -57,7 +57,7 @@ public static class BnfResultsDtosGenerator
         // Extracts the book's title and the author's name
         var titleAndAuthorArray = titleAndAuthorConcatenation.Split(BnfGlobalConsts.TITLE_AND_AUTHOR_NAME_SEPARATOR);
 
-        if (titleAndAuthorArray.Count() < 2)
+        if (titleAndAuthorArray.Length < 2)
         {
             return new BookResultDTO();
         }

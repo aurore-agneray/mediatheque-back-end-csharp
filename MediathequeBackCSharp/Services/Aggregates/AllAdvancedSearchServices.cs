@@ -6,20 +6,15 @@ namespace MediathequeBackCSharp.Services.Aggregates;
 /// An object with all search services, injected by DI.
 /// Allows the selection of a specific service into the managers.
 /// </summary>
-public class AllAdvancedSearchServices : IAllSearchServices
+/// <remarks>
+/// Main constructor of the class AllSearchServices.
+/// Gets its properties by dependency injection
+/// </remarks>
+/// <param name="sqlAdvancedSearch">Advanced search service for the MySQL database</param>
+public class AllAdvancedSearchServices(MySQLAdvancedSearchService sqlAdvancedSearch) : IAllSearchServices
 {
     /// <summary>
     /// Advanced search service for the MySQL database
     /// </summary>
-    public MySQLAdvancedSearchService MySQLAdvancedSearchService { get; set; }
-
-    /// <summary>
-    /// Main constructor of the class AllSearchServices.
-    /// Gets its properties by dependency injection
-    /// </summary>
-    /// <param name="sqlAdvancedSearch">Advanced search service for the MySQL database</param>
-    public AllAdvancedSearchServices(MySQLAdvancedSearchService sqlAdvancedSearch)
-    {
-        MySQLAdvancedSearchService = sqlAdvancedSearch;
-    }
+    public MySQLAdvancedSearchService MySQLAdvancedSearchService { get; set; } = sqlAdvancedSearch;
 }

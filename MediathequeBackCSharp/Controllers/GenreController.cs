@@ -9,18 +9,16 @@ namespace MediathequeBackCSharp.Controllers
     /// <summary>
     /// API requests for the SQL table "Genre"
     /// </summary>
+    /// <remarks>
+    /// Constructor of the GenreController class
+    /// </remarks>
+    /// <param name="sourceRepository">Source of data</param>
+    /// <param name="logger">Given Logger</param>
+    /// <param name="mapper">Given AutoMapper</param>
     [ApiController]
     [Route("[controller]")]
-    public class GenreController : IIdentifiedController<Genre, NamedDTO>
+    public class GenreController(IIdentifiedRepository<Genre> sourceRepository, ILogger<GenreController> logger, IMapper mapper) 
+        : IIdentifiedController<Genre, NamedDTO>(sourceRepository, logger, mapper)
     {
-        /// <summary>
-        /// Constructor of the GenreController class
-        /// </summary>
-        /// <param name="sourceRepository">Source of data</param>
-        /// <param name="logger">Given Logger</param>
-        /// <param name="mapper">Given AutoMapper</param>
-        public GenreController(IIdentifiedRepository<Genre> sourceRepository, ILogger<GenreController> logger, IMapper mapper) : base(sourceRepository, logger, mapper)
-        {
-        }
     }
 }

@@ -50,6 +50,12 @@ public abstract class BnfApiSearchService : SearchService
         : base(mapper, textsManager)
     {
         _xmlRepository = xmlRepo;
+
+        // Checks the availability of the repository
+        if (_xmlRepository == null)
+        {
+            throw new ArgumentException(InternalErrorTexts.ERROR_MYSQL_REPO_RETRIEVAL);
+        }
     }
 
     /// <summary>
@@ -60,6 +66,8 @@ public abstract class BnfApiSearchService : SearchService
     /// <returns>A list of BnfDataFields</returns>
     private IEnumerable<BnfDataField> GetDataFieldsFromXElement(XElement result)
     {
+#pragma warning disable CS8602
+// The compilers doesn't see that I check the presence of the needed attributes into the rawDataField
         return result.Descendants(_nMxc + DATAFIELD)
             .Where(node =>
                 node.Attributes().ToList().Exists(
@@ -69,17 +77,18 @@ public abstract class BnfApiSearchService : SearchService
             )
             .Select(rawDataField => new BnfDataField()
             {
-                Tag = rawDataField.Attribute(TAG).Value,
-                Ind1 = rawDataField.Attribute(IND1).Value,
-                Ind2 = rawDataField.Attribute(IND2).Value,
+                Tag = rawDataField.Attribute(TAG) != null ? rawDataField.Attribute(TAG).Value : string.Empty,
+                Ind1 = rawDataField.Attribute(IND1) != null ? rawDataField.Attribute(IND1).Value : string.Empty,
+                Ind2 = rawDataField.Attribute(IND2) != null ? rawDataField.Attribute(IND2).Value : string.Empty,
                 Subfields = rawDataField.Descendants().Select(rawSubfield =>
                     new BnfSubField
                     {
-                        Code = rawSubfield.Attribute(CODE).Value,
+                        Code = rawDataField.Attribute(CODE) != null ? rawSubfield.Attribute(CODE).Value : string.Empty,
                         Value = rawSubfield.Value
                     }
                 )
             });
+#pragma warning restore CS8602
     }
 
     /// <summary>
@@ -88,7 +97,7 @@ public abstract class BnfApiSearchService : SearchService
     /// <param name="datafields">List of filtered BnfDataField objects</param>
     /// <param name="propertyName">Name of the property, refers to the file BnfConsts</param>
     /// <returns>A string value</returns>
-    private string SearchForValue(IEnumerable<BnfDataField> datafields, string propertyName)
+    private static string SearchForValue(IEnumerable<BnfDataField> datafields, string propertyName)
     {
         BnfDataField? extractedDataf;
         string? extractedValue = string.Empty;
@@ -136,7 +145,7 @@ public abstract class BnfApiSearchService : SearchService
     /// <param name="datafields">List of BnfDataField objects</param>
     /// <returns>An KeyValuePair whose key is into the format "AUTHORNAME_BOOKNAME" 
     /// and the value is a dictionary containing the edition's data</returns>
-    private KeyValuePair<string, Dictionary<string, string>> ExtractOneEditionData(IEnumerable<BnfDataField> datafields)
+    private static KeyValuePair<string, Dictionary<string, string>> ExtractOneEditionData(IEnumerable<BnfDataField> datafields)
     {
         string isbn;
 
@@ -177,7 +186,7 @@ public abstract class BnfApiSearchService : SearchService
     {
         IEnumerable<BnfDataField> datafields;
         KeyValuePair<string, Dictionary<string, string>> extractedEditionData;
-        List<KeyValuePair<string, Dictionary<string, string>>> results = new();
+        List<KeyValuePair<string, Dictionary<string, string>>> results = [];
 
         foreach (var result in xmlNodes)
         {
@@ -190,7 +199,7 @@ public abstract class BnfApiSearchService : SearchService
             }
         }
 
-        return results.ToList();
+        return [.. results];
     }
 
     /// <summary>
@@ -200,8 +209,8 @@ public abstract class BnfApiSearchService : SearchService
     /// <returns>List of some SearchResultsDTO objects</returns>
     protected override async Task<Tuple<List<BookResultDTO>, List<EditionResultDTO>>> ExtractDataFromRepository(SearchDTO searchCriteria)
     {
-        List<BookResultDTO> booksList = new List<BookResultDTO>();
-        List<EditionResultDTO> editionsList = new List<EditionResultDTO>();
+        List<BookResultDTO> booksList = [];
+        List<EditionResultDTO> editionsList = [];
 
         // Checks the given notices' quantity before continuing
         if (!BnfGlobalConsts.ALLOWED_NOTICES_NUMBERS.Contains(searchCriteria.BnfNoticesQuantity))
@@ -209,12 +218,6 @@ public abstract class BnfApiSearchService : SearchService
             throw new Exception(
                 TextsManager.GetString(TextsKeys.ERROR_BNF_NOTICES_NUMBER) ?? string.Empty
             );
-        }
-
-        // Checks the availability of the repository
-        if (_xmlRepository == null)
-        {
-            throw new ArgumentNullException(nameof(_xmlRepository));
         }
 
         // Extracts and formats data

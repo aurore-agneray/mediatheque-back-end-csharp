@@ -9,19 +9,15 @@ namespace MediathequeBackCSharp.Controllers.SearchControllers;
 /// API requests for the advanced search
 /// which accepts multiple criteria into an object
 /// </summary>
+/// <remarks>
+/// Constructor of the AdvancedSearchController class
+/// </remarks>
+/// <param name="logger">Given Logger</param>
+/// <param name="manager">Given SimpleSearchManager with data process methods</param>
 [ApiController]
 [Route("/search/advanced")]
-public class AdvancedSearchController : SearchController
+public class AdvancedSearchController(ILogger<AdvancedSearchController> logger, AdvancedSearchManager manager) : SearchController(logger, manager)
 {
-    /// <summary>
-    /// Constructor of the AdvancedSearchController class
-    /// </summary>
-    /// <param name="logger">Given Logger</param>
-    /// <param name="manager">Given SimpleSearchManager with data process methods</param>
-    public AdvancedSearchController(ILogger<AdvancedSearchController> logger, AdvancedSearchManager manager) : base(logger, manager)
-    {
-    }
-
     /// <summary>
     /// Processes the advanced search with several criteria
     /// </summary>
