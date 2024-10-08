@@ -11,30 +11,24 @@ namespace MediathequeBackCSharp.Controllers.SearchControllers;
 /// <summary>
 /// API's requests for the book search
 /// </summary>
+/// <remarks>
+/// Constructor of the SearchController class
+/// </remarks>
+/// <param name="logger">Given Logger</param>
+/// <param name="manager">Given SimpleSearchManager with data process methods</param>
 [ApiController]
 [Route("/search")]
-public abstract class SearchController : ControllerBase
+public abstract class SearchController(ILogger<SearchController> logger, ISearchManager<IAllSearchServices> manager) : ControllerBase
 {
     /// <summary>
     /// Logger for the SearchController
     /// </summary>
-    protected readonly ILogger<SearchController> _logger;
+    protected readonly ILogger<SearchController> _logger = logger;
 
     /// <summary>
     /// Methods for preparing the data sent by the SearchController
     /// </summary>
-    public readonly ISearchManager<IAllSearchServices> _manager;
-
-    /// <summary>
-    /// Constructor of the SearchController class
-    /// </summary>
-    /// <param name="logger">Given Logger</param>
-    /// <param name="manager">Given SimpleSearchManager with data process methods</param>
-    public SearchController(ILogger<SearchController> logger, ISearchManager<IAllSearchServices> manager)
-    {
-        _logger = logger;
-        _manager = manager;
-    }
+    public readonly ISearchManager<IAllSearchServices> _manager = manager;
 
     /// <summary>
     /// Execute the POST request common instructions for all kind of SearchControllers

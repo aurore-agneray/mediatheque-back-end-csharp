@@ -40,9 +40,9 @@ public static class StartUpOptions
         }
 
         var frontDomainsStr = settings?.FrontEndDomains;
-        string[] frontDomains = null;
+        string[] frontDomains = [];
 
-        if (frontDomainsStr != null)
+        if (!string.IsNullOrEmpty(frontDomainsStr))
         {
             frontDomains = frontDomainsStr.Split(';');
         }
@@ -52,7 +52,7 @@ public static class StartUpOptions
             options.AddDefaultPolicy(
                 policy =>
                 {
-                    policy.WithOrigins(frontDomains ?? ["http://localhost:5173"])
+                    policy.WithOrigins(frontDomains.Any() ? frontDomains : ["http://localhost:5173"])
                           .WithHeaders("Content-type")
                           .WithMethods("GET", "POST");
                 });

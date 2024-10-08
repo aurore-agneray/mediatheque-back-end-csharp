@@ -39,10 +39,8 @@ public class SwaggerOptionsConfigurator : IConfigureNamedOptions<SwaggerGenOptio
     /// <param name="routePrefix">API's route prefix</param>
     public void Configure(string? assemblyVersion, SwaggerGenOptions options, string? routePrefix)
     {
-        if (options is null)
-        {
-            options = new SwaggerGenOptions();
-        }
+        // If options is null, generates a new one
+        options ??= new SwaggerGenOptions();
 
         assemblyVersion = !string.IsNullOrEmpty(assemblyVersion) 
                             ? assemblyVersion 

@@ -15,7 +15,7 @@ string? assemblyVersion = AssemblyInfo.GetVersionNumber();
 var builder = WebApplication.CreateBuilder(args);
 
 // Injects texts resources
-builder.Services.AddScoped<ResourceManager>(provider =>
+builder.Services.AddScoped(provider =>
     new ResourceManager(@"MediathequeBackCSharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
 );
 

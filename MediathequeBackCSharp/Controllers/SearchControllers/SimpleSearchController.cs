@@ -9,18 +9,15 @@ namespace MediathequeBackCSharp.Controllers.SearchControllers;
 /// API requests for the simple search
 /// which accepts a unique criterion (Author name, Book title, ISBN or series name)
 /// </summary>
+/// <remarks>
+/// Constructor of the SimpleSearchController class
+/// </remarks>
+/// <param name="logger">Given Logger</param>
+/// <param name="manager">Given SimpleSearchManager with data process methods</param>
 [ApiController]
 [Route("/search/simple")]
-public class SimpleSearchController : SearchController
+public class SimpleSearchController(ILogger<SimpleSearchController> logger, SimpleSearchManager manager) : SearchController(logger, manager)
 {
-    /// <summary>
-    /// Constructor of the SimpleSearchController class
-    /// </summary>
-    /// <param name="logger">Given Logger</param>
-    /// <param name="manager">Given SimpleSearchManager with data process methods</param>
-    public SimpleSearchController(ILogger<SimpleSearchController> logger, SimpleSearchManager manager) : base(logger, manager)
-    {
-    }
 
     /// <summary>
     /// Processes the simple search with a unique criterion

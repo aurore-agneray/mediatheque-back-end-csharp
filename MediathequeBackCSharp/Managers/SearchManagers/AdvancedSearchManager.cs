@@ -9,19 +9,14 @@ namespace MediathequeBackCSharp.Managers.SearchManagers;
 /// <summary>
 /// Methods for preparing the data sent by the AdvancedSearchController
 /// </summary>
-public class AdvancedSearchManager : SearchManager<AllAdvancedSearchServices>
+/// <remarks>
+/// Constructor of the AdvancedSearchManager class
+/// </remarks>
+/// <param name="services">An object with all available search services</param>
+/// <param name="mapper">Given AutoMapper</param>
+/// <param name="textsManager">Texts manager</param>
+public class AdvancedSearchManager(AllAdvancedSearchServices services, IMapper mapper, ResourceManager textsManager) : SearchManager<AllAdvancedSearchServices>(services, mapper, textsManager)
 {
-    /// <summary>
-    /// Constructor of the AdvancedSearchManager class
-    /// </summary>
-    /// <param name="services">An object with all available search services</param>
-    /// <param name="mapper">Given AutoMapper</param>
-    /// <param name="textsManager">Texts manager</param>
-    public AdvancedSearchManager(AllAdvancedSearchServices services, IMapper mapper, ResourceManager textsManager) 
-        : base(services, mapper, textsManager)
-    {
-    }
-
     /// <summary>
     /// Gets the ADVANCED search service needed for the given type of search
     /// </summary>
