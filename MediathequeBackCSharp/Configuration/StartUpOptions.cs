@@ -52,7 +52,7 @@ public static class StartUpOptions
             options.AddDefaultPolicy(
                 policy =>
                 {
-                    policy.WithOrigins(frontDomains.Length == 0 ? frontDomains : ["http://localhost:5173"])
+                    policy.WithOrigins(frontDomains.Length > 0 ? frontDomains : ["http://localhost:5173"])
                           .WithHeaders("Content-type")
                           .WithMethods("GET", "POST");
                 });
