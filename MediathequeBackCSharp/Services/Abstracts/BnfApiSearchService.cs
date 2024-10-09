@@ -83,7 +83,7 @@ public abstract class BnfApiSearchService : SearchService
                 Subfields = rawDataField.Descendants().Select(rawSubfield =>
                     new BnfSubField
                     {
-                        Code = rawDataField.Attribute(CODE) != null ? rawSubfield.Attribute(CODE).Value : string.Empty,
+                        Code = rawSubfield.Attribute(CODE) != null ? rawSubfield.Attribute(CODE).Value : string.Empty,
                         Value = rawSubfield.Value
                     }
                 )
