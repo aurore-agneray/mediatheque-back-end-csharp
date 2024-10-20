@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
-using ApplicationCore.Extensions;
+using ApplicationCore.StaticManagers;
 using AutoMapper;
 using System.Resources;
 
@@ -52,47 +52,6 @@ public abstract class SearchService(IMapper mapper, ResourceManager textsManager
     }
 
     /// <summary>
-    /// Order the given list by volumes' alphanumerical ascending order
-    /// </summary>
-    /// <param name="editions">List of EditionResultDTO objects</param>
-    /// <returns>Ordered list of EditionResultDTO objects</returns>
-    protected static List<EditionResultDTO> OrderEditionsByVolume(IEnumerable<EditionResultDTO> editions)
-    {
-        return editions.OrderBy(item => item?.Volume != null ? item.Volume.ExtractPrefix() : string.Empty)
-                       .ThenBy(item => item?.Volume != null ? item.Volume.ExtractNumber() : 0)
-                       .ToList();
-    }
-
-    /// <summary>
-    /// Groups the editions of the given list into a dictionary 
-    /// where the keys are the series' names
-    /// </summary>
-    /// <param name="editions">List of EditionResultDTOs objects</param>
-    /// <returns>Returns a dictionary where the keys are the series' names
-    /// and the elements are some lists containing editions</returns>
-    protected static Dictionary<string, List<EditionResultDTO>> GroupEditionsBySeriesName(IEnumerable<EditionResultDTO> editions)
-    {
-        if (editions == null || !editions.Any())
-        {
-            return [];
-        }
-
-        return editions.GroupBy(ed =>
-        {
-            if (!string.IsNullOrEmpty(ed?.Series?.SeriesName))
-            {
-                return ed.Series.SeriesName;
-            }
-
-            return "0";
-
-        }).ToDictionary(
-            group => group.Key,
-            group => group.ToList()
-        );
-    }
-
-    /// <summary>
     /// Processes the search that can be of type "simple" or "advanced".
     /// The process depends on the source of data
     /// </summary>
@@ -115,8 +74,8 @@ public abstract class SearchService(IMapper mapper, ResourceManager textsManager
 
             searchResultsDtos.ForEach(rDto =>
             {
-                rDto.Editions = GroupEditionsBySeriesName(
-                    OrderEditionsByVolume(
+                rDto.Editions = EditionsStaticManager.GroupEditionsBySeriesName(
+                    EditionsStaticManager.OrderEditionsByVolume(
                         editionsList.Where(ed => ed.BookId == rDto.BookId)
                     )
                 );
