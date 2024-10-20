@@ -4,7 +4,7 @@ namespace ApplicationCore.Tests.StringExtensions;
 
 /// <summary>
 /// TESTS for the static method 
-/// ApplicationCore.Extensions.StringExtensions.ExtractPrefix(this string input)
+/// ApplicationCore.Extensions.StringExtensions.ExtractPrefixWithoutNumbers(this string input)
 /// </summary>
 [TestClass]
 public class ExtractPrefixWithoutNumbers
