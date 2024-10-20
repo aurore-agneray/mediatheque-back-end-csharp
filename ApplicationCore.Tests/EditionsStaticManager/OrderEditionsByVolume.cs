@@ -10,7 +10,7 @@ namespace ApplicationCore.Tests.EditionsStaticManager;
 public class OrderEditionsByVolume
 {
     /// <summary>
-    /// Test with the first set given into EditionsManagerTestsData
+    /// Test with the first set given into EditionsStaticManagerTestsData
     /// </summary>
     [TestMethod]
     public void WithDataSetOne()
