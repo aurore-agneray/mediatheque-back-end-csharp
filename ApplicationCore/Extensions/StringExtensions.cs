@@ -21,12 +21,12 @@ namespace ApplicationCore.Extensions
         private static partial Regex ExtractNumberRegex();
 
         /// <summary>
-        /// Extracts the ALPHABETICAL prefix of the given string
+        /// Extracts a prefix without numbers of the given string
         /// </summary>
-        /// <param name="input">A string value with letters and numbers</param>
-        /// <returns>Returns a string alphabetical value or string.Empty
+        /// <param name="input">A string value with numbers and other characters</param>
+        /// <returns>Returns a string value without numbers or string.Empty
         /// if the string begins with a number</returns>
-        public static string ExtractPrefix(this string input)
+        public static string ExtractPrefixWithoutNumbers(this string input)
         {
             if (input == null)
             {

@@ -15,7 +15,7 @@ public static class EditionsStaticManager
     /// <returns>Ordered list of EditionResultDTO objects</returns>
     public static List<EditionResultDTO> OrderEditionsByVolume(IEnumerable<EditionResultDTO> editions)
     {
-        return editions.OrderBy(item => item?.Volume != null ? item.Volume.ExtractPrefix() : string.Empty)
+        return editions.OrderBy(item => item?.Volume != null ? item.Volume.ExtractPrefixWithoutNumbers() : string.Empty)
                        .ThenBy(item => item?.Volume != null ? item.Volume.ExtractNumber() : 0)
                        .ToList();
     }
