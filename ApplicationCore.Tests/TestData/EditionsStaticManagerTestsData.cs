@@ -2,9 +2,15 @@
 
 namespace ApplicationCore.Tests.TestData;
 
-internal static class SearchServiceTestsData
+/// <summary>
+/// Data sets for testing the static methods from EditionsStaticManager class
+/// </summary>
+internal static class EditionsStaticManagerTestsData
 {
-    internal static IEnumerable<EditionResultDTO> Editions = [
+    /// <summary>
+    /// A first data set with different volume numbers and series names
+    /// </summary>
+    internal static IEnumerable<EditionResultDTO> FirstEditionsSet = [
 
         new EditionResultDTO {
             Id = 1,
