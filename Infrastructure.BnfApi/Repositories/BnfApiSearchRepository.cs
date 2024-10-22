@@ -9,22 +9,6 @@ namespace Infrastructure.BnfApi.Repositories;
 /// </summary>
 public abstract class BnfApiSearchRepository : IXMLRepository
 {
-    protected const string DOUBLE_QUOTES = "\"";
-    protected const string SPACE = " ";
-    protected const string PLUS = "+";
-    protected const string NUMBER_OF_RECORDS = "numberOfRecords";
-    protected const string RECORD = "record";
-
-    /// <summary>
-    /// Namespace "mxc"
-    /// </summary>
-    protected readonly XNamespace _nMxc = "info:lc/xmlns/marcxchange-v2";
-
-    /// <summary>
-    /// Namespace "srw"
-    /// </summary>
-    protected readonly XNamespace _nSrw = "http://www.loc.gov/zing/srw/";
-
     /// <summary>
     /// Extracts and returns XML nodes from the BnF API
     /// </summary>

@@ -1,6 +1,4 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace Infrastructure.BnfApi.Repositories;
@@ -11,50 +9,15 @@ namespace Infrastructure.BnfApi.Repositories;
 public class BnfApiSimpleSearchRepository : BnfApiSearchRepository
 {
     /// <summary>
-    /// Constructs the complete string with the conditions to
-    /// send to the BnF API
-    /// </summary>
-    /// <param name="criterion">Criterion entered by the user to launch the searching process</param>
-    /// <param name="noticesQty">The quantity of notices returned by the API</param>
-    /// <returns>Returns the conditions part of the URL for the request</returns>
-    protected static string GetSimpleSearchConditions(string criterion, int noticesQty)
-    {
-        var stringBuilder = new StringBuilder();
-
-        if (string.IsNullOrEmpty(criterion))
-        {
-            return string.Empty;
-        }
-
-        if (noticesQty < BnfGlobalConsts.DEFAULT_NOTICES_NUMBER)
-        {
-            noticesQty = BnfGlobalConsts.DEFAULT_NOTICES_NUMBER;
-        }
-
-        stringBuilder = stringBuilder.Clear();
-        
-#pragma warning disable CA1834
-/* The compiler considers DOUBLE_QUOTES as a unit char, even if it's not the case !
-** https://learn.microsoft.com/fr-fr/dotnet/fundamentals/code-analysis/quality-rules/ca1834 */
-        stringBuilder.Append(DOUBLE_QUOTES)
-                     .Append(criterion.Replace(SPACE, PLUS))
-                     .Append(DOUBLE_QUOTES);
-#pragma warning restore CA1834
-
-        criterion = stringBuilder.ToString();
-
-        return BnfGlobalConsts.SIMPLE_SEARCH_PARAMETERED_CONDITIONS(criterion, noticesQty);
-    }
-
-    /// <summary>
     /// Extracts and returns XML nodes from the BnF API
     /// </summary>
-    /// <returns>An enumerable of XElement objects</returns>
+    /// <returns>An enumerable of XElement objects objects that are "records"</returns>
     public override async Task<IEnumerable<XElement>> GetXMLResultsNodes<ISimpleSearchDTO>(ISimpleSearchDTO searchCriteria)
     {
-        SimpleSearchDTO? criteriaDto = null;
+        SimpleSearchDTO? criteriaDto;
 
-        if (searchCriteria is ISimpleSearchDTO idto)
+#pragma warning disable IDE0150
+        if (searchCriteria is ISimpleSearchDTO)
         {
             criteriaDto = searchCriteria as SimpleSearchDTO;
         }
@@ -62,46 +25,23 @@ public class BnfApiSimpleSearchRepository : BnfApiSearchRepository
         {
             return [];
         }
+#pragma warning restore IDE0150
 
         if (string.IsNullOrEmpty(criteriaDto?.SimpleCriterion))
         {
             return [];
         }
 
+        // Prepares parameters to send to the API
         string stringCriterion = criteriaDto.SimpleCriterion;
         var noticesNb = criteriaDto.BnfNoticesQuantity == default ? 20 : criteriaDto.BnfNoticesQuantity;
 
-        var url = BnfGlobalConsts.BNF_API_URL_BASE + GetSimpleSearchConditions(stringCriterion, noticesNb);
+        var url = BnfGlobalConsts.BNF_API_URL_BASE + BnfApiStaticManager.GetSimpleSearchConditions(stringCriterion, noticesNb);
 
-        // Configures the XML reader
-        var readerSettings = new XmlReaderSettings()
-        {
-            Async = true
-        };
+        // Retrieves data from the API
+        XDocument bnfData = await BnfApiStaticManager.CallBnfApi(url);
 
-        XDocument fileRoot;
-
-        using (var reader = XmlReader.Create(url, readerSettings))
-        {
-
-            // Loads the XML content from the url
-            fileRoot = await XDocument.LoadAsync(
-                reader,
-                LoadOptions.None,
-                CancellationToken.None
-            );
-        }
-
-        // Checks the number of records
-        var recordsNumberNode = fileRoot.Descendants(_nSrw + NUMBER_OF_RECORDS)
-                                        .FirstOrDefault();
-
-        if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0)
-        {
-            return [];
-        }
-
-        // Checks the results nodes
-        return fileRoot.Descendants(_nMxc + RECORD);
+        // Search for the relevant nodes into the data
+        return BnfApiStaticManager.ExtractXMLResultsNodes(bnfData);
     }
 }
