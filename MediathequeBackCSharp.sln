@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.MySQL", "Inf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.BnfApi", "Infrastructure.BnfApi\Infrastructure.BnfApi.csproj", "{C0914D6B-F916-4245-A566-4A2C86023B39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationCore.Tests", "ApplicationCore.Tests\ApplicationCore.Tests.csproj", "{9D90249E-57EE-4C5F-A3CF-9AAAB247B584}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore.Tests", "ApplicationCore.Tests\ApplicationCore.Tests.csproj", "{9D90249E-57EE-4C5F-A3CF-9AAAB247B584}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.BnfApi.Tests", "Infrastructure.BnfApi.Tests\Infrastructure.BnfApi.Tests.csproj", "{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,13 +41,17 @@ Global
 		{9D90249E-57EE-4C5F-A3CF-9AAAB247B584}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D90249E-57EE-4C5F-A3CF-9AAAB247B584}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D90249E-57EE-4C5F-A3CF-9AAAB247B584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_SaveFilesImmediatelyUponChange = False
-		RESX_NeutralResourcesLanguage = fr-FR
 		SolutionGuid = {31745A20-0FD9-4334-B685-CE95238C0ED7}
+		RESX_NeutralResourcesLanguage = fr-FR
+		RESX_SaveFilesImmediatelyUponChange = False
 	EndGlobalSection
 EndGlobal
