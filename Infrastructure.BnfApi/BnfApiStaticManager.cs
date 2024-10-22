@@ -16,16 +16,6 @@ public class BnfApiStaticManager
     protected const string RECORD = "record";
 
     /// <summary>
-    /// Namespace "mxc"
-    /// </summary>
-    protected static readonly XNamespace _nMxc = "info:lc/xmlns/marcxchange-v2";
-
-    /// <summary>
-    /// Namespace "srw"
-    /// </summary>
-    protected static readonly XNamespace _nSrw = "http://www.loc.gov/zing/srw/";
-
-    /// <summary>
     /// Constructs the complete string with the conditions to
     /// send to the BnF API
     /// </summary>
@@ -41,7 +31,7 @@ public class BnfApiStaticManager
             return string.Empty;
         }
 
-        if (noticesQty < BnfGlobalConsts.DEFAULT_NOTICES_NUMBER)
+        if (!BnfGlobalConsts.ALLOWED_NOTICES_NUMBERS.Contains(noticesQty))
         {
             noticesQty = BnfGlobalConsts.DEFAULT_NOTICES_NUMBER;
         }
@@ -59,6 +49,21 @@ public class BnfApiStaticManager
         criterion = stringBuilder.ToString();
 
         return BnfGlobalConsts.SIMPLE_SEARCH_PARAMETERED_CONDITIONS(criterion, noticesQty);
+    }
+
+    /// <summary>
+    /// Constructs the complete URL with the conditions to
+    /// send to the BnF API
+    /// </summary>
+    /// <param name="criterion">Criterion entered by the user to launch the searching process</param>
+    /// <param name="noticesQty">The quantity of notices returned by the API</param>
+    /// <returns>Returns the complete URL for the request</returns>
+    public static string GetCompleteUrl(string criterion, int noticesQty)
+    {
+        return string.Concat(
+            BnfGlobalConsts.BNF_API_URL_BASE, 
+            GetSimpleSearchConditions(criterion, noticesQty)
+        );
     }
 
     /// <summary>
@@ -102,7 +107,7 @@ public class BnfApiStaticManager
         }
 
         // Checks the number of records
-        var recordsNumberNode = bnfData.Descendants(_nSrw + NUMBER_OF_RECORDS)
+        var recordsNumberNode = bnfData.Descendants(BnfGlobalConsts.NAMESPACE_SRW + NUMBER_OF_RECORDS)
                                         .FirstOrDefault();
 
         if (!int.TryParse(recordsNumberNode?.Value, out int resultsNumber) || resultsNumber <= 0)
@@ -111,6 +116,6 @@ public class BnfApiStaticManager
         }
 
         // Extracts the results nodes
-        return bnfData.Descendants(_nMxc + RECORD);
+        return bnfData.Descendants(BnfGlobalConsts.NAMESPACE_MXC + RECORD);
     }
 }

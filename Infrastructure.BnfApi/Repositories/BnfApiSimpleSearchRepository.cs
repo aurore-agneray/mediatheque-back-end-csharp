@@ -36,7 +36,7 @@ public class BnfApiSimpleSearchRepository : BnfApiSearchRepository
         string stringCriterion = criteriaDto.SimpleCriterion;
         var noticesNb = criteriaDto.BnfNoticesQuantity == default ? 20 : criteriaDto.BnfNoticesQuantity;
 
-        var url = BnfGlobalConsts.BNF_API_URL_BASE + BnfApiStaticManager.GetSimpleSearchConditions(stringCriterion, noticesNb);
+        var url = BnfApiStaticManager.GetCompleteUrl(stringCriterion, noticesNb);
 
         // Retrieves data from the API
         XDocument bnfData = await BnfApiStaticManager.CallBnfApi(url);

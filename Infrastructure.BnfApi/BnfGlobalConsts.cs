@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.BnfApi;
+﻿using System.Xml.Linq;
+
+namespace Infrastructure.BnfApi;
 
 /// <summary>
 /// Contains constants that can be used everywhere for the BnF instructions
@@ -31,6 +33,16 @@ public class BnfGlobalConsts
     /// when they are concatenated
     /// </summary>
     public const string TITLE_AND_AUTHOR_NAME_SEPARATOR = ";;;";
+
+    /// <summary>
+    /// Namespace "mxc"
+    /// </summary>
+    public static readonly XNamespace NAMESPACE_MXC = "info:lc/xmlns/marcxchange-v2";
+
+    /// <summary>
+    /// Namespace "srw"
+    /// </summary>
+    public static readonly XNamespace NAMESPACE_SRW = "http://www.loc.gov/zing/srw/";
 
     /// <summary>
     /// Returns the parametered part of the simple search request's url
