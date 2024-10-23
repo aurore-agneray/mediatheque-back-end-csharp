@@ -1,0 +1,587 @@
+﻿<srw:searchRetrieveResponse xmlns:srw="http://www.loc.gov/zing/srw/" xmlns="http://catalogue.bnf.fr/namespaces/InterXMarc" xmlns:ixm="http://catalogue.bnf.fr/namespaces/InterXMarc" xmlns:mn="http://catalogue.bnf.fr/namespaces/motsnotices" xmlns:sd="http://www.loc.gov/zing/srw/diagnostic/">
+	<srw:version>1.2</srw:version>
+	<srw:echoedSearchRetrieveRequest>
+		<srw:version>1.2</srw:version>
+		<srw:query>bib.author all "narnia" and bib.title all "narnia"</srw:query>
+	</srw:echoedSearchRetrieveRequest>
+	<srw:numberOfRecords>4</srw:numberOfRecords>
+	<srw:records>
+		<srw:record>
+			<srw:recordSchema>marcxchange</srw:recordSchema>
+			<srw:recordPacking>xml</srw:recordPacking>
+			<srw:recordData>
+				<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb43393050j" type="Bibliographic">
+					<mxc:leader>     cam  22     3  450 </mxc:leader>
+					<mxc:controlfield tag="001">FRBNF433930500000006</mxc:controlfield>
+					<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb43393050j</mxc:controlfield>
+					<mxc:datafield tag="010" ind1=" " ind2=" ">
+						<mxc:subfield code="a">0-7879-7890-6</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="010" ind1=" " ind2=" ">
+						<mxc:subfield code="a">978-0-7879-7890-7</mxc:subfield>
+						<mxc:subfield code="b">rel.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="039" ind1=" " ind2=" ">
+						<mxc:subfield code="o">ALS</mxc:subfield>
+						<mxc:subfield code="a">0911631</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="100" ind1=" " ind2=" ">
+						<mxc:subfield code="a">20062207d2005    m  y0frey50      ba</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="101" ind1="0" ind2=" ">
+						<mxc:subfield code="a">eng</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="102" ind1=" " ind2=" ">
+						<mxc:subfield code="a">US</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="105" ind1=" " ind2=" ">
+						<mxc:subfield code="a">||||z   00|||</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="106" ind1=" " ind2=" ">
+						<mxc:subfield code="a">r</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">i </mxc:subfield>
+						<mxc:subfield code="b">xxxe  </mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">txt</mxc:subfield>
+						<mxc:subfield code="2">rdacontent</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">n</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">n</mxc:subfield>
+						<mxc:subfield code="2">rdamedia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="200" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Into the wardrobe</mxc:subfield>
+						<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+						<mxc:subfield code="e">C. S. Lewis and the Narnia chronicles</mxc:subfield>
+						<mxc:subfield code="f">David C. Downing</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="210" ind1=" " ind2=" ">
+						<mxc:subfield code="a">San Francisco</mxc:subfield>
+						<mxc:subfield code="c">Jossey-Bass</mxc:subfield>
+						<mxc:subfield code="d">c2005</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="215" ind1=" " ind2=" ">
+						<mxc:subfield code="a">xvii-238 p.</mxc:subfield>
+						<mxc:subfield code="d">23 cm</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="300" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Includes bibliographical references (p. 195-206) and index.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="327" ind1="1" ind2=" ">
+						<mxc:subfield code="a">The life of C.S. Lewis -- The genesis of Narnia -- The spiritual vision of the Narnia chronicles -- Moral psychology -- Classical and medieval elements -- What's in a Narnian name? -- Lewis's literary artistry.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="604" ind1=" " ind2=" ">
+						<mxc:subfield code="3">11946697</mxc:subfield>
+						<mxc:subfield code="a">Lewis</mxc:subfield>
+						<mxc:subfield code="b">Clive Staples</mxc:subfield>
+						<mxc:subfield code="f">1898-1963</mxc:subfield>
+						<mxc:subfield code="t">The chronicles of Narnia</mxc:subfield>
+						<mxc:subfield code="2">rameau</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="608" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Ouvrages de référence</mxc:subfield>
+						<mxc:subfield code="2">CNLJ</mxc:subfield>
+						<mxc:subfield code="k">Avis critique donné par le Centre national de la littérature pour la jeunesse</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Lewis, C. S. (1898-1963.)</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Children's stories, English -- History and criticism.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Christian fiction, English -- History and criticism.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Fantasy fiction, English -- History and criticism.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Narnia (Imaginary place</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="700" ind1=" " ind2="|">
+						<mxc:subfield code="3">12396495</mxc:subfield>
+						<mxc:subfield code="o">ISNI0000000110378072</mxc:subfield>
+						<mxc:subfield code="a">Downing</mxc:subfield>
+						<mxc:subfield code="b">David C.</mxc:subfield>
+						<mxc:subfield code="f">1951-....</mxc:subfield>
+						<mxc:subfield code="4">070</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="801" ind1=" " ind2="0">
+						<mxc:subfield code="a">FR</mxc:subfield>
+						<mxc:subfield code="b">FR-751131015</mxc:subfield>
+						<mxc:subfield code="c">20062207</mxc:subfield>
+						<mxc:subfield code="g">AFNOR</mxc:subfield>
+						<mxc:subfield code="h">FRBNF433930500000006</mxc:subfield>
+						<mxc:subfield code="2">intermrc</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="930" ind1=" " ind2=" ">
+						<mxc:subfield code="5">FR-751131010:43393050001001</mxc:subfield>
+						<mxc:subfield code="a">2017-86218</mxc:subfield>
+						<mxc:subfield code="b">759999999</mxc:subfield>
+						<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+						<mxc:subfield code="d">O</mxc:subfield>
+					</mxc:datafield>
+				</mxc:record>
+			</srw:recordData>
+			<srw:recordIdentifier>ark:/12148/cb43393050j</srw:recordIdentifier>
+			<srw:recordPosition>1</srw:recordPosition>
+			<srw:extraRecordData>
+				<ixm:attr name="CreationDate">20140818</ixm:attr>
+				<ixm:attr name="LastModificationDate">20170629</ixm:attr>
+				<mn:score>14.843345</mn:score>
+			</srw:extraRecordData>
+		</srw:record>
+		<srw:record>
+			<srw:recordSchema>marcxchange</srw:recordSchema>
+			<srw:recordPacking>xml</srw:recordPacking>
+			<srw:recordData>
+				<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb43393051w" type="Bibliographic">
+					<mxc:leader>     nam  22        450 </mxc:leader>
+					<mxc:controlfield tag="001">FRBNF433930510000003</mxc:controlfield>
+					<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb43393051w</mxc:controlfield>
+					<mxc:datafield tag="010" ind1=" " ind2=" ">
+						<mxc:subfield code="a">2005017899</mxc:subfield>
+						<mxc:subfield code="d">11,24 Eur</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="010" ind1=" " ind2=" ">
+						<mxc:subfield code="a">1932100636 (pbk.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="010" ind1=" " ind2=" ">
+						<mxc:subfield code="a">978-1-932100-63-1</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="039" ind1=" " ind2=" ">
+						<mxc:subfield code="o">ALS</mxc:subfield>
+						<mxc:subfield code="a">0911636</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="100" ind1=" " ind2=" ">
+						<mxc:subfield code="a">20062207d2005    m  y0engy50      ba</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="101" ind1="0" ind2=" ">
+						<mxc:subfield code="a">zxx</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="102" ind1=" " ind2=" ">
+						<mxc:subfield code="a">XX</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="105" ind1=" " ind2=" ">
+						<mxc:subfield code="a">||||z   00|||</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="106" ind1=" " ind2=" ">
+						<mxc:subfield code="a">r</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">i </mxc:subfield>
+						<mxc:subfield code="b">xxxe  </mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">txt</mxc:subfield>
+						<mxc:subfield code="2">rdacontent</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">n</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">n</mxc:subfield>
+						<mxc:subfield code="2">rdamedia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="200" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Revisiting Narnia</mxc:subfield>
+						<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+						<mxc:subfield code="e">fantasy, myth, and religion in C.S. Lewis' chronicles</mxc:subfield>
+						<mxc:subfield code="f">edited by Shanna Caughey.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="210" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Dallas, Tex.</mxc:subfield>
+						<mxc:subfield code="c">Benbella Books</mxc:subfield>
+						<mxc:subfield code="d">c2005.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="215" ind1=" " ind2=" ">
+						<mxc:subfield code="a">x, 310 p.</mxc:subfield>
+						<mxc:subfield code="d">23 cm.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="225" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Smart pop series</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="300" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Includes bibliographical references.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="327" ind1="1" ind2=" ">
+						<mxc:subfield code="a">The silver chair and the silver screen / Charlie W. Starr -- On the origins of evil / Lawrence Watt-Evans -- Elusive prey / Natasha Giardina -- God in the details / Naomi Wood -- Coming of age in Narnia / Sam McBride -- The chronicles of Narnia : for adults only? / Martha C. Sammons -- Believing Narnia / James Como -- The "correct" order for reading The chronicles of Narnia? / Peter J. Schakel -- The chronicles of Narnia : where to start / Wesley A. Kort -- Narnia and Middle Earth / Joseph Pearce -- Aslan is on the move / Russell W. Dalton -- The beginning of the real story / James V. Schall -- Heathen eye for the Christian guy / Jacqueline Carey -- Would the modern-day C.S. Lewis be a PETA protester? / Ingrid Newkirk -- Greek delight / Nick Mamatas -- Why I love Narnia / Sarah Zettel -- Daughters of Lilith / Cathy McSporran -- The last of the bibliophiles / Peg Aloi -- C.S. Lewis and the problem of religion in science fiction and fantasy / Vox Day -- Redeeming postmodernism / Louis A. Markos -- The horse and his boy: the theology of Bree / David E. Bumbaugh -- A reconstructed image / Mary Frances Zambreno -- A knight in the mud / Marie-Catherine Caillava -- "Most right and proper, I'm sure..." / Sally D. Stabb -- Narnia in the modern world / Colin Duriez.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="608" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Ouvrages de référence</mxc:subfield>
+						<mxc:subfield code="2">CNLJ</mxc:subfield>
+						<mxc:subfield code="k">Avis critique donné par le Centre national de la littérature pour la jeunesse</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Lewis, C. S. (1898-1963.)</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Children's stories, English -- History and criticism.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Christian fiction, English -- History and criticism.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Fantasy fiction, English -- History and criticism.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Narnia (Imaginary place</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Myth in literature.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="702" ind1=" " ind2="|">
+						<mxc:subfield code="3">16783005</mxc:subfield>
+						<mxc:subfield code="a">Caughey</mxc:subfield>
+						<mxc:subfield code="b">Shanna.</mxc:subfield>
+						<mxc:subfield code="4">570</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="801" ind1=" " ind2="0">
+						<mxc:subfield code="c">20062207</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="930" ind1=" " ind2=" ">
+						<mxc:subfield code="5">FR-751131010:43393051001001</mxc:subfield>
+						<mxc:subfield code="a">2018-150696</mxc:subfield>
+						<mxc:subfield code="b">759999999</mxc:subfield>
+						<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+						<mxc:subfield code="d">O</mxc:subfield>
+					</mxc:datafield>
+				</mxc:record>
+			</srw:recordData>
+			<srw:recordIdentifier>ark:/12148/cb43393051w</srw:recordIdentifier>
+			<srw:recordPosition>2</srw:recordPosition>
+			<srw:extraRecordData>
+				<ixm:attr name="CreationDate">20140818</ixm:attr>
+				<ixm:attr name="LastModificationDate">20140818</ixm:attr>
+				<mn:score>14.7538</mn:score>
+			</srw:extraRecordData>
+		</srw:record>
+		<srw:record>
+			<srw:recordSchema>marcxchange</srw:recordSchema>
+			<srw:recordPacking>xml</srw:recordPacking>
+			<srw:recordData>
+				<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb400693581" type="Bibliographic">
+					<mxc:leader>     cmm  22        450 </mxc:leader>
+					<mxc:controlfield tag="001">FRBNF400693580000003</mxc:controlfield>
+					<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb400693581</mxc:controlfield>
+					<mxc:datafield tag="020" ind1=" " ind2=" ">
+						<mxc:subfield code="a">FR</mxc:subfield>
+						<mxc:subfield code="b">70519628</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="073" ind1=" " ind2="0">
+						<mxc:subfield code="a">0094634768122</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="100" ind1=" " ind2=" ">
+						<mxc:subfield code="a">20051114d2005    u  y0frey50      ba</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="101" ind1="0" ind2=" ">
+						<mxc:subfield code="a">eng</mxc:subfield>
+						<mxc:subfield code="g">eng</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="102" ind1=" " ind2=" ">
+						<mxc:subfield code="a">FR</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="105" ind1=" " ind2=" ">
+						<mxc:subfield code="a">a   z   000y|</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="106" ind1=" " ind2=" ">
+						<mxc:subfield code="a">r</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="115" ind1=" " ind2=" ">
+						<mxc:subfield code="a">c   baiz|||||||bk||c</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="126" ind1=" " ind2=" ">
+						<mxc:subfield code="a">aguxhxx||||||cd</mxc:subfield>
+						<mxc:subfield code="b">bex</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">i </mxc:subfield>
+						<mxc:subfield code="b">xxxe  </mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">txt</mxc:subfield>
+						<mxc:subfield code="2">rdacontent</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2="0">
+						<mxc:subfield code="6">03</mxc:subfield>
+						<mxc:subfield code="a">d </mxc:subfield>
+						<mxc:subfield code="b">bxxa  </mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2=" ">
+						<mxc:subfield code="6">04</mxc:subfield>
+						<mxc:subfield code="c">prm</mxc:subfield>
+						<mxc:subfield code="2">rdacontent</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2="0">
+						<mxc:subfield code="6">05</mxc:subfield>
+						<mxc:subfield code="a">b </mxc:subfield>
+						<mxc:subfield code="b">xa2e  </mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2=" ">
+						<mxc:subfield code="6">06</mxc:subfield>
+						<mxc:subfield code="c">tdi</mxc:subfield>
+						<mxc:subfield code="2">rdacontent</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">n</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">n</mxc:subfield>
+						<mxc:subfield code="2">rdamedia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2="0">
+						<mxc:subfield code="6">03</mxc:subfield>
+						<mxc:subfield code="a">a</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2=" ">
+						<mxc:subfield code="6">04</mxc:subfield>
+						<mxc:subfield code="c">s</mxc:subfield>
+						<mxc:subfield code="2">rdamedia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2="0">
+						<mxc:subfield code="6">05</mxc:subfield>
+						<mxc:subfield code="a">g</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2=" ">
+						<mxc:subfield code="6">06</mxc:subfield>
+						<mxc:subfield code="c">v</mxc:subfield>
+						<mxc:subfield code="2">rdamedia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="200" ind1="1" ind2=" ">
+						<mxc:subfield code="a">The chronicles of Narnia</mxc:subfield>
+						<mxc:subfield code="b">Multimédia multisupport</mxc:subfield>
+						<mxc:subfield code="e">the lion, the witch and the wardrobe</mxc:subfield>
+						<mxc:subfield code="f">music composed by Harry Gregson-Williams</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="205" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Collector's ed.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="210" ind1=" " ind2=" ">
+						<mxc:subfield code="a">[Europe]</mxc:subfield>
+						<mxc:subfield code="c">EMI music</mxc:subfield>
+						<mxc:subfield code="d">cop. 2005</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="215" ind1=" " ind2=" ">
+						<mxc:subfield code="a">1 fasc. (non paginé [34] p.)</mxc:subfield>
+						<mxc:subfield code="c">ill. en coul., couv. ill. en coul.</mxc:subfield>
+						<mxc:subfield code="d">12 cm</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="215" ind1=" " ind2=" ">
+						<mxc:subfield code="a">1 disque compact</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="215" ind1=" " ind2=" ">
+						<mxc:subfield code="a">1 DVD vidéo monoface simple couche zone 2</mxc:subfield>
+						<mxc:subfield code="c">coul. (PAL), son.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="304" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Mention parallèle de titre ou de responsabilité : Le monde de Narnia : le lion, la sorcière blanche et l'armoire magique</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="327" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Behind the magic of Narnia (DVD vidéo)</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="463" ind1=" " ind2="0">
+						<mxc:subfield code="t">Behind the magic of Narnia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="510" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Le monde de Narnia</mxc:subfield>
+						<mxc:subfield code="e">le lion, la sorcière blanche et l'armoire magique</mxc:subfield>
+						<mxc:subfield code="z">fre</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="517" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Narnia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="608" ind1=" " ind2=" ">
+						<mxc:subfield code="a">musique de film</mxc:subfield>
+						<mxc:subfield code="2">frTAV</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="608" ind1=" " ind2=" ">
+						<mxc:subfield code="a">musique (divers)</mxc:subfield>
+						<mxc:subfield code="2">frTAV</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="608" ind1=" " ind2=" ">
+						<mxc:subfield code="a">édition commerciale</mxc:subfield>
+						<mxc:subfield code="2">frTAV</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="608" ind1=" " ind2=" ">
+						<mxc:subfield code="a">bande originale de film</mxc:subfield>
+						<mxc:subfield code="2">frTAV</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="686" ind1=" " ind2=" ">
+						<mxc:subfield code="a">407</mxc:subfield>
+						<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="700" ind1=" " ind2="|">
+						<mxc:subfield code="3">14025652</mxc:subfield>
+						<mxc:subfield code="o">ISNI0000000121422075</mxc:subfield>
+						<mxc:subfield code="a">Gregson-Williams</mxc:subfield>
+						<mxc:subfield code="b">Harry</mxc:subfield>
+						<mxc:subfield code="f">1961-....</mxc:subfield>
+						<mxc:subfield code="4">230</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="801" ind1=" " ind2="0">
+						<mxc:subfield code="a">FR</mxc:subfield>
+						<mxc:subfield code="b">FR-751131015</mxc:subfield>
+						<mxc:subfield code="c">20051114</mxc:subfield>
+						<mxc:subfield code="g">AFNOR</mxc:subfield>
+						<mxc:subfield code="h">FRBNF400693580000003</mxc:subfield>
+						<mxc:subfield code="2">intermrc</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="930" ind1=" " ind2=" ">
+						<mxc:subfield code="5">FR-759999999:40069358001001</mxc:subfield>
+						<mxc:subfield code="a">8 MU-28869</mxc:subfield>
+						<mxc:subfield code="b">759999999</mxc:subfield>
+						<mxc:subfield code="c">Tolbiac - Rez de Jardin - Audiovisuel - Magasin</mxc:subfield>
+						<mxc:subfield code="d">O</mxc:subfield>
+					</mxc:datafield>
+				</mxc:record>
+			</srw:recordData>
+			<srw:recordIdentifier>ark:/12148/cb400693581</srw:recordIdentifier>
+			<srw:recordPosition>3</srw:recordPosition>
+			<srw:extraRecordData>
+				<ixm:attr name="CreationDate">20051114</ixm:attr>
+				<ixm:attr name="LastModificationDate">20051215</ixm:attr>
+				<mn:score>14.592893</mn:score>
+			</srw:extraRecordData>
+		</srw:record>
+		<srw:record>
+			<srw:recordSchema>marcxchange</srw:recordSchema>
+			<srw:recordPacking>xml</srw:recordPacking>
+			<srw:recordData>
+				<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb43488086q" type="Bibliographic">
+					<mxc:leader>     nam  22        450 </mxc:leader>
+					<mxc:controlfield tag="001">FRBNF434880860000000</mxc:controlfield>
+					<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb43488086q</mxc:controlfield>
+					<mxc:datafield tag="010" ind1=" " ind2=" ">
+						<mxc:subfield code="a">978-0-230-30124-5</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="039" ind1=" " ind2=" ">
+						<mxc:subfield code="o">ALS</mxc:subfield>
+						<mxc:subfield code="a">1844696</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="100" ind1=" " ind2=" ">
+						<mxc:subfield code="a">20132405d2012    m  y0engy50      ba</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="101" ind1="0" ind2=" ">
+						<mxc:subfield code="a">eng</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="102" ind1=" " ind2=" ">
+						<mxc:subfield code="a">US</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="105" ind1=" " ind2=" ">
+						<mxc:subfield code="a">||||z   00|||</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="106" ind1=" " ind2=" ">
+						<mxc:subfield code="a">r</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">i </mxc:subfield>
+						<mxc:subfield code="b">xxxe  </mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="181" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">txt</mxc:subfield>
+						<mxc:subfield code="2">rdacontent</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2="0">
+						<mxc:subfield code="6">01</mxc:subfield>
+						<mxc:subfield code="a">n</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="182" ind1=" " ind2=" ">
+						<mxc:subfield code="6">02</mxc:subfield>
+						<mxc:subfield code="c">n</mxc:subfield>
+						<mxc:subfield code="2">rdamedia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="200" ind1="1" ind2=" ">
+						<mxc:subfield code="a">C.S. Lewis</mxc:subfield>
+						<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+						<mxc:subfield code="e">The chronicles of Narnia</mxc:subfield>
+						<mxc:subfield code="f">edited by Michelle Ann Abate &amp; Lance Weldy</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="210" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Basingstoke</mxc:subfield>
+						<mxc:subfield code="a">New York</mxc:subfield>
+						<mxc:subfield code="c">Palgrave Macmillan</mxc:subfield>
+						<mxc:subfield code="d">2012</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="215" ind1=" " ind2=" ">
+						<mxc:subfield code="a">xiii, 210 p.</mxc:subfield>
+						<mxc:subfield code="d">23 cm.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="225" ind1="1" ind2=" ">
+						<mxc:subfield code="a">New casebooks</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="300" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Includes bibliographical references and index.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="312" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Autre forme de titre : Chronicles of Narnia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="327" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Machine generated contents note: -- List of Contributors -- Introduction; M.A.Abate -- PART I: TEXTS AND CONTEXTS -- Collective Violence and Scapegoating in The Lion, the Witch and the Wardrobe; M.Green -- Turkish Delights and Sardines with Tea: Food in The Lion, the Witch, and the Wardrobe; R.Towns -- Elements of Arthur in Lewis's Caspian Trilogy; M.Corpora -- PART II: APPLICATIONS AND IMPLICATIONS -- 'All That Rot': Picturing Education in C. S. Lewis' Chronicles of Narnia; K.Dorwick -- War and the Liminal Space: Situating The Chronicles of Narnia in the 20th Century Narrative of Trauma and Survival; N.Lewis -- C. S. Lewis's Manifold Mythopoeics: Towards a Reconsideration of Eschatological Time in the Construction of the Post-World Wars Fantasy Novel for Children; J.M.Sommers -- PART III: ADAPTATIONS AND MEDIATIONS -- The Author, the Movie, and the Marketing: The Lion, The Witch and the Wardrobe and Early Reader Adaptations; R.Brock-Servias -- Textual Evolution(s) of Prince Caspian; L.Weldy -- Narnia Fans, Narnia Fan Cultures: C. S. Lewis and Digital New Media; N.Hamer -- PART IV: CONFLICTS AND CONTROVERSY -- Lewis and anti-Lewis: The Narnia Chronicles and Philip Pullman's His Dark Materials Trilogy; G.Bar-Hillel -- Dark Queen, Mixed-Race Kings, and Girls Whose Heads Have Something in Them: Lewis's Contemporary Stance on Race and Gender in The Chronicles of Narnia; D.Brown -- Boy-Girls and Girl-Beasts: The Gender Paradox in C.S. Lewis' Chronicles of Narnia; S.Rodriguez -- Annotated Bibliography -- Index.</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="517" ind1="1" ind2=" ">
+						<mxc:subfield code="a">Chronicles of Narnia</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="608" ind1=" " ind2=" ">
+						<mxc:subfield code="a">Ouvrages de référence</mxc:subfield>
+						<mxc:subfield code="2">CNLJ</mxc:subfield>
+						<mxc:subfield code="k">Avis critique donné par le Centre national de la littérature pour la jeunesse</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="610" ind1="0" ind2=" ">
+						<mxc:subfield code="a">Lewis, C. S. (1898-1963.) -- Critique et interprétation</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="702" ind1=" " ind2="|">
+						<mxc:subfield code="3">15975161</mxc:subfield>
+						<mxc:subfield code="o">ISNI0000000118752372</mxc:subfield>
+						<mxc:subfield code="a">Abate</mxc:subfield>
+						<mxc:subfield code="b">Michelle Ann</mxc:subfield>
+						<mxc:subfield code="4">570</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="702" ind1=" " ind2="|">
+						<mxc:subfield code="3">15545495</mxc:subfield>
+						<mxc:subfield code="o">ISNI0000000122846187</mxc:subfield>
+						<mxc:subfield code="a">Weldy</mxc:subfield>
+						<mxc:subfield code="b">Lance</mxc:subfield>
+						<mxc:subfield code="4">070</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="801" ind1=" " ind2="0">
+						<mxc:subfield code="c">20132405</mxc:subfield>
+					</mxc:datafield>
+					<mxc:datafield tag="930" ind1=" " ind2=" ">
+						<mxc:subfield code="5">FR-751131010:43488086001001</mxc:subfield>
+						<mxc:subfield code="a">8-CNLJ-11368</mxc:subfield>
+						<mxc:subfield code="b">759999999</mxc:subfield>
+						<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+						<mxc:subfield code="d">O</mxc:subfield>
+					</mxc:datafield>
+				</mxc:record>
+			</srw:recordData>
+			<srw:recordIdentifier>ark:/12148/cb43488086q</srw:recordIdentifier>
+			<srw:recordPosition>4</srw:recordPosition>
+			<srw:extraRecordData>
+				<ixm:attr name="CreationDate">20140820</ixm:attr>
+				<ixm:attr name="LastModificationDate">20190301</ixm:attr>
+				<mn:score>12.910912</mn:score>
+			</srw:extraRecordData>
+		</srw:record>
+	</srw:records>
+</srw:searchRetrieveResponse>
