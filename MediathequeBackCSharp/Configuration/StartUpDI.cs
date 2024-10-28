@@ -3,6 +3,8 @@ using ApplicationCore.Pocos;
 using Infrastructure.BnfApi.Repositories;
 using Infrastructure.MySQL;
 using Infrastructure.MySQL.ComplexRequests;
+using Infrastructure.MySQL.Repositories;
+using MediathequeBackCSharp.Managers;
 using MediathequeBackCSharp.Managers.SearchManagers;
 using MediathequeBackCSharp.Services;
 using MediathequeBackCSharp.Services.Aggregates;
@@ -59,6 +61,7 @@ public static class StartUpDI
         builder.Services.AddScoped<IIdentifiedRepository<Publisher>, MySQLIIdentifiedRepository<Publisher>>();
         builder.Services.AddScoped<IIdentifiedRepository<Series>, MySQLIIdentifiedRepository<Series>>();
 
+        builder.Services.AddScoped<MySQLLoadRepository>();
         builder.Services.AddScoped<MySQLSimpleSearchRepository>();
         builder.Services.AddScoped<MySQLAdvancedSearchRepository>();
 
@@ -86,6 +89,7 @@ public static class StartUpDI
     /// <param name="builder">The application builder</param>
     public static void InjectManagers(WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<LoadManager>();
         builder.Services.AddScoped<SimpleSearchManager>();
         builder.Services.AddScoped<AdvancedSearchManager>();
     }

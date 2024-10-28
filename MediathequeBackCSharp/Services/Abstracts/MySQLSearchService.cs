@@ -17,7 +17,7 @@ public abstract class MySQLSearchService : SearchService
     /// <summary>
     /// Repository used for retrieving data from a particular database
     /// </summary>
-    protected readonly ISQLRepository<IMediathequeDbContextFields>? _sqlRepository;
+    protected readonly ISQLSearchRepository<IMediathequeDbContextFields>? _sqlRepository;
 
     /// <summary>
     /// Constructor of the MySQLSearchService class
@@ -25,7 +25,7 @@ public abstract class MySQLSearchService : SearchService
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     /// <param name="sqlRepo">Repository for collecting data from SQL databases</param>
-    protected MySQLSearchService(IMapper mapper, ResourceManager textsManager, ISQLRepository<IMediathequeDbContextFields> sqlRepo)
+    protected MySQLSearchService(IMapper mapper, ResourceManager textsManager, ISQLSearchRepository<IMediathequeDbContextFields> sqlRepo)
         : base(mapper, textsManager)
     {
         _sqlRepository = sqlRepo;

@@ -7,22 +7,12 @@ namespace Infrastructure.MySQL.Repositories;
 /// <summary>
 /// Contains common methods for MySQL simple and advanced search repositories
 /// </summary>
-public abstract class MySQLSearchRepository : ISQLRepository<MySQLDbContext>
+/// <remarks>
+/// Main constructor
+/// </remarks>
+/// <param name="context">Database context</param>
+public abstract class MySQLSearchRepository(MySQLDbContext context) : MySQLRepository(context), ISQLSearchRepository<MySQLDbContext>
 {
-    /// <summary>
-    /// Context for querying the MySQL database
-    /// </summary>
-    public MySQLDbContext DbContext { get; }
-
-    /// <summary>
-    /// Main constructor
-    /// </summary>
-    /// <param name="context">Database context</param>
-    public MySQLSearchRepository(MySQLDbContext context)
-    {
-        DbContext = context;
-    }
-
     /// <summary>
     /// Generate the IQueryable object dedicated to 
     /// retrieve the books from the database,
@@ -43,19 +33,5 @@ public abstract class MySQLSearchRepository : ISQLRepository<MySQLDbContext>
         return from edition in DbContext.Editions
                where bookIds.Contains(edition.BookId)
                select edition;
-    }
-
-    /// <summary>
-    /// Indicates if the database is available or not
-    /// </summary>
-    /// <returns>A boolean value</returns>
-    public bool IsDatabaseAvailable()
-    {
-        if (DbContext is not null)
-        {
-            return DbContext.IsDatabaseAvailable();
-        }
-
-        return false;
     }
 }

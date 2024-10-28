@@ -1,15 +1,7 @@
-﻿using ApplicationCore;
-using ApplicationCore.Dtos;
-using ApplicationCore.Interfaces.Entities;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Infrastructure.MySQL;
-using MediathequeBackCSharp.Classes;
-using MediathequeBackCSharp.Texts;
+﻿using MediathequeBackCSharp.Classes;
+using MediathequeBackCSharp.Managers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
-using System.Resources;
 
 namespace MediathequeBackCSharp.Controllers;
 
@@ -19,38 +11,15 @@ namespace MediathequeBackCSharp.Controllers;
 /// <remarks>
 /// Constructor of the LoadController class
 /// </remarks>
-/// <param name="context">Given database context</param>
-/// <param name="logger">Given Logger</param>
-/// <param name="mapper">Given AutoMapper</param>
-/// <param name="textsManager">Texts manager</param>
+/// <param name="manager">Manager dedicated to LoadController</param>
 [ApiController]
 [Route("/load")]
-public class LoadController(
-    MySQLDbContext context,
-    ILogger<LoadController> logger,
-    IMapper mapper,
-    ResourceManager textsManager
-    ) : ControllerBase
+public class LoadController(LoadManager manager) : ControllerBase
 {
     /// <summary>
-    /// Context for connecting to the database
+    /// Prepares the requests for the LoadController
     /// </summary>
-    protected readonly MySQLDbContext _context = context;
-
-    /// <summary>
-    /// Logger for the LoadController
-    /// </summary>
-    protected readonly ILogger<LoadController> _logger = logger;
-
-    /// <summary>
-    /// Mapper for the LoadController
-    /// </summary>
-    protected readonly IMapper _mapper = mapper;
-
-    /// <summary>
-    /// Gives access to the texts of the app
-    /// </summary>
-    protected readonly ResourceManager _textsManager = textsManager;
+    protected readonly LoadManager _manager = manager;
 
     /// <summary>
     /// Get the data used for initializing the front-end application :
@@ -61,41 +30,15 @@ public class LoadController(
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        Task<List<NamedDTO>> ProjectDbINamedList(IOrderedQueryable<INamed> list)
+        ErrorObject? propertiesError;
+        if ((propertiesError = _manager.CheckProperties()) != null)
         {
-            return list.ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
-                       .ToListAsync();
-        }
-
-        if (_textsManager == null)
-        {
-            return new ErrorObject(
-                HttpStatusCode.InternalServerError,
-                Constants.ERROR_TEXTS_RESOURCES_READING
-            );
-        }
-
-        if (!_context.IsDatabaseAvailable())
-        {
-            var errorMessage = _textsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty;
-
-            return new ErrorObject(
-                HttpStatusCode.InternalServerError,
-                errorMessage
-            );
+            return propertiesError;
         }
 
         try
         {
-            var results = new LoadDTO
-            {
-                Genres = await ProjectDbINamedList(_context.Genres.OrderBy(g => g.Name)),
-                Publishers = await _context.Publishers.OrderBy(p => p.PublishingHouse)
-                                                      .ProjectTo<NamedDTO>(_mapper.ConfigurationProvider)
-                                                      .ToListAsync(),
-                Formats = await ProjectDbINamedList(_context.Formats.OrderBy(f => f.Name))
-            };
-
+            var results = await _manager.Get();
             return Ok(results);
         }
         catch (Exception ex)

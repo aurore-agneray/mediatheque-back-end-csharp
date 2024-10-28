@@ -3,8 +3,7 @@ using Infrastructure.MySQL;
 using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Configuration;
 using MediathequeBackCSharp.Middlewares;
-using System.Reflection;
-using System.Resources;
+using MediathequeBackCSharp.Texts;
 
 var routePrefix = "/api";
 
@@ -15,9 +14,7 @@ string? assemblyVersion = AssemblyInfo.GetVersionNumber();
 var builder = WebApplication.CreateBuilder(args);
 
 // Injects texts resources
-builder.Services.AddScoped(provider =>
-    new ResourceManager(@"MediathequeBackCSharp.Texts.FrTexts", Assembly.GetExecutingAssembly())
-);
+builder.Services.AddSingleton(provider => TextsManager.Instance);
 
 // Store the TextManager into a variable that can be injected into StartUp static methods
 //var serviceProvider = builder.Services.BuildServiceProvider();
