@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore.Tests", "Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.BnfApi.Tests", "Infrastructure.BnfApi.Tests\Infrastructure.BnfApi.Tests.csproj", "{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediathequeBackCSharp.Tests", "MediathequeBackCSharp.Tests\MediathequeBackCSharp.Tests.csproj", "{EFF7B7B8-B9BE-46E3-AD50-29C4CD5E6EAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,13 +47,17 @@ Global
 		{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEA00B7A-DD52-42B6-8BB5-AA4305CE5EBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFF7B7B8-B9BE-46E3-AD50-29C4CD5E6EAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFF7B7B8-B9BE-46E3-AD50-29C4CD5E6EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFF7B7B8-B9BE-46E3-AD50-29C4CD5E6EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFF7B7B8-B9BE-46E3-AD50-29C4CD5E6EAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {31745A20-0FD9-4334-B685-CE95238C0ED7}
-		RESX_NeutralResourcesLanguage = fr-FR
 		RESX_SaveFilesImmediatelyUponChange = False
+		RESX_NeutralResourcesLanguage = fr-FR
+		SolutionGuid = {31745A20-0FD9-4334-B685-CE95238C0ED7}
 	EndGlobalSection
 EndGlobal
