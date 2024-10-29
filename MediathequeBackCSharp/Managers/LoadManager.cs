@@ -72,7 +72,7 @@ public class LoadManager(MySQLLoadRepository repo, ILogger<LoadController> logge
             );
         }
 
-        return null;
+        return null!;
     }
 
     /// <summary>

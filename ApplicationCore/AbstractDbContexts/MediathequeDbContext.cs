@@ -34,17 +34,17 @@ public abstract class MediathequeDbContext<T>(DbContextOptions settings) : DbCon
     /// <summary>
     /// List of Formats from the database
     /// </summary>
-    public DbSet<Format> Formats { get; set; }
+    public virtual DbSet<Format> Formats { get; set; }
 
     /// <summary>
     /// List of Genres from the database
     /// </summary>
-    public DbSet<Genre> Genres { get; set; }
+    public virtual DbSet<Genre> Genres { get; set; }
 
     /// <summary>
     /// List of Publishers from the database
     /// </summary>
-    public DbSet<Publisher> Publishers { get; set; }
+    public virtual DbSet<Publisher> Publishers { get; set; }
 
     /// <summary>
     /// List of Series from the database
