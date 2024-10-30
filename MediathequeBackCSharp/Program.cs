@@ -1,5 +1,4 @@
 using ApplicationCore.AutoMapper;
-using Infrastructure.MySQL;
 using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Configuration;
 using MediathequeBackCSharp.Middlewares;
@@ -39,11 +38,12 @@ StartUpDI.InjectManagers(builder);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(assemblyVersion, routePrefix));
 
-// Retrieves the configuration settings entered into Infrastructure.MySQL project
-var mySQLSettings = new MySQLDatabaseSettings();
-
-// Configures CORS policy
-builder.Services.AddCors(StartUpOptions.GetCorsOptions(mySQLSettings));
+// Configures CORS policy for the API
+builder.Services.AddCors(
+    StartUpOptions.GetCorsOptions(
+        builder.Configuration.GetValue<string>("FrontEndDomains")!
+    )
+);
 
 // Configures AutoMapper used for converting my POCOs into DTOs
 builder.Services.AddAutoMapper(cfg =>

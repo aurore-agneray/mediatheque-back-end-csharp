@@ -9,10 +9,7 @@ namespace Infrastructure.MySQL;
 /// <remarks>
 /// Constructor for the MySQLDbContext
 /// </remarks>
-/// <param name="settings">
-/// Contains the settings used for connecting to the database
-/// </param>
-public class MySQLDbContext(DbContextOptions settings) : MediathequeDbContext<MySQLDatabaseSettings>(settings)
+public class MySQLDbContext(DbContextOptions settings) : MediathequeDbContext(settings)
 {
     /// <summary>
     /// Indicates if the database is available or not

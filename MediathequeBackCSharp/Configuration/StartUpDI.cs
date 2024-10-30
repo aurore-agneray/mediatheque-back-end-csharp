@@ -31,16 +31,16 @@ public static class StartUpDI
         // Add the connection to the MySQL database
         builder.Services.AddDbContext<MySQLDbContext>(optionsBuilder =>
         {
-            MySQLDatabaseSettings dbSettings = new();
+            string connectionString = builder.Configuration.GetValue<string>("MySQLConnectionString")!;
 
-            if (string.IsNullOrEmpty(dbSettings.DbConnectionString))
+            if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentException(InternalErrorTexts.ERROR_MISSING_CONNEXION_STRING);
             }
 
             optionsBuilder.UseMySql(
-                dbSettings.DbConnectionString,
-                ServerVersion.AutoDetect(dbSettings.DbConnectionString)
+                connectionString,
+                ServerVersion.AutoDetect(connectionString)
             );
         });
     }

@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Interfaces.Databases;
-using MediathequeBackCSharp.Configuration.Swagger;
+﻿using MediathequeBackCSharp.Configuration.Swagger;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -30,22 +29,17 @@ public static class StartUpOptions
     /// Generates the general options for the Cors service
     /// (for instance the accepted front domains)
     /// </summary>
-    /// <param name="settings">Settings given for the concerned database</param>
+    /// <param name="frontEndDomains">Allowed front-end domains for calling the API,
+    /// separated by ;</param>
     /// <returns>An Action object</returns>
-    public static Action<CorsOptions> GetCorsOptions(IDatabaseSettings settings)
+    public static Action<CorsOptions> GetCorsOptions(string frontEndDomains)
     {
-        if (settings == null)
+        if (string.IsNullOrEmpty(frontEndDomains))
         {
-            return options => { };
+            throw new ArgumentException("Some settings are missing for configuring CORS policy");
         }
 
-        var frontDomainsStr = settings?.FrontEndDomains;
-        string[] frontDomains = [];
-
-        if (!string.IsNullOrEmpty(frontDomainsStr))
-        {
-            frontDomains = frontDomainsStr.Split(';');
-        }
+        string[] frontDomains = frontEndDomains.Split(';');
 
         return options =>
         {

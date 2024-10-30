@@ -10,11 +10,7 @@ namespace ApplicationCore.AbstractDbContexts;
 /// <remarks>
 /// Constructor for the MediathequeDbContext
 /// </remarks>
-/// <param name="settings">
-/// Contains the settings used for connecting to the database
-/// </param>
-public abstract class MediathequeDbContext<T>(DbContextOptions settings) : DbContext(settings), IMediathequeDbContextFields
-    where T : class, IDatabaseSettings
+public abstract class MediathequeDbContext(DbContextOptions settings) : DbContext(settings), IMediathequeDbContextFields
 {
     /// <summary>
     /// List of Authors from the database
