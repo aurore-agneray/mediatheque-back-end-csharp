@@ -1,4 +1,5 @@
 ﻿using MediathequeBackCSharp.Configuration.Swagger;
+using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -36,7 +37,7 @@ public static class StartUpOptions
     {
         if (string.IsNullOrEmpty(frontEndDomains))
         {
-            throw new ArgumentException("Some settings are missing for configuring CORS policy");
+            throw new ArgumentException(InternalErrorTexts.ERROR_MISSING_CORS_POLICY_DOMAINS);
         }
 
         string[] frontDomains = frontEndDomains.Split(';');

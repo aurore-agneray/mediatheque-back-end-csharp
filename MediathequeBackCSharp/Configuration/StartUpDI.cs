@@ -35,7 +35,12 @@ public static class StartUpDI
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new ArgumentException(InternalErrorTexts.ERROR_MISSING_CONNEXION_STRING);
+                throw new ArgumentException(
+                    string.Format(
+                        InternalErrorTexts.ERROR_MISSING_CONNEXION_STRING,
+                        "MySQL"
+                    )
+                );
             }
 
             optionsBuilder.UseMySql(
