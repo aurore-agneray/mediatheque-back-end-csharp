@@ -19,17 +19,17 @@ public abstract class MediathequeDbContext<T>(DbContextOptions settings) : DbCon
     /// <summary>
     /// List of Authors from the database
     /// </summary>
-    public DbSet<Author> Authors { get; set; }
+    public virtual DbSet<Author> Authors { get; set; }
 
     /// <summary>
     /// List of Books from the database
     /// </summary>
-    public DbSet<Book> Books { get; set; }
+    public virtual DbSet<Book> Books { get; set; }
 
     /// <summary>
     /// List of Editions from the database
     /// </summary>
-    public DbSet<Edition> Editions { get; set; }
+    public virtual DbSet<Edition> Editions { get; set; }
 
     /// <summary>
     /// List of Formats from the database
@@ -49,7 +49,7 @@ public abstract class MediathequeDbContext<T>(DbContextOptions settings) : DbCon
     /// <summary>
     /// List of Series from the database
     /// </summary>
-    public DbSet<Series> Series { get; set; }
+    public virtual DbSet<Series> Series { get; set; }
 
     /// <summary>
     /// Indicates if the database is available or not
