@@ -1,6 +1,5 @@
-using ApplicationCore.Interfaces.Databases;
 using AutoMapper;
-using Infrastructure.MySQL.ComplexRequests;
+using Infrastructure.MySQL.Repositories;
 using MediathequeBackCSharp.Services.Abstracts;
 using System.Resources;
 

@@ -1,9 +1,8 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
 using ApplicationCore.Pocos;
-using Infrastructure.MySQL.Repositories;
 using LinqKit;
 
-namespace Infrastructure.MySQL.ComplexRequests;
+namespace Infrastructure.MySQL.Repositories;
 
 /// <summary>
 /// Requests used for the MySQL advanced search

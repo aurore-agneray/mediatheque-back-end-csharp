@@ -1,9 +1,8 @@
-﻿using ApplicationCore.AutoMapper;
-using ApplicationCore.Dtos;
-using AutoMapper;
+﻿using ApplicationCore.Dtos;
 using Infrastructure.MySQL.Repositories;
 using MediathequeBackCSharp.Managers;
 using MediathequeBackCSharp.Tests.DataSets;
+using MediathequeBackCSharp.Tests.DependencyObjects;
 using MediathequeBackCSharp.Tests.Mocks;
 using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.Http;
@@ -15,13 +14,6 @@ namespace MediathequeBackCSharp.Tests.Controllers;
 [TestClass]
 public class LoadController
 {
-    private static Mapper GetMapper()
-    {
-        var mappingProfile = new AutoMapperProfile();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(mappingProfile));
-        return new Mapper(configuration);
-    }
-
     /// <summary>
     /// Should return a LoadDTO objects with 3 lists : genres, publishers and formats
     /// </summary>
@@ -31,7 +23,7 @@ public class LoadController
         var dbContextMock = MySQLDbContextMock.GetMockForTestingLoadController();
         var repository = new MySQLLoadRepository(dbContextMock.Object);
         var logger = new Logger<MediathequeBackCSharp.Controllers.LoadController>(LoggerFactory.Create(builder => { }));
-        var mapper = GetMapper();
+        var mapper = TestMapper.GetMapper();
         var textsManager = TextsManager.Instance;
         var loadManager = new LoadManager(repository, logger, mapper, textsManager);
         var loadController = new MediathequeBackCSharp.Controllers.LoadController(loadManager);

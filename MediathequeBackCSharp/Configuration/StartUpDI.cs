@@ -2,7 +2,6 @@
 using ApplicationCore.Pocos;
 using Infrastructure.BnfApi.Repositories;
 using Infrastructure.MySQL;
-using Infrastructure.MySQL.ComplexRequests;
 using Infrastructure.MySQL.Repositories;
 using MediathequeBackCSharp.Managers;
 using MediathequeBackCSharp.Managers.SearchManagers;
