@@ -4,6 +4,7 @@ using ApplicationCore.Interfaces;
 using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Net;
 
 namespace MediathequeBackCSharp.Controllers.SearchControllers;
@@ -18,6 +19,7 @@ namespace MediathequeBackCSharp.Controllers.SearchControllers;
 /// <param name="manager">Given SimpleSearchManager with data process methods</param>
 [ApiController]
 [Route("/search")]
+[EnableRateLimiting("fixedLimiter")]
 public abstract class SearchController(ILogger<SearchController> logger, ISearchManager<IAllSearchServices> manager) : ControllerBase
 {
     /// <summary>

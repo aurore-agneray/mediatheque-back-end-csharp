@@ -1,6 +1,7 @@
 ﻿using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Managers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Net;
 
 namespace MediathequeBackCSharp.Controllers;
@@ -14,6 +15,7 @@ namespace MediathequeBackCSharp.Controllers;
 /// <param name="manager">Manager dedicated to LoadController</param>
 [ApiController]
 [Route("/load")]
+[EnableRateLimiting("fixedLimiter")]
 public class LoadController(LoadManager manager) : ControllerBase
 {
     /// <summary>
