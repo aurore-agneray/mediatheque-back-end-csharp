@@ -15,7 +15,7 @@ namespace MediathequeBackCSharp.Controllers;
 /// <param name="manager">Manager dedicated to LoadController</param>
 [ApiController]
 [Route("/load")]
-[EnableRateLimiting("fixedLimiter")]
+[EnableRateLimiting("SecondPolicy")]
 public class LoadController(LoadManager manager) : ControllerBase
 {
     /// <summary>

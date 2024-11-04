@@ -19,7 +19,7 @@ namespace MediathequeBackCSharp.Controllers.SearchControllers;
 /// <param name="manager">Given SimpleSearchManager with data process methods</param>
 [ApiController]
 [Route("/search")]
-[EnableRateLimiting("fixedLimiter")]
+[EnableRateLimiting("SecondPolicy")]
 public abstract class SearchController(ILogger<SearchController> logger, ISearchManager<IAllSearchServices> manager) : ControllerBase
 {
     /// <summary>
