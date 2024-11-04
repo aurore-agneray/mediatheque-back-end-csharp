@@ -1,9 +1,9 @@
 using ApplicationCore.AutoMapper;
 using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Configuration;
+using MediathequeBackCSharp.Configuration.RateLimiter;
 using MediathequeBackCSharp.Middlewares;
 using MediathequeBackCSharp.Texts;
-using Microsoft.AspNetCore.RateLimiting;
 
 var routePrefix = "/api";
 
@@ -47,31 +47,7 @@ builder.Services.AddCors(
 );
 
 // Configures API calls limits
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter("fixedLimiter", opt =>
-    {
-        opt.PermitLimit = 10;
-        opt.Window = TimeSpan.FromSeconds(30);
-        opt.QueueLimit = 0;
-    });
-
-    options.OnRejected = async (context, cancellationToken) =>
-    {
-        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-
-        // This option is mandatory if we want the response to return an object instead of a string !
-        context.HttpContext.Response.ContentType = "application/json";
-
-        var message = "veuillez attendre 30 secondes avant de lancer une nouvelle recherche";
-        var response = new { Message = message };
-
-        await context.HttpContext.Response.WriteAsJsonAsync(
-            response,
-            cancellationToken
-        );
-    };
-});
+builder.Services.AddRateLimiter(MyRateLimiterOptions.GetOptions(builder));
 
 // Configures AutoMapper used for converting my POCOs into DTOs
 builder.Services.AddAutoMapper(cfg =>
