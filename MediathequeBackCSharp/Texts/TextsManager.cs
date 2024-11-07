@@ -1,48 +1,34 @@
 ﻿using System.Reflection;
 using System.Resources;
+using ApplicationCore.Interfaces;
 
 namespace MediathequeBackCSharp.Texts;
 
 /// <summary>
 /// Defines a singleton used for reading the string content into the texts resources file
 /// </summary>
-public sealed class TextsManager
+public class TextsManager : ITextsManager
 {
     /// <summary>
-    /// Unique instance of the TextsManager
+    /// Contains the texts resources
     /// </summary>
-    private static ResourceManager _instance = null!;
+    private ResourceManager _resources = null!;
 
     /// <summary>
-    /// A necessary locker for multi-threading contexts
+    /// Main constructor
     /// </summary>
-    private static readonly object _padlock = new();
-
-    /// <summary>
-    /// Main constructor which is private in order to forbidden the creation of an instance
-    /// </summary>
-    private TextsManager() {}
-
-    /// <summary>
-    /// Permits to return the instance
-    /// </summary>
-    public static ResourceManager Instance {
-        get
-        {
-            lock (_padlock)
-            {
-                if (_instance == null)
-                {
-                    CreateInstance();
-                }
-
-                return _instance!;
-            }
-        }
+    public TextsManager()
+    {
+        _resources = new ResourceManager(@"MediathequeBackCSharp.Texts.FrTexts", Assembly.GetExecutingAssembly());
     }
 
-    private static void CreateInstance()
+    /// <summary>
+    /// Get a specific text from the texts resources
+    /// </summary>
+    /// <param name="key">Key name of the wanted text</param>
+    /// <returns>A string value</returns>
+    public string GetText(string key)
     {
-        _instance = new ResourceManager(@"MediathequeBackCSharp.Texts.FrTexts", Assembly.GetExecutingAssembly());
+        return _resources.GetString(key) ?? string.Empty;
     }
 }

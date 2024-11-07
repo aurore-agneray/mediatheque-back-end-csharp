@@ -8,7 +8,6 @@ using Infrastructure.BnfApi.POCOs;
 using LinqKit;
 using MediathequeBackCSharp.Generators;
 using MediathequeBackCSharp.Texts;
-using System.Resources;
 using System.Text;
 using System.Xml.Linq;
 
@@ -46,7 +45,7 @@ public abstract class BnfApiSearchService : SearchService
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     /// <param name="xmlRepo">Repository for collecting data from XML content</param>
-    protected BnfApiSearchService(IMapper mapper, ResourceManager textsManager, IXMLRepository xmlRepo)
+    protected BnfApiSearchService(IMapper mapper, ITextsManager textsManager, IXMLRepository xmlRepo)
         : base(mapper, textsManager)
     {
         _xmlRepository = xmlRepo;
@@ -216,7 +215,7 @@ public abstract class BnfApiSearchService : SearchService
         if (!BnfGlobalConsts.ALLOWED_NOTICES_NUMBERS.Contains(searchCriteria.BnfNoticesQuantity))
         {
             throw new Exception(
-                TextsManager.GetString(TextsKeys.ERROR_BNF_NOTICES_NUMBER) ?? string.Empty
+                TextsManager.GetText(TextsKeys.ERROR_BNF_NOTICES_NUMBER)
             );
         }
 

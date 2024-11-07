@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.DTOs.SearchDTOs;
+using ApplicationCore.Interfaces;
 using ApplicationCore.StaticManagers;
 using AutoMapper;
-using System.Resources;
 
 namespace ApplicationCore.AbstractServices;
 
@@ -13,7 +13,7 @@ namespace ApplicationCore.AbstractServices;
 /// </remarks>
 /// <param name="mapper">Given AutoMapper</param>
 /// <param name="textsManager">Texts manager</param>
-public abstract class SearchService(IMapper mapper, ResourceManager textsManager)
+public abstract class SearchService(IMapper mapper, ITextsManager textsManager)
 {
     /// <summary>
     /// Transforms the POCOs into DTOs
@@ -23,7 +23,7 @@ public abstract class SearchService(IMapper mapper, ResourceManager textsManager
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    protected ResourceManager TextsManager { get; private set; } = textsManager;
+    protected ITextsManager TextsManager { get; private set; } = textsManager;
 
     /// <summary>
     /// Extracts the books and their editions from the concerned repository
@@ -46,7 +46,7 @@ public abstract class SearchService(IMapper mapper, ResourceManager textsManager
             return defaultSearchType;
         }
 
-        var name = TextsManager.GetString(resourceKey);
+        var name = TextsManager.GetText(resourceKey);
 
         return !string.IsNullOrEmpty(name) ? name : defaultSearchType;
     }

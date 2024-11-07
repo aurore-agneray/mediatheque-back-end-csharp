@@ -1,4 +1,5 @@
 using ApplicationCore.AutoMapper;
+using ApplicationCore.Interfaces;
 using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Configuration;
 using MediathequeBackCSharp.Configuration.RateLimiter;
@@ -14,7 +15,7 @@ string? assemblyVersion = AssemblyInfo.GetVersionNumber();
 var builder = WebApplication.CreateBuilder(args);
 
 // Injects texts resources
-builder.Services.AddSingleton(provider => TextsManager.Instance);
+builder.Services.AddSingleton<ITextsManager, TextsManager>();
 
 // Store the TextManager into a variable that can be injected into StartUp static methods
 //var serviceProvider = builder.Services.BuildServiceProvider();

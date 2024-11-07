@@ -1,4 +1,5 @@
-﻿using MediathequeBackCSharp.Texts;
+﻿using ApplicationCore.Interfaces;
+using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net;
 using System.Threading.RateLimiting;
@@ -135,8 +136,14 @@ internal static class MyRateLimiterOptions
     /// <param name="appBuilder">The app builder which permits to read the appsettings file</param>
     internal static Action<RateLimiterOptions> GetOptions(WebApplicationBuilder appBuilder)
     {
-        var textManager = TextsManager.Instance;
-        string rejectionMessage = textManager.GetString(TextsKeys.ERROR_RATE_LIMIT_REACHED) ?? string.Empty;
+        var serviceProvider = appBuilder.Services.BuildServiceProvider();
+        ITextsManager? textsManager = serviceProvider.GetService<ITextsManager>();
+
+        if (textsManager == null) {
+            throw new Exception(InternalErrorTexts.ERROR_TEXT_MANAGER_RETRIEVAL);
+        }
+
+        string rejectionMessage = textsManager.GetText(TextsKeys.ERROR_RATE_LIMIT_REACHED);
 
         return options =>
         {

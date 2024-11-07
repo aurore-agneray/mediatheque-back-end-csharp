@@ -1,11 +1,11 @@
 ﻿using ApplicationCore.AbstractServices;
 using ApplicationCore.DTOs.SearchDTOs;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Interfaces.Databases;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediathequeBackCSharp.Texts;
 using Microsoft.EntityFrameworkCore;
-using System.Resources;
 
 namespace MediathequeBackCSharp.Services.Abstracts;
 
@@ -25,7 +25,7 @@ public abstract class MySQLSearchService : SearchService
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
     /// <param name="sqlRepo">Repository for collecting data from SQL databases</param>
-    protected MySQLSearchService(IMapper mapper, ResourceManager textsManager, ISQLSearchRepository<IMediathequeDbContextFields> sqlRepo)
+    protected MySQLSearchService(IMapper mapper, ITextsManager textsManager, ISQLSearchRepository<IMediathequeDbContextFields> sqlRepo)
         : base(mapper, textsManager)
     {
         _sqlRepository = sqlRepo;
@@ -38,7 +38,7 @@ public abstract class MySQLSearchService : SearchService
 
         if (!_sqlRepository.IsDatabaseAvailable())
         {
-            throw new Exception(TextsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty);
+            throw new Exception(TextsManager.GetText(TextsKeys.ERROR_DATABASE_CONNECTION));
         }
     }
 

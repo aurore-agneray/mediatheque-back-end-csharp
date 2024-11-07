@@ -50,7 +50,7 @@ public abstract class SearchController(ILogger<SearchController> logger, ISearch
         {
             return new ErrorObject(
                 HttpStatusCode.InternalServerError, 
-                _manager.TextsManager.GetString(TextsKeys.ERROR_NO_IMPLEMENTED_SEARCH_TYPE) ?? string.Empty
+                _manager.TextsManager.GetText(TextsKeys.ERROR_NO_IMPLEMENTED_SEARCH_TYPE)
             );
         }
 
