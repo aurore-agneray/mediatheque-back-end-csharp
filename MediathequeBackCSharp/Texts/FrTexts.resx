@@ -135,4 +135,7 @@
   <data name="ERROR_NO_IMPLEMENTED_SEARCH_TYPE" xml:space="preserve">
     <value>Type de recherche non implémenté</value>
   </data>
+  <data name="ERROR_RATE_LIMIT_REACHED" xml:space="preserve">
+    <value>trop de recherches ont été lancées par les utilisateurs, veuillez patienter 60 secondes avant d'en lancer une nouvelle</value>
+  </data>
 </root>

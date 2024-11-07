@@ -26,6 +26,11 @@ public class InternalErrorTexts
     public const string ERROR_MISSING_CORS_POLICY_DOMAINS = "Some settings are missing for configuring CORS policy";
 
     /// <summary>
+    /// Used into MyRateLimiterOptions for reporting the missing rate limiter config into appsettings
+    /// </summary>
+    public const string ERROR_MISSING_RATE_LIMITER_CONFIG = "options used for defining the global policy limiter are missing !";
+
+    /// <summary>
     /// Used into the Search Manager while retrieving the TextManager from DI
     /// </summary>
     public const string ERROR_TEXT_MANAGER_RETRIEVAL = "Les textes de l'application ne s'afficheront peut-être pas correctement";
