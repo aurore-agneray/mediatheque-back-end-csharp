@@ -38,14 +38,7 @@ internal static class MyRateLimiterOptions
 
         var options = appBuilder.GetAppSettingsNode<TokenBucketPolicyOptions>(configurationPath);
 
-        if (options != null)
-        {
-            return options;
-        }
-        else
-        {
-            throw new Exception(InternalErrorTexts.ERROR_MISSING_RATE_LIMITER_CONFIG);
-        }
+        return options ?? throw new Exception(InternalErrorTexts.ERROR_MISSING_RATE_LIMITER_CONFIG);
     }
 
     /// <summary>
