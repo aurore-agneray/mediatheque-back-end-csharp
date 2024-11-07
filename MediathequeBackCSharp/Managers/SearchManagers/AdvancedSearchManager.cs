@@ -1,8 +1,8 @@
 using ApplicationCore.AbstractServices;
 using ApplicationCore.Enums;
+using ApplicationCore.Interfaces;
 using AutoMapper;
 using MediathequeBackCSharp.Services.Aggregates;
-using System.Resources;
 
 namespace MediathequeBackCSharp.Managers.SearchManagers;
 
@@ -15,7 +15,7 @@ namespace MediathequeBackCSharp.Managers.SearchManagers;
 /// <param name="services">An object with all available search services</param>
 /// <param name="mapper">Given AutoMapper</param>
 /// <param name="textsManager">Texts manager</param>
-public class AdvancedSearchManager(AllAdvancedSearchServices services, IMapper mapper, ResourceManager textsManager) : SearchManager<AllAdvancedSearchServices>(services, mapper, textsManager)
+public class AdvancedSearchManager(AllAdvancedSearchServices services, IMapper mapper, ITextsManager textsManager) : SearchManager<AllAdvancedSearchServices>(services, mapper, textsManager)
 {
     /// <summary>
     /// Gets the ADVANCED search service needed for the given type of search

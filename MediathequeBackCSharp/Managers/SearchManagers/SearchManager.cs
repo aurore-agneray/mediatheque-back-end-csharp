@@ -4,7 +4,6 @@ using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using AutoMapper;
 using MediathequeBackCSharp.Texts;
-using System.Resources;
 
 namespace MediathequeBackCSharp.Managers.SearchManagers;
 
@@ -32,7 +31,7 @@ public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAll
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    public ResourceManager TextsManager { get; init; }
+    public ITextsManager TextsManager { get; init; }
 
 #pragma warning disable IDE0290
     /// <summary>
@@ -41,7 +40,7 @@ public abstract class SearchManager<T> : ISearchManager<T> where T : class, IAll
     /// <param name="services">An object with all available search services</param>
     /// <param name="mapper">Given AutoMapper</param>
     /// <param name="textsManager">Texts manager</param>
-    public SearchManager(T services, IMapper mapper, ResourceManager textsManager)
+    public SearchManager(T services, IMapper mapper, ITextsManager textsManager)
     {
         AllSearchServices = services;
         _mapper = mapper;

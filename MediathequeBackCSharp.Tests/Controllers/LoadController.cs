@@ -24,7 +24,7 @@ public class LoadController
         var repository = new MySQLLoadRepository(dbContextMock.Object);
         var logger = new Logger<MediathequeBackCSharp.Controllers.LoadController>(LoggerFactory.Create(builder => { }));
         var mapper = TestMapper.GetMapper();
-        var textsManager = TextsManager.Instance;
+        var textsManager = new TextsManager();
         var loadManager = new LoadManager(repository, logger, mapper, textsManager);
         var loadController = new MediathequeBackCSharp.Controllers.LoadController(loadManager);
         var expectedDtos = LoadDataSets.GetFinalOrderedDataSet();

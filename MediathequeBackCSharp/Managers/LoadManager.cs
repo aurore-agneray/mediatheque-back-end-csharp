@@ -1,5 +1,6 @@
 ﻿using ApplicationCore;
 using ApplicationCore.Dtos;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Interfaces.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -9,7 +10,6 @@ using MediathequeBackCSharp.Controllers;
 using MediathequeBackCSharp.Texts;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
-using System.Resources;
 
 namespace MediathequeBackCSharp.Managers;
 
@@ -20,7 +20,7 @@ namespace MediathequeBackCSharp.Managers;
 /// <param name="logger">Given Logger</param>
 /// <param name="mapper">AutoMapper</param>
 /// <param name="textsManager">Texts manager</param>
-public class LoadManager(MySQLLoadRepository repo, ILogger<LoadController> logger, IMapper mapper, ResourceManager textsManager)
+public class LoadManager(MySQLLoadRepository repo, ILogger<LoadController> logger, IMapper mapper, ITextsManager textsManager)
 {
     /// <summary>
     /// Repository for querying the database
@@ -40,7 +40,7 @@ public class LoadManager(MySQLLoadRepository repo, ILogger<LoadController> logge
     /// <summary>
     /// Gives access to the texts of the app
     /// </summary>
-    public readonly ResourceManager _textsManager = textsManager;
+    public readonly ITextsManager _textsManager = textsManager;
 
     private Task<List<NamedDTO>> ProjectDbINamedList(IOrderedQueryable<INamed> list)
     {
@@ -64,7 +64,7 @@ public class LoadManager(MySQLLoadRepository repo, ILogger<LoadController> logge
 
         if (!_repository.IsDatabaseAvailable())
         {
-            var errorMessage = _textsManager.GetString(TextsKeys.ERROR_DATABASE_CONNECTION) ?? string.Empty;
+            var errorMessage = _textsManager.GetText(TextsKeys.ERROR_DATABASE_CONNECTION);
 
             return new ErrorObject(
                 HttpStatusCode.InternalServerError,

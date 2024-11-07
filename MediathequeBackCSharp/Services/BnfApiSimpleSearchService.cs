@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+﻿using ApplicationCore.Interfaces;
+using AutoMapper;
 using Infrastructure.BnfApi.Repositories;
 using MediathequeBackCSharp.Services.Abstracts;
-using System.Resources;
 
 namespace MediathequeBackCSharp.Services;
 
@@ -14,7 +14,7 @@ namespace MediathequeBackCSharp.Services;
 /// <param name="mapper">Given AutoMapper</param>
 /// <param name="textsManager">Texts manager</param>
 /// <param name="repo">Repository for collecting data</param>
-public class BnfApiSimpleSearchService(IMapper mapper, ResourceManager textsManager, BnfApiSimpleSearchRepository repo) 
+public class BnfApiSimpleSearchService(IMapper mapper, ITextsManager textsManager, BnfApiSimpleSearchRepository repo) 
     : BnfApiSearchService(mapper, textsManager, repo)
 {
 }
