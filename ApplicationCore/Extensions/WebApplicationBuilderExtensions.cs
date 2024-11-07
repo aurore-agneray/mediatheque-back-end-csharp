@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ApplicationCore.Extensions;
 
@@ -33,5 +34,19 @@ public static class WebApplicationBuilderExtensions
         where T : class
     {
         return appBuilder.Configuration.GetSection(path).Get<T>();
+    }
+
+    /// <summary>
+    /// Retrieves a specific service that has been injected 
+    /// within the application's build
+    /// </summary>
+    /// <typeparam name="T">Type of the service</typeparam>
+    /// <param name="appBuilder">Web application builder</param>
+    /// <returns>An object that represents the wanted service, or null</returns>
+    public static T? GetService<T>(this WebApplicationBuilder appBuilder)
+        where T : class
+    {
+        var serviceProvider = appBuilder.Services.BuildServiceProvider();
+        return serviceProvider.GetService<T>();
     }
 }

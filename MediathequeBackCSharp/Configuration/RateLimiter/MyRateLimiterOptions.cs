@@ -124,12 +124,8 @@ internal static class MyRateLimiterOptions
     /// <param name="appBuilder">The app builder which permits to read the appsettings file</param>
     internal static Action<RateLimiterOptions> GetOptions(WebApplicationBuilder appBuilder)
     {
-        var serviceProvider = appBuilder.Services.BuildServiceProvider();
-        ITextsManager? textsManager = serviceProvider.GetService<ITextsManager>();
-
-        if (textsManager == null) {
-            throw new Exception(InternalErrorTexts.ERROR_TEXT_MANAGER_RETRIEVAL);
-        }
+        ITextsManager? textsManager = appBuilder.GetService<ITextsManager>() 
+                                      ?? throw new Exception(InternalErrorTexts.ERROR_TEXT_MANAGER_RETRIEVAL);
 
         string rejectionMessage = textsManager.GetText(TextsKeys.ERROR_RATE_LIMIT_REACHED);
 
