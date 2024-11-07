@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Interfaces.Databases;
+﻿using ApplicationCore.Extensions;
+using ApplicationCore.Interfaces.Databases;
 using ApplicationCore.Pocos;
 using Infrastructure.BnfApi.Repositories;
 using Infrastructure.MySQL;
@@ -31,7 +32,7 @@ public static class StartUpDI
         // Add the connection to the MySQL database
         builder.Services.AddDbContext<MySQLDbContext>(optionsBuilder =>
         {
-            string connectionString = builder.Configuration.GetValue<string>("MySQLConnectionString")!;
+            string connectionString = builder.GetAppSettingsValue("MySQLConnectionString")!;
 
             if (string.IsNullOrEmpty(connectionString))
             {

@@ -1,4 +1,5 @@
 using ApplicationCore.AutoMapper;
+using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using MediathequeBackCSharp.Classes;
 using MediathequeBackCSharp.Configuration;
@@ -43,7 +44,7 @@ builder.Services.AddSwaggerGen(StartUpOptions.GetSwaggerGenOptions(assemblyVersi
 // Configures CORS policy for the API
 builder.Services.AddCors(
     StartUpOptions.GetCorsOptions(
-        builder.Configuration.GetValue<string>("FrontEndDomains")!
+        builder.GetAppSettingsValue("FrontEndDomains")!
     )
 );
 

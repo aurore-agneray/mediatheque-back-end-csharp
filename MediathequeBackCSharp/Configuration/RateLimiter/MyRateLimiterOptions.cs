@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Extensions;
+using ApplicationCore.Interfaces;
 using MediathequeBackCSharp.Texts;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net;
@@ -35,17 +36,11 @@ internal static class MyRateLimiterOptions
     {
         string configurationPath = $"{CONFIGURATION_RATE_LIMITER_SECTION}:{policyName}";
 
-        if (appBuilder.Configuration.GetSection(configurationPath) != null)
-        {
-            var options = appBuilder.Configuration.GetSection(configurationPath)
-                                                .Get<TokenBucketPolicyOptions>();
+        var options = appBuilder.GetAppSettingsNode<TokenBucketPolicyOptions>(configurationPath);
 
-            if (options != null) {
-                return options;
-            }
-            else {
-                throw new Exception(InternalErrorTexts.ERROR_MISSING_RATE_LIMITER_CONFIG);
-            }
+        if (options != null)
+        {
+            return options;
         }
         else
         {
