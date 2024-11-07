@@ -47,9 +47,12 @@ internal static class MyRateLimiterOptions
     /// Source : https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-8.0#rate-limiter-samples
     /// IS NOT APPLIED IN A LOCAL CONTEXT !!!!!
     /// </summary>
-    private static PartitionedRateLimiter<HttpContext> GetGlobalLimiter(WebApplicationBuilder appBuilder)
+    private static PartitionedRateLimiter<HttpContext> GetGlobalLimiter(WebApplicationBuilder appBuilder, out TokenBucketPolicyOptions globalOptions)
     {
-        var globalOptions = GetPolicyOptions(appBuilder, GLOBAL_POLICY_NAME);
+        globalOptions = GetPolicyOptions(appBuilder, GLOBAL_POLICY_NAME);
+        /* The options are stored into another value in order to be used into the lambda expression below.
+         * Without doing this, the code analyser displays an error because an "out" variable can't be used within a lambda exp */
+        var optionsForLambdaExp = globalOptions;
 
         return PartitionedRateLimiter.Create<HttpContext, IPAddress>(context =>
         {
@@ -62,11 +65,11 @@ internal static class MyRateLimiterOptions
                     remoteIpAddress!,
                     _ => new TokenBucketRateLimiterOptions
                     {
-                        TokenLimit = globalOptions.TokenLimit,
+                        TokenLimit = optionsForLambdaExp.TokenLimit,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        QueueLimit = globalOptions.QueueLimit,
-                        ReplenishmentPeriod = TimeSpan.FromSeconds(globalOptions.ReplenishmentPeriod),
-                        TokensPerPeriod = globalOptions.TokensPerPeriod,
+                        QueueLimit = optionsForLambdaExp.QueueLimit,
+                        ReplenishmentPeriod = TimeSpan.FromSeconds(optionsForLambdaExp.ReplenishmentPeriod),
+                        TokensPerPeriod = optionsForLambdaExp.TokensPerPeriod,
                         AutoReplenishment = true
                     }
                 );
@@ -80,17 +83,20 @@ internal static class MyRateLimiterOptions
     /// This global policy concerns ALL user as a whole !!
     /// The attribute [EnableRateLimiting] has to be added into the controllers
     /// </summary>
-    private static Action<TokenBucketRateLimiterOptions> GetSecondPolicyOptions(WebApplicationBuilder appBuilder)
+    private static Action<TokenBucketRateLimiterOptions> GetSecondPolicyOptionsAction(WebApplicationBuilder appBuilder, out TokenBucketPolicyOptions policyOptions)
     {
-        var policyOptions = GetPolicyOptions(appBuilder, SECOND_POLICY_NAME);
+        policyOptions = GetPolicyOptions(appBuilder, SECOND_POLICY_NAME);
+        /* The options are stored into another value in order to be used into the lambda expression below.
+         * Without doing this, the code analyser displays an error because an "out" variable can't be used within a lambda exp */
+        var optionsForLambdaExp = policyOptions;
 
         return opt =>
         {
-            opt.TokenLimit = policyOptions.TokenLimit;
+            opt.TokenLimit = optionsForLambdaExp.TokenLimit;
             opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-            opt.QueueLimit = policyOptions.QueueLimit;
-            opt.ReplenishmentPeriod = TimeSpan.FromSeconds(policyOptions.ReplenishmentPeriod);
-            opt.TokensPerPeriod = policyOptions.TokensPerPeriod;
+            opt.QueueLimit = optionsForLambdaExp.QueueLimit;
+            opt.ReplenishmentPeriod = TimeSpan.FromSeconds(optionsForLambdaExp.ReplenishmentPeriod);
+            opt.TokensPerPeriod = optionsForLambdaExp.TokensPerPeriod;
             opt.AutoReplenishment = true;
         };
     }
@@ -127,12 +133,21 @@ internal static class MyRateLimiterOptions
         ITextsManager? textsManager = appBuilder.GetService<ITextsManager>() 
                                       ?? throw new Exception(InternalErrorTexts.ERROR_TEXT_MANAGER_RETRIEVAL);
 
-        string rejectionMessage = textsManager.GetText(TextsKeys.ERROR_RATE_LIMIT_REACHED);
+        var globalLimiter = GetGlobalLimiter(appBuilder, out TokenBucketPolicyOptions globalLimiterOptions);
+        var secondLimiterOptionsAction = GetSecondPolicyOptionsAction(appBuilder, out TokenBucketPolicyOptions secondLimiterOptions);
+
+        // Defines the number of seconds the user must wait to initiate a new request if he reaches a threshold
+        int maxTimeForWaiting = Math.Max(globalLimiterOptions.ReplenishmentPeriod, secondLimiterOptions.ReplenishmentPeriod);
+
+        string rejectionMessage = string.Format(
+            textsManager.GetText(TextsKeys.ERROR_RATE_LIMIT_REACHED),
+            maxTimeForWaiting
+        );
 
         return options =>
         {
-            options.GlobalLimiter = GetGlobalLimiter(appBuilder);
-            options.AddTokenBucketLimiter(SECOND_POLICY_NAME, GetSecondPolicyOptions(appBuilder));
+            options.GlobalLimiter = globalLimiter;
+            options.AddTokenBucketLimiter(SECOND_POLICY_NAME, secondLimiterOptionsAction);
             options.OnRejected = GetOnRejected(rejectionMessage);
         };
     }
