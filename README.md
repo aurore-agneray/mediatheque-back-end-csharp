@@ -1,73 +1,73 @@
-# :books: :books: :books: API dédiée à rechercher des livres depuis plusieurs sources :books: :books: :books:
+# :books: :books: :books: API dÃ©diÃ©e Ã  rechercher des livres depuis plusieurs sources :books: :books: :books:
 
 ## 1 / Sources choisies 
 
 **Ce projet exploite actuellement deux sources** :
-- l'API de la bibliothèque nationale de France (BnF) : http://catalogue.bnf.fr/api
+- l'API de la bibliothÃ¨que nationale de France (BnF) : http://catalogue.bnf.fr/api
 - une base MySQL personnelle
 
-Il a été construit de sorte à pouvoir ajouter d'autres sources de données, par example une autre API ou une autre base de données (SQL Server par exemple).
+Il a Ã©tÃ© construit de sorte Ã  pouvoir ajouter d'autres sources de donnÃ©es, par example une autre API ou une autre base de donnÃ©es (SQL Server par exemple).
 
-Le choix a été fait de ne renvoyer que les entrées rattachées à un numéro ISBN.
+Le choix a Ã©tÃ© fait de ne renvoyer que les entrÃ©es rattachÃ©es Ã  un numÃ©ro ISBN.
 
-**A noter que l'API de la BnF n'est actuellement exploitée que pour la recherche de type "simple"** (cf section 2.3).
+**A noter que l'API de la BnF n'est actuellement exploitÃ©e que pour la recherche de type "simple"** (cf section 2.3).
 
 ## 2 / Aspects fonctionnels du projet
 
-### 2.1 / Définitions
+### 2.1 / DÃ©finitions
 
-Précisons quels sont les termes employés pour décrire les entités dans le cadre de ce projet :
+PrÃ©cisons quels sont les termes employÃ©s pour dÃ©crire les entitÃ©s dans le cadre de ce projetÂ :
 
->  **« Edition »** : entité bibliographique désignée par un ISBN unique. Une édition est caractérisée par une date de publication, un éditeur et s’inscrit dans une série. Il s’agit d’une « manifestation » au sens donné par l’IFLA dans son formalisme de description des entités liées à la bibliographie. 
+>  **Â« Edition Â»** : entitÃ© bibliographique dÃ©signÃ©e par un ISBN unique. Une Ã©dition est caractÃ©risÃ©e par une date de publication, un Ã©diteur et sâ€™inscrit dans une sÃ©rie. Il sâ€™agit dâ€™une Â« manifestation Â» au sens donnÃ© par lâ€™IFLA dans son formalisme de description des entitÃ©s liÃ©es Ã  la bibliographie. 
 
-> **« Editeur »** : personne morale qui fait publier une édition. Désignée uniquement par son nom dans le cadre du projet.
+> **Â« Editeur Â»** : personne morale qui fait publier une Ã©dition. DÃ©signÃ©e uniquement par son nom dans le cadre du projet.
 
-> **« Livre »** : la définition choisie dans le cadre du projet se rapproche de la notion « d’expression » décrite par l’IFLA. Ici, le livre sera décrit par son titre, son auteur et la série dans laquelle il s’insère. 
+> **Â« Livre Â»** : la dÃ©finition choisie dans le cadre du projet se rapproche de la notion Â« dâ€™expression Â» dÃ©crite par lâ€™IFLA. Ici, le livre sera dÃ©crit par son titre, son auteur et la sÃ©rie dans laquelle il sâ€™insÃ¨re. 
 
-> **« Auteur »** : personne physique qui a imaginé « l’oeuvre » (au sens de l’IFLA) et l’a réalisée sous forme « d’expression ». Est désignée par son nom. 
+> **Â« Auteur Â»** : personne physique qui a imaginÃ© Â« lâ€™oeuvre Â» (au sens de lâ€™IFLA) et lâ€™a rÃ©alisÃ©e sous forme Â« dâ€™expression Â». Est dÃ©signÃ©e par son nom. 
 
-> **« Série »** : ensemble de plusieurs « éditions » d’un même « éditeur » reconstituant une « expression », un « livre ».
+> **Â« SÃ©rie Â»** : ensemble de plusieurs Â« Ã©ditions Â» dâ€™un mÃªme Â« Ã©diteur Â» reconstituant une Â« expression Â», un Â« livre Â».
 
-### 2.2 / Données récupérées pour chaque livre
+### 2.2 / DonnÃ©es rÃ©cupÃ©rÃ©es pour chaque livre
 
-Plus concrètement, l’API renvoie pour chaque « livre » un objet contenant :
-- l’**ID du livre**
-- un **objet « Book »** contenant le titre et le nom de l’auteur du livre
-- un **tableau « Editions »** contenant toutes les éditions de ce livre. Les éditions sont regroupées selon le nom de leur série. Si aucun nom de série n’est trouvé, les éditions sont regroupées dans un tableau nommé « 0 ». Les éditions apportent diverses informations, dont l’ISBN, l’ark ID et le nom de l’éditeur.
+Plus concrÃ¨tement, lâ€™API renvoie pour chaque Â«Â livreÂ Â» un objet contenantÂ :
+- lâ€™**ID du livre**
+- un **objet Â«Â BookÂ Â»** contenant le titre et le nom de lâ€™auteur du livre
+- un **tableau Â«Â EditionsÂ Â»** contenant toutes les Ã©ditions de ce livre. Les Ã©ditions sont regroupÃ©es selon le nom de leur sÃ©rie. Si aucun nom de sÃ©rie nâ€™est trouvÃ©, les Ã©ditions sont regroupÃ©es dans un tableau nommÃ© Â«Â 0Â Â». Les Ã©ditions apportent diverses informations, dont lâ€™ISBN, lâ€™ark ID et le nom de lâ€™Ã©diteur.
 
 ### 2.3 / Deux types de recherche
 
-- La recherche **"simple"** : signifie que l’utilisateur n’a qu’un seul critère à saisir lors de sa recherche. Ce critère est alors recherché au sein de plusieurs caractéristiques des livres : **le titre, le nom de l’auteur, l’ISBN et le nom de la série**. Un seul critère de type `string` est demandé.
+- La recherche **"simple"** : signifie que lâ€™utilisateur nâ€™a quâ€™un seul critÃ¨re Ã  saisir lors de sa recherche. Ce critÃ¨re est alors recherchÃ© au sein de plusieurs caractÃ©ristiques des livresÂ : **le titre, le nom de lâ€™auteur, lâ€™ISBN et le nom de la sÃ©rie**. Un seul critÃ¨re de type `string` est demandÃ©.
 
-- La recherche **"avancée"** : l'internaute a la possibilité de sélectionner plusieurs critères de recherche, qui sont dans ce projet : 
+- La recherche **"avancÃ©e"** : l'internaute a la possibilitÃ© de sÃ©lectionner plusieurs critÃ¨res de recherche, qui sont dans ce projet : 
 
 ```
 - le titre
 - l'ISBN
 - l'auteur
-- le nom de la série
+- le nom de la sÃ©rie
 - le genre
-- l'éditeur
+- l'Ã©diteur
 - le format
-- la date de publication (égale, inférieure ou supérieure à une date donnée)
+- la date de publication (Ã©gale, infÃ©rieure ou supÃ©rieure Ã  une date donnÃ©e)
 ```
 
-### 2.4 / Données de la BnF
+### 2.4 / DonnÃ©es de la BnF
 
-La **Bibliothèque Nationale de France** (nommée dans la suite du document « BnF ») met à disposition des internautes des notices bibliographiques et d’autorités décrivant tous les ouvrages ayant été déposés dans ses locaux dans le cadre du dépôt légal. Ces notices concernent les livres mais aussi d’autres types d’oeuvres telles que les musicales, les cinématographiques, les iconographiques, etc.
+La **BibliothÃ¨que Nationale de France** (nommÃ©e dans la suite du document Â«Â BnFÂ Â») met Ã  disposition des internautes des notices bibliographiques et dâ€™autoritÃ©s dÃ©crivant tous les ouvrages ayant Ã©tÃ© dÃ©posÃ©s dans ses locaux dans le cadre du dÃ©pÃ´t lÃ©gal. Ces notices concernent les livres mais aussi dâ€™autres types dâ€™oeuvres telles que les musicales, les cinÃ©matographiques, les iconographiques, etc.
 
-Les données présentes dans ces notices sont exploitables via une API librement utilisable, sans besoin de s’authentifier.
+Les donnÃ©es prÃ©sentes dans ces notices sont exploitables via une API librement utilisable, sans besoin de sâ€™authentifier.
 
 ## 3 / Aspects techniques du projet
 
-### 3.1 / Paramètres nécessaires à toute recherche
+### 3.1 / ParamÃ¨tres nÃ©cessaires Ã  toute recherche
 
-Format des données attendues et renvoyées :
+Format des donnÃ©es attendues et renvoyÃ©esÂ :
 `"Content-type": "application/json"`
 
-URL de base : `back_end_domain/api`
+URL de baseÂ : `back_end_domain/api`
 
-La recherche via la BnF exige de fournir un nombre de "notices" renvoyées parmi les suivants : 20, 100, 200, 500, 1000. Il peut être laissé à 0 si une autre source est utilisée.
+La recherche via la BnF exige de fournir un nombre de "notices" renvoyÃ©es parmi les suivants : 20, 100, 200, 500, 1000. Il peut Ãªtre laissÃ© Ã  0 si une autre source est utilisÃ©e.
 
 ```ts
 {
@@ -79,9 +79,9 @@ La recherche via la BnF exige de fournir un nombre de "notices" renvoyées parmi 
 
 ### 3.2 / Deux types de recherche
 
-- La recherche **"simple"** : Un seul critère de type `string` est demandé.
+- La recherche **"simple"** : Un seul critÃ¨re de type `string` est demandÃ©.
 
-- La recherche **"avancée"** : l'internaute a la possibilité de sélectionner plusieurs critères de recherche, qui sont dans ce projet : 
+- La recherche **"avancÃ©e"** : l'internaute a la possibilitÃ© de sÃ©lectionner plusieurs critÃ¨res de recherche, qui sont dans ce projet : 
 
 ```ts
 "criteria": {
@@ -108,9 +108,18 @@ La recherche via la BnF exige de fournir un nombre de "notices" renvoyées parmi 
 }
 ```
 
-### 3.3 / Requêtes API disponibles :
+### 3.3 / RequÃªtes API disponibles :
 
-- **GET** `/api/load` : chargement des données de formulaire (genres, éditeurs, formats)
+- **GET** `/api/load` : chargement des donnÃ©es de formulaire (genres, Ã©diteurs, formats)
 - **POST** `/api/search/simple` : recherche "simple" des livres
-- **POST** `/api/search/advanced` : recherche "avancée" des livres
-- **GET** `api/entity_name` : lister toutes les entités de la base de données MySQL d'un type donné (par exemple `/api/genres`), créées à des fins de test
+- **POST** `/api/search/advanced` : recherche "avancÃ©e" des livres
+- **GET** `api/entity_name` : lister toutes les entitÃ©s de la base de donnÃ©es MySQL d'un type donnÃ© (par exemple `/api/genres`), crÃ©Ã©es Ã  des fins de test
+
+### 3.4 / Contenu attendu du fichier appsettings.json (branche master) :
+
+```
+{
+  "FrontEndDomains": "DOMAINS_SEPARATED_BY_SEMICOLONS",
+  "MySQLConnectionString": "Server=HOST_NAME; User ID=USER_ID; Password=PASSWORD; Database=DATABASE_NAME"
+}
+```
